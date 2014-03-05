@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scenarioo", "Scenarioo\Scenarioo\Scenarioo.csproj", "{D237664F-5976-429F-AF65-E2DC2FFE742D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsoleApp", "TestConsoleApp\TestConsoleApp.csproj", "{17DCC306-9606-4AF8-BFE7-C79AF1C2C02B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScenariooTest", "Scenarioo\ScenariooTest\ScenariooTest\ScenariooTest.csproj", "{1D7C2DF7-00D9-4C32-BE91-A0A55FB2AE9D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D237664F-5976-429F-AF65-E2DC2FFE742D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D237664F-5976-429F-AF65-E2DC2FFE742D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D237664F-5976-429F-AF65-E2DC2FFE742D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D237664F-5976-429F-AF65-E2DC2FFE742D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17DCC306-9606-4AF8-BFE7-C79AF1C2C02B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17DCC306-9606-4AF8-BFE7-C79AF1C2C02B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17DCC306-9606-4AF8-BFE7-C79AF1C2C02B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17DCC306-9606-4AF8-BFE7-C79AF1C2C02B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D7C2DF7-00D9-4C32-BE91-A0A55FB2AE9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D7C2DF7-00D9-4C32-BE91-A0A55FB2AE9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D7C2DF7-00D9-4C32-BE91-A0A55FB2AE9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D7C2DF7-00D9-4C32-BE91-A0A55FB2AE9D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
