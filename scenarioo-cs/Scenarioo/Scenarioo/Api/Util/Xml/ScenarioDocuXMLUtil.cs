@@ -20,15 +20,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Scenarioo.Api.Util.Xml
 {
-    class ScenarioDocuXMLUtil
+    using System.IO;
+    using System.Runtime.Serialization;
+    using System.Xml.Serialization;
+
+    using Exception = System.Exception;
+
+    public class ScenarioDocuXMLUtil
     {
+        // TODO: better using LINQ to XML??
+        public static T Unmarshal<T>(FileStream fs) where T : class
+        {
+            try
+            {
+                var serializer = new XmlSerializer(typeof(T));
+                return serializer.Deserialize(fs) as T;
+            }
+            catch (SerializationException ex)
+            {
+                throw new Exception(string.Format("Could not unmarshall object of type {0}", typeof(T).Name), ex);
+            }
+        }
+
+        public static void Marshal<T>(T entity, FileStream st) where T : class
+        {
+            try
+            {
+                var serializer = new XmlSerializer(typeof(T));
+                serializer.Serialize(st, entity);
+            }
+            catch (SerializationException ex)
+            {
+                throw new Exception(string.Format("Could not Marshall object of type {0}", typeof(T).Name), ex);
+            }
+        }
     }
 }

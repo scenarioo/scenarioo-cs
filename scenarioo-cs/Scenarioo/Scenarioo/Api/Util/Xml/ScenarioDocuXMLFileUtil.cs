@@ -28,7 +28,51 @@ using System.Threading.Tasks;
 
 namespace Scenarioo.Api.Util.Xml
 {
-    class ScenarioDocuXMLFileUtil
+    using System.IO;
+
+    using Scenarioo.Model.Docu.Entities;
+
+    using Exception = System.Exception;
+
+    public class ScenarioDocuXMLFileUtil
     {
+        public static T Unmarshal<T>(string srcFile) where T : class
+        {
+            if (!File.Exists(srcFile))
+            {
+                throw new FileNotFoundException(srcFile);
+            }
+
+            try
+            {
+                using (var fs = new FileStream(srcFile, FileMode.Open))
+                {
+                    return ScenarioDocuXMLUtil.Unmarshal<T>(fs);
+                }
+
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(string.Format("Could not unmarshall Object from file:{0}", srcFile), e);
+            }
+
+        }
+
+        public static void Marshal<T>(T entity, string destFile) where T : class
+        {
+            try
+            {
+                using (var fs = new FileStream(destFile, FileMode.CreateNew))
+                {
+                    ScenarioDocuXMLUtil.Marshal(entity, fs);
+                    fs.Flush();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(string.Format("Could not marshall Object of type:{0} into file:{1}", entity.GetType().Name, destFile), e);
+            }
+        }
     }
 }

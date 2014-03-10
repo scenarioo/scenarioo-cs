@@ -22,8 +22,24 @@
 
 namespace Scenarioo.Api
 {
+    using Scenarioo.Api.Files;
+    using Scenarioo.Api.Util.Xml;
+    using Scenarioo.Model.Docu.Entities;
+
     public class ScenarioDocuReader
     {
+        private readonly ScenarioDocuFiles docuFiles;
 
+        public ScenarioDocuReader(string rootDirectory)
+        {
+            this.docuFiles = new ScenarioDocuFiles(rootDirectory);
+        }
+
+        public Branch LoadBranch(string buildName, string branchName)
+        {
+            return ScenarioDocuXMLFileUtil.Unmarshal<Branch>(
+                docuFiles.GetBranchFile(buildName, branchName));
+        }
     }
+
 }

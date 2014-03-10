@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    class ScenarioCalculatedData
+    public class ScenarioCalculatedData
     {
     }
 }

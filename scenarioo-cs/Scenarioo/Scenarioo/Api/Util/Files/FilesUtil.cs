@@ -21,14 +21,27 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Scenarioo.Api.Util.Files
 {
-    class FilesUtil
+    using System.Web;
+
+    public class FilesUtil
     {
+        public static string EncodeName(string name)
+        {
+            try
+            {
+                return HttpUtility.UrlEncode(name, Encoding.UTF8);
+            }
+            catch (System.Exception e)
+            {
+                throw new ArgumentOutOfRangeException(
+                    string.Format(
+                        "Unsupported UTF-8 charset. Scenarioo needs to run on a server environment that supports 'UTF-8'."),
+                    e.Message);
+            }
+        }
     }
 }

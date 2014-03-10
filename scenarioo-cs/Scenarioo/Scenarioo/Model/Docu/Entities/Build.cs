@@ -21,14 +21,49 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    class Build
+    using Scenarioo.Model.Docu.Entities.Generic;
+
+    public class Build
     {
+        private long serialVersionUID = 1L;
+
+        public string Name { get; set; }
+
+        private string Revision { get; set; }
+
+        private DateTime Date { get; set; }
+
+        private string Status { get; set; }
+
+        private Details details = new Details();
+
+
+        public Build()
+        {
+
+        }
+
+        public Build(string name)
+        {
+            this.Name = name;
+        }
+
+        public Details Details
+        {
+            get
+            {
+                return this.details;
+            }
+
+            set
+            {
+                this.details = value;
+            }
+
+        }
+
     }
 }

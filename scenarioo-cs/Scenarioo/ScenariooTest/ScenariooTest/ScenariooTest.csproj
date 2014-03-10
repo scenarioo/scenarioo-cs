@@ -53,6 +53,12 @@
     <Compile Include="ScenarioDocuWriterAndReaderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Scenarioo\Scenarioo.csproj">
+      <Project>{D237664F-5976-429F-AF65-E2DC2FFE742D}</Project>
+      <Name>Scenarioo</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

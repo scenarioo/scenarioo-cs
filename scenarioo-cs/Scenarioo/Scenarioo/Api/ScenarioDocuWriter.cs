@@ -20,15 +20,76 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Scenarioo.Api
 {
+    using System.IO;
+
+    using Scenarioo.Api.Files;
+    using Scenarioo.Api.Util.Xml;
+    using Scenarioo.Model.Docu.Entities;
+
     public class ScenarioDocuWriter
     {
+        public ScenarioDocuFiles DocuFiles { get; set; }
+        
+        private string BranchName { get; set; }
+
+        private string BuildName { get; set; }
+
+        private string DestinationRootDirectory { get; set; }
+
+        public ScenarioDocuWriter(string destinationRootDirectory, string branchName, string buildName)
+        {
+            this.DocuFiles = new ScenarioDocuFiles(destinationRootDirectory);
+            this.BranchName = branchName;
+            this.BuildName = buildName;
+            this.DestinationRootDirectory = destinationRootDirectory;
+            CreateBuildDirectoryIfNotYetExists();
+        }
+
+        private void CreateBuildDirectoryIfNotYetExists()
+        {
+            CreateDirectoryIfNotYetExists(this.GetBuildDirectory());
+        }
+
+        private void CreateBranchDirectoryIfNotYetExists()
+        {
+            CreateDirectoryIfNotYetExists(this.GetBranchDirectory());
+        }
+
+        private void CreateDirectoryIfNotYetExists(string directory)
+        {
+            this.DocuFiles.AssertRootDirectoryExists();
+
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+        }
+
+        public async void SaveBranchDescription(Branch branch)
+        {
+           // await Task.Run(() => ExecuteAsyncWrite(branch));
+            var destBranchFile = this.DocuFiles.GetBranchFile(this.BuildName, branch.Name);
+            this.CreateBranchDirectoryIfNotYetExists();
+            ExecuteAsyncWrite(branch, destBranchFile);
+        }
+
+        private void ExecuteAsyncWrite(Branch branch, string destBranchFile)
+        {
+            ScenarioDocuXMLFileUtil.Marshal(branch, destBranchFile);
+        }
+
+        private string GetBuildDirectory()
+        {
+            return this.DocuFiles.GetBuildDirectory(this.BuildName);
+        }
+
+        private string GetBranchDirectory()
+        {
+            return this.DocuFiles.GetBranchDirectory(this.BuildName, this.BranchName);
+        }
+
+
     }
 }

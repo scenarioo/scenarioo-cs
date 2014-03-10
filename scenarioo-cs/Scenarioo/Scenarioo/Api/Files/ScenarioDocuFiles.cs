@@ -20,15 +20,48 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Scenarioo.Api.Files
 {
-    class ScenarioDocuFiles
+    using System;
+    using System.IO;
+
+    using Scenarioo.Api.Util.Files;
+
+    public class ScenarioDocuFiles
     {
+        private const string FileNameBranch = "branch.xml";
+
+        private readonly string rootDirectory;
+    
+        public ScenarioDocuFiles(string rootDirectory)
+        {
+            this.rootDirectory = rootDirectory;
+        }
+
+        public void AssertRootDirectoryExists()
+        {
+            if (!Directory.Exists(this.rootDirectory))
+            {
+                throw new ArgumentException(string.Format("Directory for docu content generation does not exist: {0}", rootDirectory));
+            }
+        }
+
+        public string GetBranchFile(string buildName, string branchName)
+        {
+            return string.Format(@"{0}{1}{2}", GetBranchDirectory(buildName, branchName), Path.DirectorySeparatorChar, FileNameBranch);
+        }
+
+        public string GetBranchDirectory(string buildName, string branchName)
+        {
+            return string.Format(@"{0}{1}{2}", this.GetBuildDirectory(buildName), Path.DirectorySeparatorChar, FilesUtil.EncodeName(branchName));
+        }
+
+
+        public string GetBuildDirectory(string buildName)
+        {
+            return string.Format(@"{0}{1}{2}", this.rootDirectory, Path.DirectorySeparatorChar, buildName);
+        }
+
+
     }
 }

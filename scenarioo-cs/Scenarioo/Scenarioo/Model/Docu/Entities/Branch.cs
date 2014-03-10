@@ -21,14 +21,52 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    class Branch
+    using Scenarioo.Model.Docu.Entities.Generic;
+
+    [Serializable]
+    public class Branch
     {
+  
+        private long serialVersionUID = 1L;
+
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        private Details details = new Details();
+
+        public Branch()
+        {
+            this.Name = string.Empty;
+        }
+
+        public Branch(string name)
+        {
+            this.Name = name;
+            this.Description = string.Empty;
+        }
+
+        public Branch(string name, string description)
+
+        {
+            this.Name = name;
+            this.Description = description;
+        }
+
+        public Details Details
+        {
+            get
+            {
+                return this.details;
+            }
+
+            set
+            {
+                this.details = value;
+            }
+        }
     }
 }
