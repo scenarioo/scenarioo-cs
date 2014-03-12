@@ -46,6 +46,12 @@ namespace Scenarioo.Api
             return ScenarioDocuXMLFileUtil.Unmarshal<build>(
                 docuFiles.GetBuildFile(buildName));
         }
+
+        public useCase LoadUseCase(string buildName, string branchName, string useCaseName)
+        {
+            return ScenarioDocuXMLFileUtil.Unmarshal<useCase>(
+                docuFiles.GetUseCaseFile(buildName, branchName, useCaseName));
+        }
     }
 
 }

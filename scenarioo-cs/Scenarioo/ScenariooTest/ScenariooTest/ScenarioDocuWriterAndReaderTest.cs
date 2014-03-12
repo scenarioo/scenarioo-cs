@@ -37,7 +37,8 @@ namespace ScenariooTest
 
         private const string branchName = "testBranch";
         private const string buildName = "testBuild";
-        private const string testCaseName = "testCase";
+        private const string useCaseName = "testUseCase";
+        private const string tesCaseName = "testCase";
         private const string testScenarioName = "testScenario";
         private const string rootDirectory = @"c:\temp";
 
@@ -66,7 +67,7 @@ namespace ScenariooTest
         {
 
             // GIVEN: a typical branch
-            var brunchFromSchema = new branch()
+            var branch = new branch()
                                        {
                                            name = branchName,
                                            description =
@@ -75,12 +76,12 @@ namespace ScenariooTest
 
 
             // WHEN: the branch was saved.
-            writer.SaveBranchDescription(brunchFromSchema);
+            writer.SaveBranchDescription(branch);
 
             // THEN: the branch can be loaded successfully and correctly
             branch branchFromFile = reader.LoadBranch(buildName, branchName);
             Assert.AreEqual(branchName, branchFromFile.name);
-            Assert.AreEqual(brunchFromSchema.description, branchFromFile.description);
+            Assert.AreEqual(branch.description, branchFromFile.description);
 
         }
 
@@ -89,7 +90,7 @@ namespace ScenariooTest
         {
 
             // GIVEN: a typical build
-            var buildFromSchema = new build
+            var build = new build
             {
                 name = buildName,
                 date = new DateTime(),
@@ -100,20 +101,45 @@ namespace ScenariooTest
             };
 
             // WHEN: the build was saved.
-            writer.SaveBuildDescription(buildFromSchema);
-
-            // Preventing that async write process is slower than read process
-            Thread.Sleep(1);
+            writer.SaveBuildDescription(build);
 
             // THEN: the build can be loaded successfully and correctly
             build buildFromFile = reader.LoadBuild(buildName, branchName);
-            Assert.AreEqual(buildFromSchema.name, buildFromFile.name);
+            Assert.AreEqual(build.name, buildFromFile.name);
 
-            Assert.AreEqual(buildFromSchema.date, buildFromFile.date);
-            Assert.AreEqual(buildFromSchema.revision, buildFromFile.revision);
-            Assert.AreEqual(buildFromSchema.status, buildFromFile.status);
-            Assert.AreEqual(buildFromSchema.details[0].key, buildFromFile.details[0].key);
-            Assert.AreEqual(buildFromSchema.details[0].value, buildFromFile.details[0].value);
+            Assert.AreEqual(build.date, buildFromFile.date);
+            Assert.AreEqual(build.revision, buildFromFile.revision);
+            Assert.AreEqual(build.status, buildFromFile.status);
+            Assert.AreEqual(build.details[0].key, buildFromFile.details[0].key);
+            Assert.AreEqual(build.details[0].value, buildFromFile.details[0].value);
+        }
+
+        [TestMethod]
+        public void WriteAndReadUseCaseDescription()
+        {
+
+            // GIVEN: a typical use case
+            var usecase = new useCase
+                              {
+                                  name = useCaseName,
+                                  description = "this is a typical use case with a decription",
+                                  status = "success",
+                                  details =
+                                      new[]
+                                          { new useCaseEntry() { key = "webtestName", value = "UseCaseWebTest" } }
+                              };
+
+            // WHEN: the usecase was saved.
+            writer.SaveUseCase(usecase);
+
+            // THEN: the usecase can be loaded successfully and correctly
+            var useCaseFromFile = reader.LoadUseCase(buildName, branchName, useCaseName);
+            Assert.AreEqual(useCaseFromFile.name, useCaseFromFile.name);
+            Assert.AreEqual(useCaseFromFile.description, useCaseFromFile.description);
+            Assert.AreEqual(useCaseFromFile.status, useCaseFromFile.status);
+            Assert.AreEqual(useCaseFromFile.details[0].key, useCaseFromFile.details[0].key);
+            Assert.AreEqual(useCaseFromFile.details[0].value, useCaseFromFile.details[0].value);
+
         }
 
     }

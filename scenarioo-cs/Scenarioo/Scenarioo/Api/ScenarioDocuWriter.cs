@@ -37,6 +37,8 @@ namespace Scenarioo.Api
 
         private string BuildName { get; set; }
 
+        private string UseCaseName { get; set; }
+
         private string DestinationRootDirectory { get; set; }
 
         public ScenarioDocuWriter(string destinationRootDirectory, string branchName, string buildName)
@@ -58,6 +60,11 @@ namespace Scenarioo.Api
             CreateDirectoryIfNotYetExists(this.GetBranchDirectory());
         }
 
+        private void CreateUseCaseDirectoryIfNotYetExists()
+        {
+            CreateDirectoryIfNotYetExists(this.GetUseCaseDirectory());
+        }
+
         private void CreateDirectoryIfNotYetExists(string directory)
         {
             this.DocuFiles.AssertRootDirectoryExists();
@@ -68,12 +75,7 @@ namespace Scenarioo.Api
             }
         }
 
-        public void SaveBranchDescription(branch branch)
-        {
-            var destBranchFile = this.DocuFiles.GetBranchFile(this.BuildName, branch.name);
-            this.CreateBranchDirectoryIfNotYetExists();
-            ExecuteAsyncWrite(branch, destBranchFile);
-        }
+
 
         private void ExecuteAsyncWrite<T>(T entity, string destBranchFile) where T : class
         {
@@ -90,13 +92,31 @@ namespace Scenarioo.Api
             return this.DocuFiles.GetBranchDirectory(this.BuildName, this.BranchName);
         }
 
+        private string GetUseCaseDirectory()
+        {
+            return this.DocuFiles.GetUseCaseDirectory(this.BuildName, this.BranchName, this.UseCaseName);
+        }
 
         public void SaveBuildDescription(build build)
         {
             var destBuildFile = this.DocuFiles.GetBuildFile(this.BuildName);
-            this.CreateBranchDirectoryIfNotYetExists();
+            this.CreateBuildDirectoryIfNotYetExists();
             ExecuteAsyncWrite(build, destBuildFile);
         }
-       
+
+        public void SaveBranchDescription(branch branch)
+        {
+            var destBranchFile = this.DocuFiles.GetBranchFile(this.BuildName, branch.name);
+            this.CreateBranchDirectoryIfNotYetExists();
+            ExecuteAsyncWrite(branch, destBranchFile);
+        }
+
+        public void SaveUseCase(useCase useCase)
+        {
+            var desUseCaseFile = this.DocuFiles.GetUseCaseFile(this.BuildName, this.BranchName, useCase.name);
+            this.CreateUseCaseDirectoryIfNotYetExists();
+            ExecuteAsyncWrite(useCase, desUseCaseFile);
+        }
+
     }
 }
