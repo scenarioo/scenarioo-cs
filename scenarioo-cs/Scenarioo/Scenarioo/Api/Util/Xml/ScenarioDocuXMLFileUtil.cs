@@ -20,22 +20,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Scenarioo.Api.Util.Xml
 {
+    using System;
+    using System.Diagnostics;
     using System.IO;
-
-    using Scenarioo.Model.Docu.Entities;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     using Exception = System.Exception;
 
     public class ScenarioDocuXMLFileUtil
     {
+        private const int Buffer = 8;
+
         public static T Unmarshal<T>(string srcFile) where T : class
         {
             if (!File.Exists(srcFile))
@@ -43,35 +41,85 @@ namespace Scenarioo.Api.Util.Xml
                 throw new FileNotFoundException(srcFile);
             }
 
-            try
+
+            Lock(
+                srcFile,
+                (f) =>
+                    {
+                        try
+                        {
+                            var cbuffer = new byte[] { };
+                            f.Write(cbuffer, 0, cbuffer.Length);
+                        }
+                        catch (IOException e)
+                        {
+                            throw new Exception(string.Format("Could not unmarshall Object from file:{0}", srcFile), e);
+                        }
+                    });
+
+            using (var fs = new FileStream(srcFile, FileMode.Open, FileAccess.Read, FileShare.None, Buffer, true))
             {
-                using (var fs = new FileStream(srcFile, FileMode.Open))
-                {
-                    return ScenarioDocuXMLUtil.Unmarshal<T>(fs);
-                }
+                var desirializedObject = ScenarioDocuXMLUtil.Unmarshal<T>(fs);
+                fs.Flush();
+                fs.Close();
+                fs.Dispose();
 
+                return desirializedObject;
             }
-            catch (Exception e)
-            {
-
-                throw new Exception(string.Format("Could not unmarshall Object from file:{0}", srcFile), e);
-            }
-
         }
 
-        public static void Marshal<T>(T entity, string destFile) where T : class
+        public static async Task Marshal<T>(T entity, string destFile) where T : class
         {
             try
             {
-                using (var fs = new FileStream(destFile, FileMode.CreateNew))
+                using (
+                    var fs = new FileStream(destFile, FileMode.Create, FileAccess.Write, FileShare.None, Buffer, true))
                 {
-                    ScenarioDocuXMLUtil.Marshal(entity, fs);
+                    await ScenarioDocuXMLUtil.Marshal(entity, fs);
                     fs.Flush();
+                    fs.Dispose();
+                    fs.Close();
+
                 }
             }
             catch (Exception e)
             {
                 throw new Exception(string.Format("Could not marshall Object of type:{0} into file:{1}", entity.GetType().Name, destFile), e);
+            }
+        }
+
+        public static void Lock(string srcPath, Action<FileStream> action)
+        {
+            var autoResetEvent = new AutoResetEvent(false);
+
+            while (true)
+            {
+                try
+                {
+                    using (var file = File.Open(srcPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Write))
+                    {
+                        action(file);
+                        break;
+                    }
+                }
+                catch (IOException)
+                {
+                    var fileSystemWatcher = new FileSystemWatcher(Path.GetDirectoryName(srcPath))
+                                                {
+                                                    EnableRaisingEvents =
+                                                        true
+                                                };
+
+                    fileSystemWatcher.Changed += (o, e) =>
+                        {
+                            if (Path.GetFullPath(e.FullPath) == Path.GetFullPath(srcPath))
+                            {
+                                autoResetEvent.Set();
+                            }
+                        };
+
+                    autoResetEvent.WaitOne();
+                }
             }
         }
     }

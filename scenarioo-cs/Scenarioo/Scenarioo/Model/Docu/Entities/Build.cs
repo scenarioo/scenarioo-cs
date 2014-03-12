@@ -24,45 +24,33 @@ using System;
 
 namespace Scenarioo.Model.Docu.Entities
 {
+    using Scenarioo.Annotations;
     using Scenarioo.Model.Docu.Entities.Generic;
 
+    [Serializable]
     public class Build
     {
         private long serialVersionUID = 1L;
 
         public string Name { get; set; }
 
-        private string Revision { get; set; }
+        public string Revision { get; set; }
 
-        private DateTime Date { get; set; }
+        public DateTime Date { get; set; }
 
-        private string Status { get; set; }
+        public string Status { get; set; }
 
-        private Details details = new Details();
-
+        [CanBeNull]
+        public Details Details { get; set; }
 
         public Build()
         {
-
+            this.Details = new Details();
         }
 
         public Build(string name)
         {
             this.Name = name;
-        }
-
-        public Details Details
-        {
-            get
-            {
-                return this.details;
-            }
-
-            set
-            {
-                this.details = value;
-            }
-
         }
 
     }

@@ -31,6 +31,8 @@ namespace Scenarioo.Api.Files
     {
         private const string FileNameBranch = "branch.xml";
 
+        private static string FileNameBuild = "build.xml";
+
         private readonly string rootDirectory;
     
         public ScenarioDocuFiles(string rootDirectory)
@@ -49,6 +51,11 @@ namespace Scenarioo.Api.Files
         public string GetBranchFile(string buildName, string branchName)
         {
             return string.Format(@"{0}{1}{2}", GetBranchDirectory(buildName, branchName), Path.DirectorySeparatorChar, FileNameBranch);
+        }
+
+        public string GetBuildFile(string buildName)
+        {
+            return string.Format(@"{0}{1}{2}", GetBuildDirectory(buildName), Path.DirectorySeparatorChar, FileNameBuild);
         }
 
         public string GetBranchDirectory(string buildName, string branchName)

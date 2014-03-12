@@ -23,6 +23,7 @@
 namespace Scenarioo.Api
 {
     using System.IO;
+    using System.Threading.Tasks;
 
     using Scenarioo.Api.Files;
     using Scenarioo.Api.Util.Xml;
@@ -67,17 +68,16 @@ namespace Scenarioo.Api
             }
         }
 
-        public async void SaveBranchDescription(Branch branch)
+        public void SaveBranchDescription(branch branch)
         {
-           // await Task.Run(() => ExecuteAsyncWrite(branch));
-            var destBranchFile = this.DocuFiles.GetBranchFile(this.BuildName, branch.Name);
+            var destBranchFile = this.DocuFiles.GetBranchFile(this.BuildName, branch.name);
             this.CreateBranchDirectoryIfNotYetExists();
             ExecuteAsyncWrite(branch, destBranchFile);
         }
 
-        private void ExecuteAsyncWrite(Branch branch, string destBranchFile)
+        private void ExecuteAsyncWrite<T>(T entity, string destBranchFile) where T : class
         {
-            ScenarioDocuXMLFileUtil.Marshal(branch, destBranchFile);
+            ScenarioDocuXMLFileUtil.Marshal(entity, destBranchFile);
         }
 
         private string GetBuildDirectory()
@@ -91,5 +91,12 @@ namespace Scenarioo.Api
         }
 
 
+        public void SaveBuildDescription(build build)
+        {
+            var destBuildFile = this.DocuFiles.GetBuildFile(this.BuildName);
+            this.CreateBranchDirectoryIfNotYetExists();
+            ExecuteAsyncWrite(build, destBuildFile);
+        }
+       
     }
 }

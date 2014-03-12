@@ -35,10 +35,16 @@ namespace Scenarioo.Api
             this.docuFiles = new ScenarioDocuFiles(rootDirectory);
         }
 
-        public Branch LoadBranch(string buildName, string branchName)
+        public branch LoadBranch(string buildName, string branchName)
         {
-            return ScenarioDocuXMLFileUtil.Unmarshal<Branch>(
+            return ScenarioDocuXMLFileUtil.Unmarshal<branch>(
                 docuFiles.GetBranchFile(buildName, branchName));
+        }
+
+        public build LoadBuild(string buildName, string branchName)
+        {
+            return ScenarioDocuXMLFileUtil.Unmarshal<build>(
+                docuFiles.GetBuildFile(buildName));
         }
     }
 

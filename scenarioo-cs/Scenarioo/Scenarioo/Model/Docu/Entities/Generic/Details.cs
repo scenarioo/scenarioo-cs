@@ -22,28 +22,59 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Scenarioo.Model.Docu.Entities.Generic
 {
-    using System.Collections;
+    using System.Xml;
+    using System.Xml.Serialization;
 
-    public class Details
+    [Serializable]
+    public class Details: IXmlSerializable
     {
-        private readonly Hashtable properties = new Hashtable();
+        [XmlArray(ElementName = "type")]
+        public Dictionary<string, object> Properties { get; set; }
+
+        public Details()
+        {
+            this.Properties = new Dictionary<string, object>();
+        }
 
         public void AddDetail(string key, Object value)
         {
             if (value != null)
             {
-                properties.Add(key, value);
+                this.Properties.Add(key, value);
             }
             else
             {
-                properties.Remove(key);
+                this.Properties.Remove(key);
             }
+        }
+        
+
+        public System.Xml.Schema.XmlSchema GetSchema()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            if (this.Properties == null)
+            {
+                return;
+            }
+
+            var serializer = new XmlSerializer(this.Properties.GetType());
+            serializer.Serialize(writer, this.Properties);
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            if (this.Properties == null)
+            {
+                this.Properties = new Dictionary<string, object>();
+            }
+            this.AddDetail(reader.ReadElementString("Key"), reader.ReadElementContentAsObject());
         }
     }
 }

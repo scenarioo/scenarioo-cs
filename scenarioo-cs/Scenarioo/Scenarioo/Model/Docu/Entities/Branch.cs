@@ -24,6 +24,8 @@ using System;
 
 namespace Scenarioo.Model.Docu.Entities
 {
+    using System.Xml.Serialization;
+
     using Scenarioo.Model.Docu.Entities.Generic;
 
     [Serializable]

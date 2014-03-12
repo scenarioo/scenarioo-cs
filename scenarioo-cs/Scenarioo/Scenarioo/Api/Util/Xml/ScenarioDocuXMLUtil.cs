@@ -22,21 +22,31 @@
 
 namespace Scenarioo.Api.Util.Xml
 {
+    using System;
     using System.IO;
     using System.Runtime.Serialization;
+    using System.Threading.Tasks;
     using System.Xml.Serialization;
 
     using Exception = System.Exception;
 
     public class ScenarioDocuXMLUtil
     {
-        // TODO: better using LINQ to XML??
         public static T Unmarshal<T>(FileStream fs) where T : class
         {
+
+            if (fs == null)
+            {
+                throw new NullReferenceException("FileStream cannot be null");
+            }
+
             try
             {
                 var serializer = new XmlSerializer(typeof(T));
-                return serializer.Deserialize(fs) as T;
+                var deserializedObject = serializer.Deserialize(fs) as T;
+
+                return deserializedObject;
+
             }
             catch (SerializationException ex)
             {
@@ -44,12 +54,17 @@ namespace Scenarioo.Api.Util.Xml
             }
         }
 
-        public static void Marshal<T>(T entity, FileStream st) where T : class
+        public static async Task Marshal<T>(T entity, FileStream st) where T : class
         {
+            if (st == null || entity == null)
+            {
+                throw new NullReferenceException("FileStream cannot be null");
+            }
+
             try
             {
                 var serializer = new XmlSerializer(typeof(T));
-                serializer.Serialize(st, entity);
+                await Task.Run(() => serializer.Serialize(st, entity));
             }
             catch (SerializationException ex)
             {
