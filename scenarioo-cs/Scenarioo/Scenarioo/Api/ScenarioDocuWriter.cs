@@ -23,7 +23,6 @@
 namespace Scenarioo.Api
 {
     using System.IO;
-    using System.Threading.Tasks;
 
     using Scenarioo.Api.Files;
     using Scenarioo.Api.Util.Xml;
@@ -41,16 +40,29 @@ namespace Scenarioo.Api
 
         private readonly string scenarioName;
 
+        private readonly string scenarioStepName;
+
+        private readonly int stepIndex;
+
         private string DestinationRootDirectory { get; set; }
 
-        public ScenarioDocuWriter(string destinationRootDirectory, string branchName, string buildName, string useCaseName, string scenarioName)
+        public ScenarioDocuWriter(
+            string destinationRootDirectory,
+            string branchName,
+            string buildName,
+            string useCaseName,
+            string scenarioName,
+            string scenarioStepName,
+            int stepIndex)
         {
             this.DocuFiles = new ScenarioDocuFiles(destinationRootDirectory);
             this.branchName = branchName;
             this.buildName = buildName;
             this.useCaseName = useCaseName;
             this.scenarioName = scenarioName;
+            this.scenarioStepName = scenarioStepName;
             this.DestinationRootDirectory = destinationRootDirectory;
+            this.stepIndex = stepIndex;
             CreateBuildDirectoryIfNotYetExists();
         }
 
@@ -74,6 +86,11 @@ namespace Scenarioo.Api
             CreateDirectoryIfNotYetExists(this.GetScenarioDirectory());
         }
 
+        private void CreateScenariooStepDirectoryIfNotYetExists()
+        {
+            CreateDirectoryIfNotYetExists(this.GetScenarioStepDirectory());
+        }
+
         private void CreateDirectoryIfNotYetExists(string directory)
         {
             this.DocuFiles.AssertRootDirectoryExists();
@@ -83,8 +100,6 @@ namespace Scenarioo.Api
                 Directory.CreateDirectory(directory);
             }
         }
-
-
 
         private static void ExecuteAsyncWrite<T>(T entity, string destFile) where T : class
         {
@@ -106,9 +121,23 @@ namespace Scenarioo.Api
             return this.DocuFiles.GetUseCaseDirectory(this.buildName, this.branchName, this.useCaseName);
         }
 
+        private string GetScenarioStepDirectory()
+        {
+            return this.DocuFiles.GetScenarioStepDirectory(
+                this.buildName,
+                this.branchName,
+                this.useCaseName,
+                this.scenarioName,
+                this.scenarioStepName);
+        }
+
         private string GetScenarioDirectory()
         {
-            return this.DocuFiles.GetScenarioDirectory(this.buildName, this.branchName, this.useCaseName, this.scenarioName);
+            return this.DocuFiles.GetScenarioDirectory(
+                this.buildName,
+                this.branchName,
+                this.useCaseName,
+                this.scenarioName);
         }
 
         public void SaveBuildDescription(build build)
@@ -134,9 +163,26 @@ namespace Scenarioo.Api
 
         public void SaveScenario(scenario scenario)
         {
-            var desScenarioFile = this.DocuFiles.GetScenarioFile(this.buildName, this.branchName, this.useCaseName, scenario.name);
+            var desScenarioFile = this.DocuFiles.GetScenarioFile(
+                this.buildName,
+                this.branchName,
+                this.useCaseName,
+                scenario.name);
             this.CreateScenariooDirectoryIfNotYetExists();
             ExecuteAsyncWrite(scenario, desScenarioFile);
+        }
+
+        public void SaveStep(step step)
+        {
+            var desScenarioStepFile = this.DocuFiles.GetScenarioStepFile(
+                this.buildName,
+                this.branchName,
+                this.useCaseName,
+                this.scenarioName,
+                scenarioStepName,
+                stepIndex);
+            this.CreateScenariooStepDirectoryIfNotYetExists();
+            ExecuteAsyncWrite(step, desScenarioStepFile);
         }
     }
 }

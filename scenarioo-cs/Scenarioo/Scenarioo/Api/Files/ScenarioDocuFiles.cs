@@ -23,6 +23,7 @@
 namespace Scenarioo.Api.Files
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
 
     using Scenarioo.Api.Util.Files;
@@ -33,16 +34,19 @@ namespace Scenarioo.Api.Files
 
         private const string FileNameBuild = "build.xml";
 
-        private const string FileNameScenariooScreenshot = "screenshots";
+        private const string FileNameScenarioScreenshot = "screenshots";
 
-        private const string FileNameScenariooStep = "steps";
+        private const string FileNameScenarioStep = "steps";
 
         private const string FileNameScenario = "scenario.xml";
 
         private const string FileNameUseCase = "usecase.xml";
 
         private readonly string rootDirectory;
-    
+
+        private string digitFormat = CreateNumberFormatWithMinimumIntegerDigits(3, "0");
+
+
         public ScenarioDocuFiles(string rootDirectory)
         {
             this.rootDirectory = rootDirectory;
@@ -52,56 +56,118 @@ namespace Scenarioo.Api.Files
         {
             if (!Directory.Exists(this.rootDirectory))
             {
-                throw new ArgumentException(string.Format("Directory for docu content generation does not exist: {0}", rootDirectory));
+                throw new ArgumentException(
+                    string.Format("Directory for docu content generation does not exist: {0}", rootDirectory));
             }
         }
 
         public string GetBranchFile(string buildName, string branchName)
         {
-            return string.Format(@"{0}{1}{2}", GetBranchDirectory(buildName, branchName), Path.DirectorySeparatorChar, FileNameBranch);
+            return string.Format(
+                @"{0}{1}{2}",
+                this.GetBranchDirectory(buildName, branchName),
+                Path.DirectorySeparatorChar,
+                FileNameBranch);
         }
 
         public string GetBuildFile(string buildName)
         {
-            return string.Format(@"{0}{1}{2}", GetBuildDirectory(buildName), Path.DirectorySeparatorChar, FileNameBuild);
+            return string.Format(
+                @"{0}{1}{2}",
+                this.GetBuildDirectory(buildName),
+                Path.DirectorySeparatorChar,
+                FileNameBuild);
         }
 
         public string GetUseCaseFile(string buildName, string branchName, string useCaseName)
         {
-            return string.Format(@"{0}{1}{2}", GetBranchDirectory(buildName, branchName), Path.DirectorySeparatorChar, FileNameUseCase);
+            return string.Format(
+                @"{0}{1}{2}",
+                this.GetUseCaseDirectory(buildName, branchName, useCaseName),
+                Path.DirectorySeparatorChar,
+                FileNameUseCase);
         }
 
         public string GetScenarioFile(string buildName, string branchName, string useCaseName, string scenarioName)
         {
-            return string.Format(@"{0}{1}{2}", this.GetUseCaseDirectory(buildName, branchName, useCaseName), Path.DirectorySeparatorChar, FileNameScenario);
+            return string.Format(
+                @"{0}{1}{2}",
+                this.GetScenarioDirectory(buildName, branchName, useCaseName, scenarioName),
+                Path.DirectorySeparatorChar,
+                FileNameScenario);
         }
 
+        public string GetScenarioStepFile(string buildName, string branchName, string useCaseName, string scenarioName, string scenarioStepName, int stepIndex)
+        {
+            return string.Format(
+                @"{0}{1}{2}",
+                this.GetScenarioStepDirectory(buildName, branchName, useCaseName, scenarioName, scenarioStepName),
+                Path.DirectorySeparatorChar,
+                string.Format(@"{0}{1}", stepIndex.ToString(this.digitFormat), ".xml"));
+        }
 
         /// <summary>
-        /// concatenate directory
+        /// Concatenate directory of docu files
         /// </summary>
         /// <param name="buildName"></param>
         /// <param name="branchName"></param>
         /// <returns></returns>
         public string GetBranchDirectory(string buildName, string branchName)
         {
-            return string.Format(@"{0}{1}{2}", this.GetBuildDirectory(buildName), Path.DirectorySeparatorChar, FilesUtil.EncodeName(branchName));
+            return string.Format(
+                @"{0}{1}{2}",
+                this.GetBuildDirectory(buildName),
+                Path.DirectorySeparatorChar,
+                FilesUtil.EncodeName(branchName));
         }
 
         public string GetBuildDirectory(string buildName)
         {
-            return string.Format(@"{0}{1}{2}", this.rootDirectory, Path.DirectorySeparatorChar, buildName);
+            return string.Format(
+                @"{0}{1}{2}",
+                this.rootDirectory,
+                Path.DirectorySeparatorChar,
+                FilesUtil.EncodeName(buildName));
         }
 
         public string GetUseCaseDirectory(string buildName, string branchName, string useCaseName)
         {
-            return string.Format(@"{0}{1}{2}", GetBranchDirectory(buildName, branchName), Path.DirectorySeparatorChar, useCaseName);
+            return string.Format(
+                @"{0}{1}{2}",
+                GetBranchDirectory(buildName, branchName),
+                Path.DirectorySeparatorChar,
+                FilesUtil.EncodeName(useCaseName));
         }
 
         public string GetScenarioDirectory(string buildName, string branchName, string useCaseName, string scenarioName)
         {
-            return string.Format(@"{0}{1}{2}", this.GetUseCaseDirectory(buildName, branchName, useCaseName), Path.DirectorySeparatorChar, scenarioName);
+            return string.Format(
+                @"{0}{1}{2}",
+                this.GetUseCaseDirectory(buildName, branchName, useCaseName),
+                Path.DirectorySeparatorChar,
+                FilesUtil.EncodeName(scenarioName));
         }
 
+        public string GetScenarioStepDirectory(string buildName, string branchName, string useCaseName, string scenarioName, string scenarioStepName)
+        {
+            return string.Format(
+                @"{0}{1}{2}",
+                this.GetScenarioDirectory(buildName, branchName, useCaseName, scenarioName),
+                Path.DirectorySeparatorChar,
+                FilesUtil.EncodeName(scenarioStepName));
+        }
+
+        private static string CreateNumberFormatWithMinimumIntegerDigits(int minimumIntegerDigits, string digitPatern)
+        {
+            var format = new List<string>();
+
+            for (var i = 0; i < minimumIntegerDigits; i++)
+            {
+                format.Add(digitPatern);
+            }
+
+            return string.Concat(format.ToArray());
+        }
     }
+
 }

@@ -37,27 +37,46 @@ namespace Scenarioo.Api
 
         public branch LoadBranch(string buildName, string branchName)
         {
-            return ScenarioDocuXMLFileUtil.Unmarshal<branch>(
-                docuFiles.GetBranchFile(buildName, branchName));
+            return ScenarioDocuXMLFileUtil.Unmarshal<branch>(docuFiles.GetBranchFile(buildName, branchName));
         }
 
         public build LoadBuild(string buildName, string branchName)
         {
-            return ScenarioDocuXMLFileUtil.Unmarshal<build>(
-                docuFiles.GetBuildFile(buildName));
+            return ScenarioDocuXMLFileUtil.Unmarshal<build>(docuFiles.GetBuildFile(buildName));
         }
 
         public useCase LoadUseCase(string buildName, string branchName, string useCaseName)
         {
-            return ScenarioDocuXMLFileUtil.Unmarshal<useCase>(
-                docuFiles.GetUseCaseFile(buildName, branchName, useCaseName));
+            return
+                ScenarioDocuXMLFileUtil.Unmarshal<useCase>(docuFiles.GetUseCaseFile(buildName, branchName, useCaseName));
         }
 
         public scenario LoadScenario(string buildName, string branchName, string useCaseName, string scenarioName)
         {
-            return ScenarioDocuXMLFileUtil.Unmarshal<scenario>(
-                docuFiles.GetScenarioFile(buildName, branchName, useCaseName, scenarioName));
+            return
+                ScenarioDocuXMLFileUtil.Unmarshal<scenario>(
+                    docuFiles.GetScenarioFile(buildName, branchName, useCaseName, scenarioName));
         }
+
+        public step LoadScenarioStep(
+            string buildName,
+            string branchName,
+            string useCaseName,
+            string scenarioName,
+            string scenarioStepName,
+            int stepIndex)
+        {
+            return
+                ScenarioDocuXMLFileUtil.Unmarshal<step>(
+                    docuFiles.GetScenarioStepFile(
+                        buildName,
+                        branchName,
+                        useCaseName,
+                        scenarioName,
+                        scenarioStepName,
+                        stepIndex));
+        }
+
     }
 
 }

@@ -37,19 +37,28 @@ namespace ScenariooTest
         private const string BuildName = "testBuild";
         private const string UseCaseName = "testUseCase";
         private const string ScenarioName = "testScenario";
+        private const string ScenarioStepName = "step";
         private const string RootDirectory = @"c:\temp";
 
         private const string DetailsVersionKey = "version";
 
-        private int TestStepIndex = 1;
-        
+        private const int StepIndex = 1;
+
         private ScenarioDocuWriter writer;
         private ScenarioDocuReader reader;
 
         [TestInitialize]
         public void TestInit()
         {
-            this.writer = new ScenarioDocuWriter(RootDirectory, BranchName, BuildName, UseCaseName, ScenarioName);
+            this.writer = new ScenarioDocuWriter(
+                RootDirectory,
+                BranchName,
+                BuildName,
+                UseCaseName,
+                ScenarioName,
+                ScenarioStepName,
+                StepIndex);
+
             this.reader = new ScenarioDocuReader(RootDirectory);
         }
 
@@ -64,8 +73,7 @@ namespace ScenariooTest
         {
 
             // GIVEN: a typical branch
-            var branch = new branch()
-                                       {
+            var branch = new branch {
                                            name = BranchName,
                                            description =
                                                "just a simple development branch, might as well be the trunk."
@@ -94,14 +102,14 @@ namespace ScenariooTest
                 revision = "10123",
                 status = "success",
                 details =
-                    new[] { new buildEntry() { key = DetailsVersionKey, value = "1.0.1" } }
+                    new[] { new buildEntry { key = DetailsVersionKey, value = "1.0.1" } }
             };
 
             // WHEN: the build was saved.
             writer.SaveBuildDescription(build);
 
             // THEN: the build can be loaded successfully and correctly
-            build buildFromFile = reader.LoadBuild(BuildName, BranchName);
+            var buildFromFile = reader.LoadBuild(BuildName, BranchName);
             Assert.AreEqual(build.name, buildFromFile.name);
 
             Assert.AreEqual(build.date, buildFromFile.date);
@@ -123,7 +131,7 @@ namespace ScenariooTest
                                   status = "success",
                                   details =
                                       new[]
-                                          { new useCaseEntry() { key = "webtestName", value = "UseCaseWebTest" } }
+                                          { new useCaseEntry { key = "webtestName", value = "UseCaseWebTest" } }
                               };
 
             // WHEN: the usecase was saved.
@@ -150,19 +158,74 @@ namespace ScenariooTest
                                    description = "this is a typical scenario with a decription",
                                    status = "success",
                                    details =
-                                       new[] { new scenarioEntry() { key = "userRole", value = "customer" } }
+                                       new[] { new scenarioEntry { key = "userRole", value = "customer" } }
                                };
 
             // WHEN: the scenario was saved.
             writer.SaveScenario(scenario);
 
             // THEN: the scenario can be loaded successfully and correctly
-            scenario scenarioFromFile = reader.LoadScenario(BuildName, BranchName, UseCaseName, ScenarioName);
+            var scenarioFromFile = reader.LoadScenario(BuildName, BranchName, UseCaseName, ScenarioName);
             Assert.AreEqual(scenario.name, scenarioFromFile.name);
             Assert.AreEqual(scenario.description, scenarioFromFile.description);
             Assert.AreEqual(scenario.status, scenarioFromFile.status);
             Assert.AreEqual(scenario.details[0].key, scenarioFromFile.details[0].key);
             Assert.AreEqual(scenario.details[0].value, scenarioFromFile.details[0].value);
+
+        }
+
+        [TestMethod]
+        public void WriteAndReadStep()
+        {
+
+            // GIVEN: a typical step
+            var step = new step();
+            var stepDescription = new stepDescription
+                                      {
+                                          index = StepIndex,
+                                          title = "Test Step",
+                                          status = "success"
+                                      };
+            step.stepDescription = stepDescription;
+
+            step.html = new stepHtml { htmlSource = "<html>just some page text</html>" };
+            step.page = new page {name = "customer/overview.jsp"};
+
+            var stepMetadata = new stepMetadata
+                                   {
+                                       visibleText = "just some page text",
+                                       details =
+                                           new[]
+                                               {
+                                                   new stepMetadataEntry {
+                                                           key =
+                                                               "mockedServicesConfiguration",
+                                                           value =
+                                                               "dummy_config_xy.properties"
+                                                       }
+                                               }
+                                   };
+            step.metadata = stepMetadata;
+
+            // WHEN: the step was saved.
+            writer.SaveStep(step);
+
+            // THEN: the step can be loaded successfully and correctly
+            var stepFromFile = reader.LoadScenarioStep(
+                BuildName,
+                BranchName,
+                UseCaseName,
+                ScenarioName,
+                ScenarioStepName,
+                StepIndex);
+
+            Assert.AreEqual(StepIndex, stepFromFile.stepDescription.index);
+            Assert.AreEqual(step.stepDescription.title, stepFromFile.stepDescription.title);
+            Assert.AreEqual(step.stepDescription.status,stepFromFile.stepDescription.status);
+            Assert.AreEqual(step.html.htmlSource, stepFromFile.html.htmlSource);
+            Assert.AreEqual(step.page.name, stepFromFile.page.name);
+            Assert.AreEqual(step.metadata.details[0].key, stepFromFile.metadata.details[0].key);
+            Assert.AreEqual(step.metadata.details[0].value, stepFromFile.metadata.details[0].value);
 
         }
     }
