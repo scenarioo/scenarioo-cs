@@ -32,20 +32,24 @@ namespace Scenarioo.Api
     public class ScenarioDocuWriter
     {
         public ScenarioDocuFiles DocuFiles { get; set; }
-        
-        private string BranchName { get; set; }
 
-        private string BuildName { get; set; }
+        private readonly string branchName;
 
-        private string UseCaseName { get; set; }
+        private readonly string buildName;
+
+        private readonly string useCaseName;
+
+        private readonly string scenarioName;
 
         private string DestinationRootDirectory { get; set; }
 
-        public ScenarioDocuWriter(string destinationRootDirectory, string branchName, string buildName)
+        public ScenarioDocuWriter(string destinationRootDirectory, string branchName, string buildName, string useCaseName, string scenarioName)
         {
             this.DocuFiles = new ScenarioDocuFiles(destinationRootDirectory);
-            this.BranchName = branchName;
-            this.BuildName = buildName;
+            this.branchName = branchName;
+            this.buildName = buildName;
+            this.useCaseName = useCaseName;
+            this.scenarioName = scenarioName;
             this.DestinationRootDirectory = destinationRootDirectory;
             CreateBuildDirectoryIfNotYetExists();
         }
@@ -65,6 +69,11 @@ namespace Scenarioo.Api
             CreateDirectoryIfNotYetExists(this.GetUseCaseDirectory());
         }
 
+        private void CreateScenariooDirectoryIfNotYetExists()
+        {
+            CreateDirectoryIfNotYetExists(this.GetScenarioDirectory());
+        }
+
         private void CreateDirectoryIfNotYetExists(string directory)
         {
             this.DocuFiles.AssertRootDirectoryExists();
@@ -77,46 +86,57 @@ namespace Scenarioo.Api
 
 
 
-        private void ExecuteAsyncWrite<T>(T entity, string destBranchFile) where T : class
+        private static void ExecuteAsyncWrite<T>(T entity, string destFile) where T : class
         {
-            ScenarioDocuXMLFileUtil.Marshal(entity, destBranchFile);
+            ScenarioDocuXMLFileUtil.Marshal(entity, destFile);
         }
 
         private string GetBuildDirectory()
         {
-            return this.DocuFiles.GetBuildDirectory(this.BuildName);
+            return this.DocuFiles.GetBuildDirectory(this.buildName);
         }
 
         private string GetBranchDirectory()
         {
-            return this.DocuFiles.GetBranchDirectory(this.BuildName, this.BranchName);
+            return this.DocuFiles.GetBranchDirectory(this.buildName, this.branchName);
         }
 
         private string GetUseCaseDirectory()
         {
-            return this.DocuFiles.GetUseCaseDirectory(this.BuildName, this.BranchName, this.UseCaseName);
+            return this.DocuFiles.GetUseCaseDirectory(this.buildName, this.branchName, this.useCaseName);
+        }
+
+        private string GetScenarioDirectory()
+        {
+            return this.DocuFiles.GetScenarioDirectory(this.buildName, this.branchName, this.useCaseName, this.scenarioName);
         }
 
         public void SaveBuildDescription(build build)
         {
-            var destBuildFile = this.DocuFiles.GetBuildFile(this.BuildName);
+            var destBuildFile = this.DocuFiles.GetBuildFile(this.buildName);
             this.CreateBuildDirectoryIfNotYetExists();
             ExecuteAsyncWrite(build, destBuildFile);
         }
 
         public void SaveBranchDescription(branch branch)
         {
-            var destBranchFile = this.DocuFiles.GetBranchFile(this.BuildName, branch.name);
+            var destBranchFile = this.DocuFiles.GetBranchFile(this.buildName, branch.name);
             this.CreateBranchDirectoryIfNotYetExists();
             ExecuteAsyncWrite(branch, destBranchFile);
         }
 
         public void SaveUseCase(useCase useCase)
         {
-            var desUseCaseFile = this.DocuFiles.GetUseCaseFile(this.BuildName, this.BranchName, useCase.name);
+            var desUseCaseFile = this.DocuFiles.GetUseCaseFile(this.buildName, this.branchName, useCase.name);
             this.CreateUseCaseDirectoryIfNotYetExists();
             ExecuteAsyncWrite(useCase, desUseCaseFile);
         }
 
+        public void SaveScenario(scenario scenario)
+        {
+            var desScenarioFile = this.DocuFiles.GetScenarioFile(this.buildName, this.branchName, this.useCaseName, scenario.name);
+            this.CreateScenariooDirectoryIfNotYetExists();
+            ExecuteAsyncWrite(scenario, desScenarioFile);
+        }
     }
 }

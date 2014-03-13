@@ -25,8 +25,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ScenariooTest
 {
     using System;
-    using System.IO;
-    using System.Threading;
 
     using Scenarioo.Api;
     using Scenarioo.Model.Docu.Entities;
@@ -34,15 +32,14 @@ namespace ScenariooTest
     [TestClass]
     public class ScenarioDocuWriterAndReaderTest
     {
+        private const string BranchName = "testBranch";
 
-        private const string branchName = "testBranch";
-        private const string buildName = "testBuild";
-        private const string useCaseName = "testUseCase";
-        private const string tesCaseName = "testCase";
-        private const string testScenarioName = "testScenario";
-        private const string rootDirectory = @"c:\temp";
+        private const string BuildName = "testBuild";
+        private const string UseCaseName = "testUseCase";
+        private const string ScenarioName = "testScenario";
+        private const string RootDirectory = @"c:\temp";
 
-        private const string detailsVersionKey = "version";
+        private const string DetailsVersionKey = "version";
 
         private int TestStepIndex = 1;
         
@@ -52,8 +49,8 @@ namespace ScenariooTest
         [TestInitialize]
         public void TestInit()
         {
-            this.writer = new ScenarioDocuWriter(rootDirectory, branchName, buildName);
-            this.reader = new ScenarioDocuReader(rootDirectory);
+            this.writer = new ScenarioDocuWriter(RootDirectory, BranchName, BuildName, UseCaseName, ScenarioName);
+            this.reader = new ScenarioDocuReader(RootDirectory);
         }
 
         [TestCleanup]
@@ -69,7 +66,7 @@ namespace ScenariooTest
             // GIVEN: a typical branch
             var branch = new branch()
                                        {
-                                           name = branchName,
+                                           name = BranchName,
                                            description =
                                                "just a simple development branch, might as well be the trunk."
                                        };
@@ -79,8 +76,8 @@ namespace ScenariooTest
             writer.SaveBranchDescription(branch);
 
             // THEN: the branch can be loaded successfully and correctly
-            branch branchFromFile = reader.LoadBranch(buildName, branchName);
-            Assert.AreEqual(branchName, branchFromFile.name);
+            branch branchFromFile = reader.LoadBranch(BuildName, BranchName);
+            Assert.AreEqual(BranchName, branchFromFile.name);
             Assert.AreEqual(branch.description, branchFromFile.description);
 
         }
@@ -92,19 +89,19 @@ namespace ScenariooTest
             // GIVEN: a typical build
             var build = new build
             {
-                name = buildName,
+                name = BuildName,
                 date = new DateTime(),
                 revision = "10123",
                 status = "success",
                 details =
-                    new[] { new buildEntry() { key = detailsVersionKey, value = "1.0.1" } }
+                    new[] { new buildEntry() { key = DetailsVersionKey, value = "1.0.1" } }
             };
 
             // WHEN: the build was saved.
             writer.SaveBuildDescription(build);
 
             // THEN: the build can be loaded successfully and correctly
-            build buildFromFile = reader.LoadBuild(buildName, branchName);
+            build buildFromFile = reader.LoadBuild(BuildName, BranchName);
             Assert.AreEqual(build.name, buildFromFile.name);
 
             Assert.AreEqual(build.date, buildFromFile.date);
@@ -121,7 +118,7 @@ namespace ScenariooTest
             // GIVEN: a typical use case
             var usecase = new useCase
                               {
-                                  name = useCaseName,
+                                  name = UseCaseName,
                                   description = "this is a typical use case with a decription",
                                   status = "success",
                                   details =
@@ -133,14 +130,40 @@ namespace ScenariooTest
             writer.SaveUseCase(usecase);
 
             // THEN: the usecase can be loaded successfully and correctly
-            var useCaseFromFile = reader.LoadUseCase(buildName, branchName, useCaseName);
-            Assert.AreEqual(useCaseFromFile.name, useCaseFromFile.name);
-            Assert.AreEqual(useCaseFromFile.description, useCaseFromFile.description);
-            Assert.AreEqual(useCaseFromFile.status, useCaseFromFile.status);
-            Assert.AreEqual(useCaseFromFile.details[0].key, useCaseFromFile.details[0].key);
-            Assert.AreEqual(useCaseFromFile.details[0].value, useCaseFromFile.details[0].value);
+            var useCaseFromFile = reader.LoadUseCase(BuildName, BranchName, UseCaseName);
+            Assert.AreEqual(usecase.name, useCaseFromFile.name);
+            Assert.AreEqual(usecase.description, useCaseFromFile.description);
+            Assert.AreEqual(usecase.status, useCaseFromFile.status);
+            Assert.AreEqual(usecase.details[0].key, useCaseFromFile.details[0].key);
+            Assert.AreEqual(usecase.details[0].value, useCaseFromFile.details[0].value);
 
         }
 
+        [TestMethod]
+        public void WriteAndReadScenarioDescription()
+        {
+
+            // GIVEN: a typical scenario
+            var scenario = new scenario
+                               {
+                                   name = ScenarioName,
+                                   description = "this is a typical scenario with a decription",
+                                   status = "success",
+                                   details =
+                                       new[] { new scenarioEntry() { key = "userRole", value = "customer" } }
+                               };
+
+            // WHEN: the scenario was saved.
+            writer.SaveScenario(scenario);
+
+            // THEN: the scenario can be loaded successfully and correctly
+            scenario scenarioFromFile = reader.LoadScenario(BuildName, BranchName, UseCaseName, ScenarioName);
+            Assert.AreEqual(scenario.name, scenarioFromFile.name);
+            Assert.AreEqual(scenario.description, scenarioFromFile.description);
+            Assert.AreEqual(scenario.status, scenarioFromFile.status);
+            Assert.AreEqual(scenario.details[0].key, scenarioFromFile.details[0].key);
+            Assert.AreEqual(scenario.details[0].value, scenarioFromFile.details[0].value);
+
+        }
     }
 }

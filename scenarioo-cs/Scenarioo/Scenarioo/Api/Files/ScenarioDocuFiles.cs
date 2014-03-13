@@ -37,7 +37,7 @@ namespace Scenarioo.Api.Files
 
         private const string FileNameScenariooStep = "steps";
 
-        private const string FileNameScenarioo = "scenario.xml";
+        private const string FileNameScenario = "scenario.xml";
 
         private const string FileNameUseCase = "usecase.xml";
 
@@ -71,6 +71,11 @@ namespace Scenarioo.Api.Files
             return string.Format(@"{0}{1}{2}", GetBranchDirectory(buildName, branchName), Path.DirectorySeparatorChar, FileNameUseCase);
         }
 
+        public string GetScenarioFile(string buildName, string branchName, string useCaseName, string scenarioName)
+        {
+            return string.Format(@"{0}{1}{2}", this.GetUseCaseDirectory(buildName, branchName, useCaseName), Path.DirectorySeparatorChar, FileNameScenario);
+        }
+
 
         /// <summary>
         /// concatenate directory
@@ -83,7 +88,6 @@ namespace Scenarioo.Api.Files
             return string.Format(@"{0}{1}{2}", this.GetBuildDirectory(buildName), Path.DirectorySeparatorChar, FilesUtil.EncodeName(branchName));
         }
 
-
         public string GetBuildDirectory(string buildName)
         {
             return string.Format(@"{0}{1}{2}", this.rootDirectory, Path.DirectorySeparatorChar, buildName);
@@ -93,5 +97,11 @@ namespace Scenarioo.Api.Files
         {
             return string.Format(@"{0}{1}{2}", GetBranchDirectory(buildName, branchName), Path.DirectorySeparatorChar, useCaseName);
         }
+
+        public string GetScenarioDirectory(string buildName, string branchName, string useCaseName, string scenarioName)
+        {
+            return string.Format(@"{0}{1}{2}", this.GetUseCaseDirectory(buildName, branchName, useCaseName), Path.DirectorySeparatorChar, scenarioName);
+        }
+
     }
 }
