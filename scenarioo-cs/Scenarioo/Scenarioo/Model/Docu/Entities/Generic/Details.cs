@@ -31,7 +31,6 @@ namespace Scenarioo.Model.Docu.Entities.Generic
     [Serializable]
     public class Details: IXmlSerializable
     {
-        [XmlArray(ElementName = "type")]
         public Dictionary<string, object> Properties { get; set; }
 
         public Details()
@@ -51,7 +50,6 @@ namespace Scenarioo.Model.Docu.Entities.Generic
             }
         }
         
-
         public System.Xml.Schema.XmlSchema GetSchema()
         {
             throw new NotImplementedException();

@@ -20,15 +20,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Scenarioo.Model.Docu.Entities.Generic
 {
-    class ObjectReference
+    public class ObjectReference
     {
+        private static long serialVersionUID = 1L;
+
+        private string Name { get; set; }
+
+        private string Type { get; set; }
+
+        public ObjectReference()
+        {
+
+        }
+
+        public ObjectReference(string type, string name)
+        {
+            this.Type = type;
+            this.Name = name;
+        }
     }
 }

@@ -31,9 +31,9 @@ namespace Scenarioo.Model.Docu.Entities
 
         private long serialVersionUID = 1L;
 
-        private string Name { get; set; }
+        public string Name { get; set; }
 
-        private Details details = new Details();
+        public Details Details { get; set; }
 
         public Page()
         {
@@ -45,55 +45,5 @@ namespace Scenarioo.Model.Docu.Entities
             this.Name = name;
         }
 
-        public Details Details
-        {
-            set
-            {
-                this.details = value;
-            }
-
-            get
-            {
-                return this.details;
-            }
-        }
-
-//        public int HashCode()
-//        {
-//            const int Prime = 31;
-//            var result = 1;
-//
-//            result = Prime * result + ((this.Name == null) ? 0 : this.Name.GetHashCode());
-//            return result;
-//        }
-
-//        public bool Equals(Object obj)
-//        {
-//            if (this == obj)
-//            {
-//                return true;
-//            }
-//            if (obj == null)
-//            {
-//                return false;
-//            }
-//            if (getClass() != obj.getClass())
-//            {
-//                return false;
-//            }
-//            Page other = (Page)obj;
-//            if (name == null)
-//            {
-//                if (other.name != null)
-//                {
-//                    return false;
-//                }
-//            }
-//            else if (!name.equals(other.name))
-//            {
-//                return false;
-//            }
-//            return true;
-//        }
     }
 }

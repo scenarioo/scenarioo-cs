@@ -56,9 +56,6 @@
     <Compile Include="Model\Docu\Entities\Branch.cs" />
     <Compile Include="Model\Docu\Entities\Build.cs" />
     <Compile Include="Model\Docu\Entities\Generic\Details.cs" />
-    <Compile Include="Model\Docu\Entities\Generic\Generated\schema.cs">
-      <DependentUpon>schema.xsd</DependentUpon>
-    </Compile>
     <Compile Include="Model\Docu\Entities\Generic\ObjectDescription.cs" />
     <Compile Include="Model\Docu\Entities\Generic\ObjectList.cs" />
     <Compile Include="Model\Docu\Entities\Generic\ObjectReference.cs" />
@@ -77,7 +74,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <None Include="Model\Docu\Entities\Generic\Generated\schema.xsd">
+    <None Include="Schema\schema.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>

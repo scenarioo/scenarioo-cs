@@ -28,7 +28,20 @@ using System.Threading.Tasks;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    class StepHtml
+    public class StepHtml
     {
+        private static long serialVersionUID = 1L;
+
+        public string htmlSource = string.Empty;
+
+        public StepHtml()
+        {
+
+        }
+
+        public StepHtml(string htmlSource)
+        {
+            this.htmlSource = htmlSource;
+        }
     }
 }

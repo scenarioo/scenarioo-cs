@@ -1,5 +1,5 @@
-﻿/* scenarioo-api
- * Copyright (C) 2014, scenarioo.org Development Team
+﻿/* Scenarioo-api
+ * Copyright (C) 2014, Scenarioo.org Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -140,46 +140,46 @@ namespace Scenarioo.Api
                 this.scenarioName);
         }
 
-        public void SaveBuildDescription(build build)
+        public void SaveBuildDescription(Build build)
         {
             var destBuildFile = this.DocuFiles.GetBuildFile(this.buildName);
             this.CreateBuildDirectoryIfNotYetExists();
             ExecuteAsyncWrite(build, destBuildFile);
         }
 
-        public void SaveBranchDescription(branch branch)
+        public void SaveBranchDescription(Branch branch)
         {
-            var destBranchFile = this.DocuFiles.GetBranchFile(this.buildName, branch.name);
+            var destBranchFile = this.DocuFiles.GetBranchFile(this.buildName, branch.Name);
             this.CreateBranchDirectoryIfNotYetExists();
             ExecuteAsyncWrite(branch, destBranchFile);
         }
 
-        public void SaveUseCase(useCase useCase)
+        public void SaveUseCase(UseCase useCase)
         {
-            var desUseCaseFile = this.DocuFiles.GetUseCaseFile(this.buildName, this.branchName, useCase.name);
+            var desUseCaseFile = this.DocuFiles.GetUseCaseFile(this.buildName, this.branchName, useCase.Name);
             this.CreateUseCaseDirectoryIfNotYetExists();
             ExecuteAsyncWrite(useCase, desUseCaseFile);
         }
 
-        public void SaveScenario(scenario scenario)
+        public void SaveScenario(Scenario scenario)
         {
             var desScenarioFile = this.DocuFiles.GetScenarioFile(
                 this.buildName,
                 this.branchName,
                 this.useCaseName,
-                scenario.name);
+                scenario.Name);
             this.CreateScenariooDirectoryIfNotYetExists();
             ExecuteAsyncWrite(scenario, desScenarioFile);
         }
 
-        public void SaveStep(step step)
+        public void SaveStep(Step step)
         {
             var desScenarioStepFile = this.DocuFiles.GetScenarioStepFile(
                 this.buildName,
                 this.branchName,
                 this.useCaseName,
                 this.scenarioName,
-                scenarioStepName,
+                this.scenarioStepName,
                 stepIndex);
             this.CreateScenariooStepDirectoryIfNotYetExists();
             ExecuteAsyncWrite(step, desScenarioStepFile);

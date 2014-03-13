@@ -1,5 +1,5 @@
-﻿/* scenarioo-api
- * Copyright (C) 2014, scenarioo.org Development Team
+﻿/* Scenarioo-api
+ * Copyright (C) 2014, Scenarioo.org Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,30 +35,30 @@ namespace Scenarioo.Api
             this.docuFiles = new ScenarioDocuFiles(rootDirectory);
         }
 
-        public branch LoadBranch(string buildName, string branchName)
+        public Branch LoadBranch(string buildName, string branchName)
         {
-            return ScenarioDocuXMLFileUtil.Unmarshal<branch>(docuFiles.GetBranchFile(buildName, branchName));
+            return ScenarioDocuXMLFileUtil.Unmarshal<Branch>(docuFiles.GetBranchFile(buildName, branchName));
         }
 
-        public build LoadBuild(string buildName, string branchName)
+        public Build LoadBuild(string buildName, string branchName)
         {
-            return ScenarioDocuXMLFileUtil.Unmarshal<build>(docuFiles.GetBuildFile(buildName));
+            return ScenarioDocuXMLFileUtil.Unmarshal<Build>(docuFiles.GetBuildFile(buildName));
         }
 
-        public useCase LoadUseCase(string buildName, string branchName, string useCaseName)
+        public UseCase LoadUseCase(string buildName, string branchName, string useCaseName)
         {
             return
-                ScenarioDocuXMLFileUtil.Unmarshal<useCase>(docuFiles.GetUseCaseFile(buildName, branchName, useCaseName));
+                ScenarioDocuXMLFileUtil.Unmarshal<UseCase>(docuFiles.GetUseCaseFile(buildName, branchName, useCaseName));
         }
 
-        public scenario LoadScenario(string buildName, string branchName, string useCaseName, string scenarioName)
+        public Scenario LoadScenario(string buildName, string branchName, string useCaseName, string scenarioName)
         {
             return
-                ScenarioDocuXMLFileUtil.Unmarshal<scenario>(
+                ScenarioDocuXMLFileUtil.Unmarshal<Scenario>(
                     docuFiles.GetScenarioFile(buildName, branchName, useCaseName, scenarioName));
         }
 
-        public step LoadScenarioStep(
+        public Step LoadScenarioStep(
             string buildName,
             string branchName,
             string useCaseName,
@@ -67,7 +67,7 @@ namespace Scenarioo.Api
             int stepIndex)
         {
             return
-                ScenarioDocuXMLFileUtil.Unmarshal<step>(
+                ScenarioDocuXMLFileUtil.Unmarshal<Step>(
                     docuFiles.GetScenarioStepFile(
                         buildName,
                         branchName,

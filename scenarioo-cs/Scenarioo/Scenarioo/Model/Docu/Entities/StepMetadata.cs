@@ -28,7 +28,21 @@ using System.Threading.Tasks;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    class StepMetadata
+    using Scenarioo.Model.Docu.Entities.Generic;
+
+    public class StepMetadata
     {
+        private static long serialVersionUID = 1L;
+
+        public string VisibleText { get; set; }
+
+        public Details Details { get; set; }
+
+        public void AddDetail(string key, Object value)
+        {
+            this.Details.AddDetail(key, value);
+        }
+
+
     }
 }

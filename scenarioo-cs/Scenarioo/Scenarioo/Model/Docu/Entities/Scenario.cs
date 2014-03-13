@@ -21,10 +21,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Scenarioo.Model.Docu.Entities
 {
@@ -35,21 +31,20 @@ namespace Scenarioo.Model.Docu.Entities
 
         private static long serialVersionUID = 1L;
 
-        private string Name { get; set; }
+        public string Name { get; set; }
 
-        private string Description { get; set; }
+        public string Description { get; set; }
 
-        private string Status { get; set; }
+        public string Status { get; set; }
 
-        private Details details = new Details();
-
-        private ScenarioCalculatedData calculatedData = new ScenarioCalculatedData();
+        public Details Details { get; set; }
 
         public Scenario()
         {
             this.Name = string.Empty;
             this.Description = string.Empty;
             this.Status = string.Empty;
+            this.Details = new Details();
         }
 
         public Scenario(string name, string description, int numberOfPages, int numberOfSteps)
@@ -59,35 +54,9 @@ namespace Scenarioo.Model.Docu.Entities
             this.Description = description;
         }
 
-        public Details Details
+        public void AddDetail(string key, object value)
         {
-            get
-            {
-                return this.details;
-            }
-
-            set
-            {
-                this.details = value;
-            }
-        }
-
-        public ScenarioCalculatedData CalculatedData
-        {
-            get
-            {
-                return this.calculatedData;
-            }
-
-            set
-            {
-                this.calculatedData = value;
-            }
-        }
-
-        public void AddDetail(string key, Object value)
-        {
-            this.details.AddDetail(key, value);
+            this.Details.AddDetail(key, value);
         }
 
     }

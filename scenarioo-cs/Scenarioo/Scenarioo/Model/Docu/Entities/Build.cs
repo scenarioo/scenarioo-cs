@@ -40,7 +40,6 @@ namespace Scenarioo.Model.Docu.Entities
 
         public string Status { get; set; }
 
-        [CanBeNull]
         public Details Details { get; set; }
 
         public Build()
@@ -49,8 +48,14 @@ namespace Scenarioo.Model.Docu.Entities
         }
 
         public Build(string name)
+            : base()
         {
             this.Name = name;
+        }
+
+        public void AddDetail(string key, object value)
+        {
+            this.Details.AddDetail(key, value);
         }
 
     }

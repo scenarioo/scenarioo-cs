@@ -38,7 +38,7 @@ namespace Scenarioo.Model.Docu.Entities
 
         public string Description { get; set; }
 
-        private Details details = new Details();
+        private Details Details { get; set; }
 
         public Branch()
         {
@@ -58,17 +58,5 @@ namespace Scenarioo.Model.Docu.Entities
             this.Description = description;
         }
 
-        public Details Details
-        {
-            get
-            {
-                return this.details;
-            }
-
-            set
-            {
-                this.details = value;
-            }
-        }
     }
 }

@@ -20,15 +20,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Scenarioo.Model.Docu.Entities
 {
-    class UseCase
+    using System.Collections.Generic;
+
+    using Scenarioo.Model.Docu.Entities.Generic;
+
+    public class UseCase
     {
+
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        public string Status { get; set; }
+
+        public Details Details { get; set; }
+
+        public void AddDetail(string key, object value)
+        {
+            Details.AddDetail(key, value);
+        }
     }
 }

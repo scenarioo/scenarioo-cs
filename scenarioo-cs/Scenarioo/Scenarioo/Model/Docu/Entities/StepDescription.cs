@@ -28,7 +28,24 @@ using System.Threading.Tasks;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    class StepDescription
+    using Scenarioo.Model.Docu.Entities.Generic;
+
+    public class StepDescription
     {
+        public int Index { get; set; }
+        
+        public string Title { get; set; }
+
+        public string Status { get; set; }
+
+        public string ScreenshotFileName { get; set; }
+
+        public Details Details { get; set; }
+
+        public void AddDetails(string key, object value)
+        {
+            this.Details.AddDetail(key, value);
+        }
+
     }
 }

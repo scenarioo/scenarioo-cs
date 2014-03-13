@@ -28,7 +28,18 @@ using System.Threading.Tasks;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    class Step
+    public class Step
     {
+
+        private static long serialVersionUID = 1L;
+
+        public Page Page { get; set; }
+
+        public StepDescription StepDescription { get; set; }
+
+        public StepHtml StepHtml { get; set; }
+
+        public StepMetadata StepMetadata { get; set; }
+
     }
 }
