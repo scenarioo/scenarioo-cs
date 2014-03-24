@@ -24,22 +24,22 @@ using System;
 
 namespace Scenarioo.Model.Docu.Entities.Generic
 {
+    using System.Collections.Generic;
     using System.Xml;
     using System.Xml.Serialization;
 
     using Scenarioo.Api.Serializer;
-    using Scenarioo.Api.Util.Xml;
 
     [Serializable]
     [XmlRoot("details")]
     public class Details: IXmlSerializable
     {
 
-        public SerializableDictionary<string, object> Properties { get; set; }
+        public Dictionary<string, object> Properties { get; set; }
 
         public Details()
         {
-            this.Properties = new SerializableDictionary<string, object>();
+            this.Properties = new Dictionary<string, object>();
         }
 
         public void AddDetail(string key, object value)
@@ -77,18 +77,10 @@ namespace Scenarioo.Model.Docu.Entities.Generic
 
                 var value = this.Properties[key];
 
-                writer.WriteStartElement("value");
-                writer.WriteAttributeString("xmlns:xsi", ScenarioDocuXMLFileUtil.schemaInstanceNamespace);
-
-                if (value.GetType() == typeof(Details))
-                {
-                    writer.WriteAttributeString("xsi:type", "details");
-                }
-
-                this.Properties.SerializeDetails(writer, value);
+                GenericSerializer.Serializer(writer, value, key);
 
                 writer.WriteEndElement();
-                writer.WriteEndElement();
+
             }
 
         }

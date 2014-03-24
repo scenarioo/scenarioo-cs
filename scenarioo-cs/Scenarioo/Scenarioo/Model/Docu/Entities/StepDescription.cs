@@ -44,6 +44,7 @@ namespace Scenarioo.Model.Docu.Entities
         [XmlElement("screenshotFileName")]
         public string ScreenshotFileName { get; set; }
 
+        [XmlElement("details")]
         public Details Details { get; set; }
 
         public void AddDetails(string key, object value)

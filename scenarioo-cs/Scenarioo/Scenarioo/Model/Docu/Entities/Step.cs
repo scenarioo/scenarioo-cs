@@ -26,6 +26,8 @@ namespace Scenarioo.Model.Docu.Entities
 {
     using System.Xml.Serialization;
 
+    using Scenarioo.Api.Util.Xml;
+
     [Serializable]
     [XmlRoot("step")]
     public class Step
@@ -37,11 +39,21 @@ namespace Scenarioo.Model.Docu.Entities
         [XmlElement("stepDescription")]
         public StepDescription StepDescription { get; set; }
 
-        [XmlElement("stepHtml")]
+        [XmlElement("html")]
         public StepHtml StepHtml { get; set; }
 
-        [XmlElement("stepMetadata")]
+        [XmlElement("metadata")]
         public StepMetadata StepMetadata { get; set; }
+
+        [XmlNamespaceDeclarations]
+        public XmlSerializerNamespaces Xmlns;
+
+        public Step()
+        {
+            this.Xmlns = new XmlSerializerNamespaces();
+            this.Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
+            this.Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmklSchema);
+        }
 
     }
 }

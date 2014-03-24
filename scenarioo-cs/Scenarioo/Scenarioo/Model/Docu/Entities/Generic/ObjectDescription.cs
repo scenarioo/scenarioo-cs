@@ -51,12 +51,11 @@ namespace Scenarioo.Model.Docu.Entities.Generic
 
         public ObjectDescription()
         {
-            this.Details = new Details();
+
         }
 
         public ObjectDescription(string type, string name)
         {
-            this.Details = new Details();
             this.Type = type;
             this.Name = name;
         }

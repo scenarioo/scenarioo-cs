@@ -26,6 +26,7 @@ namespace Scenarioo.Model.Docu.Entities
 {
     using System.Xml.Serialization;
 
+    using Scenarioo.Api.Util.Xml;
     using Scenarioo.Model.Docu.Entities.Generic;
 
     [Serializable]
@@ -44,11 +45,18 @@ namespace Scenarioo.Model.Docu.Entities
         [XmlElement("status")]
         public string Status { get; set; }
 
+        [XmlElement("details")]
         public Details Details { get; set; }
+
+       
+        [XmlNamespaceDeclarations]
+        public XmlSerializerNamespaces Xmlns;
 
         public Build()
         {
-            this.Details = new Details();
+            this.Xmlns = new XmlSerializerNamespaces();
+            this.Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
+            this.Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmklSchema);
         }
 
         public Build(string name)
@@ -59,6 +67,11 @@ namespace Scenarioo.Model.Docu.Entities
 
         public void AddDetail(string key, object value)
         {
+            if (this.Details == null)
+            {
+                this.Details = new Details();    
+            }
+
             this.Details.AddDetail(key, value);
         }
 

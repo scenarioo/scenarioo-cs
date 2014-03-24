@@ -24,9 +24,72 @@ using System;
 
 namespace Scenarioo.Model.Docu.Entities.Generic
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.Xml;
+    using System.Xml.Serialization;
+
+    using Scenarioo.Model.Docu.Entities.Generic.Interface;
+
     [Serializable]
-    class ObjectTreeNode
+    public class ObjectTreeNode<T> : IObjectTreeNode<T>
     {
+        [XmlElement("details")]
+        public Details Details { get; set; }
+
+        [XmlElement("children")]
+        private List<ObjectTreeNode<T>> children;
+
+        [XmlElement("item")]
+        public T Item { get; set; }
+
+        public ObjectTreeNode()
+        {
+
+        }
+
+        public List<ObjectTreeNode<T>> Children
+        {
+            get
+            {
+                return this.children;
+            }
+        }
+
+        public ObjectTreeNode(T item)
+        {
+            this.Item = item;
+        }
+
+        public void AddDetail(string key, object value)
+        {
+            if (this.Details == null)
+            {
+                this.Details = new Details();
+            }
+
+            this.Details.AddDetail(key, value);
+        }
+
+        public void AddChild(ObjectTreeNode<T> child)
+        {
+            if (this.children == null)
+            {
+                this.children = new List<ObjectTreeNode<T>>();
+            }
+
+            this.children.Add(child);
+        }
+
+        public void AddChildren(List<ObjectTreeNode<T>> children)
+        {
+            if (children != null && children.Any())
+            {
+                this.children.AddRange(children);
+            }
+        }
 
     }
+
 }

@@ -25,23 +25,42 @@ namespace Scenarioo.Model.Docu.Entities
     using System;
     using System.Xml.Serialization;
 
+    using Scenarioo.Api.Util.Xml;
     using Scenarioo.Model.Docu.Entities.Generic;
 
     [Serializable]
     [XmlRoot("useCase")]
     public class UseCase
     {
-
+        [XmlElement("name")]
         public string Name { get; set; }
 
+        [XmlElement("description")]
         public string Description { get; set; }
 
+        [XmlElement("status")]
         public string Status { get; set; }
 
+        [XmlElement("details")]
         public Details Details { get; set; }
+
+        [XmlNamespaceDeclarations]
+        public XmlSerializerNamespaces Xmlns;
+
+        public UseCase()
+        {
+            this.Xmlns = new XmlSerializerNamespaces();
+            this.Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
+            this.Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmklSchema);
+        }
 
         public void AddDetail(string key, object value)
         {
+            if (this.Details == null)
+            {
+                this.Details = new Details();
+            }
+
             Details.AddDetail(key, value);
         }
     }

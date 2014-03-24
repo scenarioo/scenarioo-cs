@@ -23,8 +23,10 @@
 namespace Scenarioo.Model.Docu.Entities
 {
     using System;
+    using System.Runtime.InteropServices.ComTypes;
     using System.Xml.Serialization;
 
+    using Scenarioo.Api.Util.Xml;
     using Scenarioo.Model.Docu.Entities.Generic;
 
     [Serializable]
@@ -43,12 +45,19 @@ namespace Scenarioo.Model.Docu.Entities
         [XmlElement("details")]
         public Details Details { get; set; }
 
+        [XmlNamespaceDeclarations]
+        public XmlSerializerNamespaces Xmlns;
+
         public Scenario()
         {
+            // Set appropriate namespace
+            this.Xmlns = new XmlSerializerNamespaces();
+            this.Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
+            this.Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmklSchema);
+
             this.Name = string.Empty;
             this.Description = string.Empty;
             this.Status = string.Empty;
-            this.Details = new Details();
         }
 
         public Scenario(string name, string description, int numberOfPages, int numberOfSteps)
@@ -60,6 +69,11 @@ namespace Scenarioo.Model.Docu.Entities
 
         public void AddDetail(string key, object value)
         {
+            if (this.Details == null)
+            {
+                this.Details = new Details();
+            }
+
             this.Details.AddDetail(key, value);
         }
 

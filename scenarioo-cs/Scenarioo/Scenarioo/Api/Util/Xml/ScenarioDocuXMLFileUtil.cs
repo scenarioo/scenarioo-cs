@@ -36,9 +36,11 @@ namespace Scenarioo.Api.Util.Xml
 
         public static string XmlValueIdentifier = "value";
 
-        public static string schemaInstanceNamespace = "http://www.w3.org/2001/XMLSchema-instance";
+        public static string SchemaInstanceNamespace = "http://www.w3.org/2001/XMLSchema-instance";
 
-        public static string scenarioNameSpace = "http://www.scenarioo.org/scenarioo";
+        public static string ScenarioNameSpace = "http://www.scenarioo.org/scenarioo";
+
+        public static string XmklSchema = "http://www.w3.org/2001/XMLSchema";
 
         public static T Unmarshal<T>(string srcFile) where T : class
         {
@@ -46,7 +48,6 @@ namespace Scenarioo.Api.Util.Xml
             {
                 throw new FileNotFoundException(srcFile);
             }
-
 
             Lock(
                 srcFile,
@@ -85,9 +86,8 @@ namespace Scenarioo.Api.Util.Xml
                     // await ScenarioDocuXMLUtil.Marshal(entity, fs);
                     ScenarioDocuXMLUtil.Marshal(entity, fs);
                     fs.Flush();
-                    fs.Dispose();
                     fs.Close();
-
+                    fs.Dispose();
                 }
             }
             catch (Exception e)

@@ -20,46 +20,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
-
-namespace Scenarioo.Model.Docu.Entities
+namespace Scenarioo.Model.Docu.Entities.Generic.Interface
 {
-    using System.Xml.Serialization;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
 
-    using Scenarioo.Model.Docu.Entities.Generic;
-
-    [Serializable]
-    [XmlRoot("metadata")]
-    public class StepMetadata
+    public interface IObjectTreeNode<T>
     {
-        [XmlElement("visibleText")]
-        public string VisibleText { get; set; }
+        Details Details { get; set; }
 
-        private Details details = new Details();
+        List<ObjectTreeNode<T>> Children { get; }
 
-        [XmlElement("details")]
-        public Details Details
-        {
-            get
-            {
-                return this.details;
-            }
-            set
-            {
-                this.details = value;
-            }
-        }
-
-        public void AddDetail(string key, Object value)
-        {
-            if (this.Details == null)
-            {
-                this.Details = new Details();
-            }
-
-            this.Details.AddDetail(key, value);
-        }
-
-
+        T Item { get; set; }
     }
+
 }

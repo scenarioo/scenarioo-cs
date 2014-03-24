@@ -25,6 +25,8 @@ namespace Scenarioo.Api.Util.Xml
     using System;
     using System.IO;
     using System.Runtime.Serialization;
+    using System.Text;
+    using System.Xml;
     using System.Xml.Serialization;
 
     using Exception = System.Exception;
@@ -63,9 +65,11 @@ namespace Scenarioo.Api.Util.Xml
 
             try
             {
-                var serializer = new XmlSerializer(typeof(T), "http://www.scenarioo.org/scenarioo"); //, null, Int32.MaxValue, false, false, null, new ContractDataCustomResolver());
+                var utf8 = new UTF8Encoding(false);
+                var textWriter = new XmlTextWriter(st, utf8) { Indentation = 4, Formatting = Formatting.Indented };
+                var serializer = new XmlSerializer(typeof(T));
                 // await Task.Run(() => serializer.Serialize(st, entity));
-                serializer.Serialize(st, entity);
+                serializer.Serialize(textWriter, entity);
             }
             catch (SerializationException ex)
             {

@@ -25,23 +25,31 @@ namespace Scenarioo.Model.Docu.Entities
     using System;
     using System.Xml.Serialization;
 
+    using Scenarioo.Api.Util.Xml;
     using Scenarioo.Model.Docu.Entities.Generic;
 
     [Serializable]
     [XmlRoot("branch")]
     public class Branch
     {
-  
+
         [XmlElement("name")]
         public string Name { get; set; }
 
         [XmlElement("description")]
         public string Description { get; set; }
 
-        private Details Details { get; set; }
+        [XmlElement("details")]
+        public Details Details { get; set; }
+
+        [XmlNamespaceDeclarations]
+        public XmlSerializerNamespaces Xmlns;
 
         public Branch()
         {
+            this.Xmlns = new XmlSerializerNamespaces();
+            this.Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
+            this.Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmklSchema);
             this.Name = string.Empty;
         }
 
@@ -56,6 +64,16 @@ namespace Scenarioo.Model.Docu.Entities
         {
             this.Name = name;
             this.Description = description;
+        }
+
+        public void AddDetails(string key, object value)
+        {
+            if (this.Details == null)
+            {
+                this.Details = new Details();
+            }
+
+            this.Details.AddDetail(key, value);
         }
 
     }

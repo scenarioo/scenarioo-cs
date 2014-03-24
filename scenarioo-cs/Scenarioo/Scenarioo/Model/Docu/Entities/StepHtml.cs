@@ -27,7 +27,7 @@ namespace Scenarioo.Model.Docu.Entities
     using System.Xml.Serialization;
 
     [Serializable]
-    [XmlRoot("stepHtml")]
+    [XmlRoot("asdfasfasf")]
     public class StepHtml
     {
 
