@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -50,8 +51,10 @@
     <Compile Include="Api\ScenarioDocuWriter.cs" />
     <Compile Include="Api\Util\Files\AlphanumericFileComparator.cs" />
     <Compile Include="Api\Util\Files\FilesUtil.cs" />
+    <Compile Include="Api\Util\Xml\ContractDataCustomResolver.cs" />
     <Compile Include="Api\Util\Xml\ScenarioDocuXMLFileUtil.cs" />
     <Compile Include="Api\Util\Xml\ScenarioDocuXMLUtil.cs" />
+    <Compile Include="Api\Serializer\SerializableDictioniary.cs" />
     <Compile Include="Model\Docu\Derived\BuildLink.cs" />
     <Compile Include="Model\Docu\Entities\Branch.cs" />
     <Compile Include="Model\Docu\Entities\Build.cs" />
@@ -62,7 +65,6 @@
     <Compile Include="Model\Docu\Entities\Generic\ObjectTreeNode.cs" />
     <Compile Include="Model\Docu\Entities\Page.cs" />
     <Compile Include="Model\Docu\Entities\Scenario.cs" />
-    <Compile Include="Model\Docu\Entities\ScenarioCalculatedData.cs" />
     <Compile Include="Model\Docu\Entities\Step.cs" />
     <Compile Include="Model\Docu\Entities\StepDescription.cs" />
     <Compile Include="Model\Docu\Entities\StepHtml.cs" />

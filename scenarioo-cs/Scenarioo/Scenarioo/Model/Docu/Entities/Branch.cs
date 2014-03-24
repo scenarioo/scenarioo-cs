@@ -20,22 +20,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
-
 namespace Scenarioo.Model.Docu.Entities
 {
+    using System;
     using System.Xml.Serialization;
 
     using Scenarioo.Model.Docu.Entities.Generic;
 
     [Serializable]
+    [XmlRoot("branch")]
     public class Branch
     {
   
-        private long serialVersionUID = 1L;
-
+        [XmlElement("name")]
         public string Name { get; set; }
 
+        [XmlElement("description")]
         public string Description { get; set; }
 
         private Details Details { get; set; }

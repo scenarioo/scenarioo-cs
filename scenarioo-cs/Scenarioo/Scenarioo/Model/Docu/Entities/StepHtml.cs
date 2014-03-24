@@ -21,17 +21,17 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Scenarioo.Model.Docu.Entities
 {
+    using System.Xml.Serialization;
+
+    [Serializable]
+    [XmlRoot("stepHtml")]
     public class StepHtml
     {
-        private static long serialVersionUID = 1L;
 
+        [XmlElement("htmlSource")]
         public string htmlSource = string.Empty;
 
         public StepHtml()

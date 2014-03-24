@@ -21,24 +21,28 @@
  */
 
 using System;
-using System.Collections.Generic;
 
 namespace Scenarioo.Model.Docu.Entities.Generic
 {
     using System.Xml;
     using System.Xml.Serialization;
 
+    using Scenarioo.Api.Serializer;
+    using Scenarioo.Api.Util.Xml;
+
     [Serializable]
+    [XmlRoot("details")]
     public class Details: IXmlSerializable
     {
-        public Dictionary<string, object> Properties { get; set; }
+
+        public SerializableDictionary<string, object> Properties { get; set; }
 
         public Details()
         {
-            this.Properties = new Dictionary<string, object>();
+            this.Properties = new SerializableDictionary<string, object>();
         }
 
-        public void AddDetail(string key, Object value)
+        public void AddDetail(string key, object value)
         {
             if (value != null)
             {
@@ -49,30 +53,44 @@ namespace Scenarioo.Model.Docu.Entities.Generic
                 this.Properties.Remove(key);
             }
         }
-        
+
         public System.Xml.Schema.XmlSchema GetSchema()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReadXml(XmlReader reader)
         {
             throw new NotImplementedException();
         }
 
         public void WriteXml(XmlWriter writer)
         {
-            if (this.Properties == null)
+
+            foreach (var key in this.Properties.Keys)
             {
-                return;
+                writer.WriteStartElement("entry");
+
+                writer.WriteStartElement("key");
+                writer.WriteName(key);
+                writer.WriteEndElement();
+
+                var value = this.Properties[key];
+
+                writer.WriteStartElement("value");
+                writer.WriteAttributeString("xmlns:xsi", ScenarioDocuXMLFileUtil.schemaInstanceNamespace);
+
+                if (value.GetType() == typeof(Details))
+                {
+                    writer.WriteAttributeString("xsi:type", "details");
+                }
+
+                this.Properties.SerializeDetails(writer, value);
+
+                writer.WriteEndElement();
+                writer.WriteEndElement();
             }
 
-            var serializer = new XmlSerializer(this.Properties.GetType());
-            serializer.Serialize(writer, this.Properties);
-        }
-
-        public void ReadXml(XmlReader reader)
-        {
-            if (this.Properties == null)
-            {
-                this.Properties = new Dictionary<string, object>();
-            }
-            this.AddDetail(reader.ReadElementString("Key"), reader.ReadElementContentAsObject());
         }
     }
 }

@@ -24,15 +24,18 @@ using System;
 
 namespace Scenarioo.Model.Docu.Entities
 {
+    using System.Xml.Serialization;
+
     using Scenarioo.Model.Docu.Entities.Generic;
 
+    [Serializable]
+    [XmlRoot("page")]
     public class Page
     {
-
-        private long serialVersionUID = 1L;
-
+        [XmlElement("name")]
         public string Name { get; set; }
 
+        [XmlElement("details")]
         public Details Details { get; set; }
 
         public Page()

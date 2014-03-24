@@ -23,24 +23,40 @@
 namespace Scenarioo.Model.Docu.Entities.Generic
 {
     using System;
+    using System.Xml.Serialization;
 
+    [Serializable]
+    [XmlRoot("objectDescription")]
     public class ObjectDescription
     {
-        private static long serialVersionUID = 1L;
+        public string Name { get; set; }
 
-        private string Name { get; set; }
 
-        private string Type { get; set; }
+        public string Type { get; set; }
 
-        public Details Details { get; set; }
+        private Details details = new Details();
+
+        public Details Details
+        {
+            get
+            {
+                return this.details;
+            }
+            set
+            {
+                this.details = value;
+            }
+        }
+
 
         public ObjectDescription()
         {
-
+            this.Details = new Details();
         }
 
         public ObjectDescription(string type, string name)
         {
+            this.Details = new Details();
             this.Type = type;
             this.Name = name;
         }

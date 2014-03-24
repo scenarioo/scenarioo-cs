@@ -22,10 +22,13 @@
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    using System.Collections.Generic;
+    using System;
+    using System.Xml.Serialization;
 
     using Scenarioo.Model.Docu.Entities.Generic;
 
+    [Serializable]
+    [XmlRoot("useCase")]
     public class UseCase
     {
 

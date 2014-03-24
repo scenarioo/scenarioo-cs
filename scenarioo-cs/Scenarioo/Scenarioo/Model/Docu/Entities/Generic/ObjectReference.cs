@@ -22,13 +22,15 @@
 
 namespace Scenarioo.Model.Docu.Entities.Generic
 {
+    using System;
+
+    [Serializable]
     public class ObjectReference
     {
-        private static long serialVersionUID = 1L;
 
-        private string Name { get; set; }
+        public string Name { get; set; }
 
-        private string Type { get; set; }
+        public string Type { get; set; }
 
         public ObjectReference()
         {

@@ -25,13 +25,20 @@ namespace Scenarioo.Api.Util.Xml
     using System;
     using System.IO;
     using System.Threading;
-    using System.Threading.Tasks;
 
     using Exception = System.Exception;
 
     public class ScenarioDocuXMLFileUtil
     {
         private const int Buffer = 8;
+
+        public static string XmlKeyIdentifier = "key";
+
+        public static string XmlValueIdentifier = "value";
+
+        public static string schemaInstanceNamespace = "http://www.w3.org/2001/XMLSchema-instance";
+
+        public static string scenarioNameSpace = "http://www.scenarioo.org/scenarioo";
 
         public static T Unmarshal<T>(string srcFile) where T : class
         {
@@ -67,14 +74,16 @@ namespace Scenarioo.Api.Util.Xml
             }
         }
 
-        public static async Task Marshal<T>(T entity, string destFile) where T : class
+        //public static async Task Marshal<T>(T entity, string destFile) where T : class
+        public static void Marshal<T>(T entity, string destFile) where T : class
         {
             try
             {
                 using (
                     var fs = new FileStream(destFile, FileMode.Create, FileAccess.Write, FileShare.None, Buffer, true))
                 {
-                    await ScenarioDocuXMLUtil.Marshal(entity, fs);
+                    // await ScenarioDocuXMLUtil.Marshal(entity, fs);
+                    ScenarioDocuXMLUtil.Marshal(entity, fs);
                     fs.Flush();
                     fs.Dispose();
                     fs.Close();
@@ -83,7 +92,12 @@ namespace Scenarioo.Api.Util.Xml
             }
             catch (Exception e)
             {
-                throw new Exception(string.Format("Could not marshall Object of type:{0} into file:{1}", entity.GetType().Name, destFile), e);
+                throw new Exception(
+                    string.Format(
+                        "Could not marshall Object of type:{0} into file:{1}",
+                        entity.GetType().Name,
+                        destFile),
+                    e);
             }
         }
 
@@ -105,8 +119,8 @@ namespace Scenarioo.Api.Util.Xml
                 {
                     var fileSystemWatcher = new FileSystemWatcher(Path.GetDirectoryName(srcPath))
                                                 {
-                                                    EnableRaisingEvents =
-                                                        true
+                                                    EnableRaisingEvents
+                                                        = true
                                                 };
 
                     fileSystemWatcher.Changed += (o, e) =>
@@ -121,5 +135,6 @@ namespace Scenarioo.Api.Util.Xml
                 }
             }
         }
+
     }
 }

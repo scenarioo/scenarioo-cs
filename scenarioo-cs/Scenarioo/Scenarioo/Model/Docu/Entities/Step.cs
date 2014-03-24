@@ -21,24 +21,26 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Scenarioo.Model.Docu.Entities
 {
+    using System.Xml.Serialization;
+
+    [Serializable]
+    [XmlRoot("step")]
     public class Step
     {
 
-        private static long serialVersionUID = 1L;
-
+        [XmlElement("page")]
         public Page Page { get; set; }
 
+        [XmlElement("stepDescription")]
         public StepDescription StepDescription { get; set; }
 
+        [XmlElement("stepHtml")]
         public StepHtml StepHtml { get; set; }
 
+        [XmlElement("stepMetadata")]
         public StepMetadata StepMetadata { get; set; }
 
     }

@@ -26,9 +26,9 @@ namespace ScenariooTest
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     using Scenarioo.Api;
+    using Scenarioo.Api.Serializer;
     using Scenarioo.Model.Docu.Entities;
     using Scenarioo.Model.Docu.Entities.Generic;
 
@@ -135,7 +135,7 @@ namespace ScenariooTest
                                       new Details()
                                           {
                                               Properties =
-                                                  new Dictionary<string, object>()
+                                                  new SerializableDictionary<string, object>()
                                                       {
                                                         {
                                                             "webtestName",
@@ -209,7 +209,7 @@ namespace ScenariooTest
                                            new Details()
                                                {
                                                    Properties =
-                                                       new Dictionary<string, object>()
+                                                       new SerializableDictionary<string, object>()
                                                            {
                                                                {
                                                                    "mockedServicesConfiguration",
@@ -247,7 +247,6 @@ namespace ScenariooTest
         [TestMethod]
         public void WriteAndReadGenericCollectionsInDetails()
         {
-
             // GIVEN: any object containing collections in details
             var scenario = new Scenario
                                {
@@ -255,32 +254,31 @@ namespace ScenariooTest
                                    Description = "a scenario for testing collections in details"
                                };
 
-            // List of Strings
-            var list = new List<string> { "item1", "item2", "item3" };
-            scenario.Details.AddDetail("list", list);
-
-
             // Details (further maps with key value pairs for structured objects)
             var detailsMap = new Details();
-            detailsMap.AddDetail("key1", "value1");
-            detailsMap.AddDetail("key2", "value2");
             detailsMap.AddDetail("anyGenericObjectReference", new ObjectReference("serviceCall", "MainDB.getUsers"));
             detailsMap.AddDetail(
                 "anyGenericObject",
                 new ObjectDescription("configuration", "my_dummy_mocks_configuration.properties"));
+            detailsMap.AddDetail("key1", "value1");
+            detailsMap.AddDetail("key2", "value2");
 
             scenario.Details.AddDetail("map", detailsMap);
+
+            // List of Strings
+            var objList = new ObjectList<string> { "item1", "item2", "item3" };
+            scenario.Details.AddDetail("list", objList);
 
             // WHEN: the object was saved.
             writer.SaveScenario(scenario);
 
             // THEN: the collections get loaded correctly again.
-//            Scenario scenarioFromFile = reader.loadScenario(TEST_Branch_NAME, TEST_BUILD_NAME, TEST_CASE_NAME,
-//                    TEST_SCENARIO_NAME);
-//            assertEquals(list, scenarioFromFile.getDetails().getDetail("list"));
-//            assertEquals(detailsMap, scenarioFromFile.getDetails().getDetail("map"));
-//            assertEquals(scenario.getDetails(), scenarioFromFile.getDetails());
-
+            //Scenario scenarioFromFile = reader.loadScenario(TEST_Branch_NAME, TEST_BUILD_NAME, TEST_CASE_NAME,
+            //TEST_SCENARIO_NAME);
+            //assertEquals(list, scenarioFromFile.getDetails().getDetail("list"));
+            //assertEquals(detailsMap, scenarioFromFile.getDetails().getDetail("map"));
+            //assertEquals(scenario.getDetails(), scenarioFromFile.getDetails());
         }
+
     }
 }

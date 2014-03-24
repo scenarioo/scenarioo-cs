@@ -20,23 +20,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
-
 namespace Scenarioo.Model.Docu.Entities
 {
+    using System;
+    using System.Xml.Serialization;
+
     using Scenarioo.Model.Docu.Entities.Generic;
 
+    [Serializable]
+    [XmlRoot("scenario")]
     public class Scenario
     {
-
-        private static long serialVersionUID = 1L;
-
+        [XmlElement("name")]
         public string Name { get; set; }
 
+        [XmlElement("description")]
         public string Description { get; set; }
 
+        [XmlElement("status")]
         public string Status { get; set; }
 
+        [XmlElement("details")]
         public Details Details { get; set; }
 
         public Scenario()

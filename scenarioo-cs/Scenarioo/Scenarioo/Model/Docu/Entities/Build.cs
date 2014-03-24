@@ -24,20 +24,24 @@ using System;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    using Scenarioo.Annotations;
+    using System.Xml.Serialization;
+
     using Scenarioo.Model.Docu.Entities.Generic;
 
     [Serializable]
+    [XmlRoot("build")]
     public class Build
     {
-        private long serialVersionUID = 1L;
-
+        [XmlElement("name")]
         public string Name { get; set; }
 
+        [XmlElement("revision")]
         public string Revision { get; set; }
 
+        [XmlElement("date")]
         public DateTime Date { get; set; }
 
+        [XmlElement("status")]
         public string Status { get; set; }
 
         public Details Details { get; set; }

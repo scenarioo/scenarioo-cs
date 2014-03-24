@@ -21,22 +21,32 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Scenarioo.Model.Docu.Entities
 {
+    using System.Xml.Serialization;
+
     using Scenarioo.Model.Docu.Entities.Generic;
 
+    [Serializable]
+    [XmlRoot("stepMetadata")]
     public class StepMetadata
     {
-        private static long serialVersionUID = 1L;
-
         public string VisibleText { get; set; }
 
-        public Details Details { get; set; }
+        private Details details = new Details();
+
+        public Details Details
+        {
+            get
+            {
+                return this.details;
+            }
+            set
+            {
+                this.details = value;
+            }
+        }
 
         public void AddDetail(string key, Object value)
         {

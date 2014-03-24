@@ -20,15 +20,81 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Scenarioo.Model.Docu.Entities.Generic
 {
-    class ObjectList
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    public class ObjectList<T> : List<T>
     {
+        private IList<T> items = new List<T>();
+
+        public IList<T> Items
+        {
+            get
+            {
+                return this.items;
+            }
+
+            set
+            {
+                this.items = value;
+            }
+        }
+
+        public ObjectList(IList<T> items)
+        {
+            this.items = items;
+        }
+
+        public ObjectList(IEnumerable<T> items)
+        {
+            this.items = items.ToList();
+        }
+
+        public ObjectList()
+        {
+            
+        }
+
+        public override int GetHashCode()
+        {
+            const int Prime = 31;
+		    var result = 1;
+		    result = Prime * result + ((this.Items == null) ? 0 : this.Items.GetHashCode());
+		    return result;
+        }
+
+        public override bool Equals(Object obj)
+        {
+            if (this == obj)
+            {
+                return true;
+            }
+            if (obj == null)
+            {
+                return false;
+            }
+            if (this.GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            var other = (ObjectList<T>) obj;
+
+            if (items == null)
+            {
+                if (other.items != null)
+                {
+                    return false;
+                }
+            }
+            else if (!items.Equals(other.items))
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

@@ -25,7 +25,6 @@ namespace Scenarioo.Api.Util.Xml
     using System;
     using System.IO;
     using System.Runtime.Serialization;
-    using System.Threading.Tasks;
     using System.Xml.Serialization;
 
     using Exception = System.Exception;
@@ -54,7 +53,8 @@ namespace Scenarioo.Api.Util.Xml
             }
         }
 
-        public static async Task Marshal<T>(T entity, FileStream st) where T : class
+        // public static async Task Marshal<T>(T entity, FileStream st) where T : class
+        public static void Marshal<T>(T entity, FileStream st) where T : class
         {
             if (st == null || entity == null)
             {
@@ -63,12 +63,13 @@ namespace Scenarioo.Api.Util.Xml
 
             try
             {
-                var serializer = new XmlSerializer(typeof(T));
-                await Task.Run(() => serializer.Serialize(st, entity));
+                var serializer = new XmlSerializer(typeof(T), "http://www.scenarioo.org/scenarioo"); //, null, Int32.MaxValue, false, false, null, new ContractDataCustomResolver());
+                // await Task.Run(() => serializer.Serialize(st, entity));
+                serializer.Serialize(st, entity);
             }
             catch (SerializationException ex)
             {
-                throw new Exception(string.Format("Could not Marshall object of type {0}", typeof(T).Name), ex);
+                throw new Exception(string.Format("Could not marshall object of type {0}", typeof(T).Name), ex);
             }
         }
     }

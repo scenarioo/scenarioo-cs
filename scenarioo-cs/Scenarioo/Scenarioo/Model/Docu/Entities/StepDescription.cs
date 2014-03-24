@@ -21,23 +21,27 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Scenarioo.Model.Docu.Entities
 {
+    using System.Xml.Serialization;
+
     using Scenarioo.Model.Docu.Entities.Generic;
 
+    [Serializable]
+    [XmlRoot("stepDescription")]
     public class StepDescription
     {
+        [XmlElement("index")]
         public int Index { get; set; }
-        
+
+        [XmlElement("title")]
         public string Title { get; set; }
 
+        [XmlElement("status")]
         public string Status { get; set; }
 
+        [XmlElement("screenshotFileName")]
         public string ScreenshotFileName { get; set; }
 
         public Details Details { get; set; }

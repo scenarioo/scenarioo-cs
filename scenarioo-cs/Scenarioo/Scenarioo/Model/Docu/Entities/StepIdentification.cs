@@ -21,14 +21,47 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Scenarioo.Model.Docu.Entities
 {
+    using System.Xml.Serialization;
+
+    [Serializable]
+    [XmlRoot("stepIdentification")]
     class StepIdentification
     {
+        [XmlElement("useCaseName")]
+        public string UseCaseName { get; set; }
+
+        [XmlElement("scenarioName")]
+        public string ScenarioName { get; set; }
+
+        [XmlElement("pageName")]
+        public string PageName { get; set; }
+
+        [XmlElement("index")]
+        public int Index { get; set; }
+
+        [XmlElement("occurence")]
+        public int Occurence { get; set; }
+
+        [XmlElement("relativeIndex")]
+        public int RelativeIndex { get; set; }
+
+        public StepIdentification(
+            string useCaseName,
+            string scenarioName,
+            string pageName,
+            int index,
+            int occurence,
+            int relativeIndex)
+        {
+            this.UseCaseName = useCaseName;
+            this.ScenarioName = scenarioName;
+            this.PageName = pageName;
+            this.Index = index;
+            this.Occurence = occurence;
+            this.RelativeIndex = relativeIndex;
+        }
     }
 }
