@@ -29,6 +29,10 @@ namespace Scenarioo.Model.Docu.Entities.Generic
     using System.Xml.Serialization;
 
     using Scenarioo.Api.Serializer;
+    using Scenarioo.Api.Util.Xml;
+
+    using XmlAttribute = Scenarioo.Api.Util.Xml.XmlAttribute;
+    using XmlElement = Scenarioo.Api.Util.Xml.XmlElement;
 
     [Serializable]
     [XmlRoot("details")]
@@ -77,7 +81,19 @@ namespace Scenarioo.Model.Docu.Entities.Generic
 
                 var value = this.Properties[key];
 
-                GenericSerializer.Serializer(writer, value, key);
+                // Configure serializer behavior
+                var genericSerializer = new GenericSerializer();
+                genericSerializer.AddAttributeObjectBinding(
+                    new XmlAttribute(typeof(Details), "xmlns:xsi", ScenarioDocuXMLFileUtil.SchemaInstanceNamespace));
+                genericSerializer.AddAttributeObjectBinding(new XmlAttribute(typeof(Details), "xsi:type", "details"));
+                genericSerializer.AddElementObjectBinding(new XmlElement(typeof(Details), "value"), typeof(Details));
+                genericSerializer.AddElementObjectBinding(new XmlElement(typeof(ObjectDescription), "value"), typeof(ObjectDescription));
+                genericSerializer.AddElementObjectBinding(new XmlElement(typeof(ObjectReference), "value"), typeof(ObjectReference));
+                genericSerializer.AddElementObjectBinding(new XmlElement(typeof(ObjectList<>), "value"), typeof(ObjectList<>));
+                genericSerializer.SuppressProperties = false;
+                genericSerializer.DetailElementName = "value";
+
+                genericSerializer.SerializeDetails(writer, value);
 
                 writer.WriteEndElement();
 

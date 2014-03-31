@@ -25,7 +25,10 @@ using System.Text;
 
 namespace Scenarioo.Api.Util.Files
 {
+    using System.IO;
     using System.Web;
+
+    using Scenarioo.Api.Exception;
 
     public class FilesUtil
     {
@@ -43,5 +46,36 @@ namespace Scenarioo.Api.Util.Files
                     e.Message);
             }
         }
+
+
+        public static string[] GetListOfFiles(string directory)
+        {
+
+    		if (!Directory.Exists(directory))
+            {
+                throw new ResourceNotFoundException(directory);
+            }
+
+            return Directory.GetFiles(directory);
+        }
+
+        public static string[] GetListOfFilesFromSubdirs(string directory, string filename)
+        {
+
+            if (!Directory.Exists(directory))
+            {
+                throw new ResourceNotFoundException(directory);
+            }
+
+            return Directory.GetFiles(directory, "*", SearchOption.AllDirectories);
+        }
+
+        public static string[] ListFiles(string directory)
+        {
+            var files = GetListOfFiles(directory);
+            Array.Sort(files);
+            return files;
+        }
+
     }
 }

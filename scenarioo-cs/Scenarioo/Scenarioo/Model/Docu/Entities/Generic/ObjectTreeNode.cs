@@ -25,12 +25,10 @@ using System;
 namespace Scenarioo.Model.Docu.Entities.Generic
 {
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Linq;
-    using System.Xml;
     using System.Xml.Serialization;
 
-    using Scenarioo.Model.Docu.Entities.Generic.Interface;
+    using Scenarioo.Model.Docu.Entities.Generic.Interfaces;
 
     [Serializable]
     public class ObjectTreeNode<T> : IObjectTreeNode<T>
@@ -38,16 +36,26 @@ namespace Scenarioo.Model.Docu.Entities.Generic
         [XmlElement("details")]
         public Details Details { get; set; }
 
-        [XmlElement("children")]
-        private List<ObjectTreeNode<T>> children;
+        [XmlArray("children")]
+        private readonly List<ObjectTreeNode<T>> children = new List<ObjectTreeNode<T>>();
 
         [XmlElement("item")]
         public T Item { get; set; }
+
+        [XmlNamespaceDeclarations]
+        public XmlSerializerNamespaces Xmlns;
+
 
         public ObjectTreeNode()
         {
 
         }
+
+        public ObjectTreeNode(T item): base()
+        {
+            this.Item = item;
+        }
+
 
         public List<ObjectTreeNode<T>> Children
         {
@@ -55,11 +63,7 @@ namespace Scenarioo.Model.Docu.Entities.Generic
             {
                 return this.children;
             }
-        }
 
-        public ObjectTreeNode(T item)
-        {
-            this.Item = item;
         }
 
         public void AddDetail(string key, object value)
@@ -74,20 +78,24 @@ namespace Scenarioo.Model.Docu.Entities.Generic
 
         public void AddChild(ObjectTreeNode<T> child)
         {
-            if (this.children == null)
-            {
-                this.children = new List<ObjectTreeNode<T>>();
-            }
-
             this.children.Add(child);
         }
 
-        public void AddChildren(List<ObjectTreeNode<T>> children)
+        public void AddChildren(IEnumerable<ObjectTreeNode<T>> childrenValue)
         {
-            if (children != null && children.Any())
+            var objectTreeNodes = childrenValue as ObjectTreeNode<T>[] ?? childrenValue.ToArray();
+            if (objectTreeNodes.Any())
             {
-                this.children.AddRange(children);
+                this.children.AddRange(objectTreeNodes);
             }
+        }
+
+        public void AddChild(ObjectTreeNode<IObjectTreeNode<object>> childWithList)
+        {
+            this.children.Add(new ObjectTreeNode<T>()
+                                  {
+                                      Item = (T)childWithList.Item,
+                                  });
         }
 
     }

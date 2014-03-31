@@ -26,7 +26,9 @@ namespace Scenarioo.Model.Docu.Entities.Generic
     using System.Collections.Generic;
     using System.Linq;
 
-    public class ObjectList<T> : List<T>
+    using Scenarioo.Model.Docu.Entities.Generic.Interfaces;
+
+    public class ObjectList<T> : List<T>, IObjectTreeNode<T>
     {
         private IList<T> items = new List<T>();
 
@@ -95,6 +97,35 @@ namespace Scenarioo.Model.Docu.Entities.Generic
                 return false;
             }
             return true;
+        }
+
+        public Details Details
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public List<ObjectTreeNode<T>> Children
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public T Item
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

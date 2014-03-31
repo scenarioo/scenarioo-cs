@@ -56,7 +56,7 @@ namespace Scenarioo.Model.Docu.Entities
         {
             this.Xmlns = new XmlSerializerNamespaces();
             this.Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
-            this.Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmklSchema);
+            this.Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
         }
 
         public Build(string name)

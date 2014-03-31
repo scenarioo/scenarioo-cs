@@ -106,6 +106,16 @@ namespace Scenarioo.Api.Files
                 string.Format(@"{0}{1}", stepIndex.ToString(this.digitFormat), ".xml"));
         }
 
+        public string GetScreenshotFile(string buildName, string branchName, string useCaseName, string scenarioName, string scenarioStepName, int stepIndex)
+        {
+            return string.Format(
+                @"{0}{1}{2}",
+                this.GetScreenshotDirectory(buildName, branchName, useCaseName, scenarioName),
+                Path.DirectorySeparatorChar,
+                string.Format(@"{0}{1}", stepIndex.ToString(this.digitFormat), ".png"));
+        }
+
+
         /// <summary>
         /// Concatenate directory of docu files
         /// </summary>
@@ -155,6 +165,15 @@ namespace Scenarioo.Api.Files
                 this.GetScenarioDirectory(buildName, branchName, useCaseName, scenarioName),
                 Path.DirectorySeparatorChar,
                 FilesUtil.EncodeName(scenarioStepName));
+        }
+
+        private object GetScreenshotDirectory(string buildName, string branchName, string useCaseName, string scenarioName)
+        {
+            return string.Format(
+                @"{0}{1}{2}",
+                this.GetScenarioDirectory(buildName, branchName, useCaseName, scenarioName),
+                Path.DirectorySeparatorChar,
+                FilesUtil.EncodeName(FileNameScenarioScreenshot));
         }
 
         private static string CreateNumberFormatWithMinimumIntegerDigits(int minimumIntegerDigits, string digitPatern)

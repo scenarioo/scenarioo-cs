@@ -25,6 +25,8 @@ namespace Scenarioo.Model.Docu.Entities.Generic
     using System;
     using System.Xml.Serialization;
 
+    using Scenarioo.Model.Docu.Entities.Generic.Interfaces;
+
     [Serializable]
     [XmlRoot("objectDescription")]
     public class ObjectDescription
@@ -64,5 +66,6 @@ namespace Scenarioo.Model.Docu.Entities.Generic
         {
             this.Details.AddDetail(key, value);
         }
+
     }
 }

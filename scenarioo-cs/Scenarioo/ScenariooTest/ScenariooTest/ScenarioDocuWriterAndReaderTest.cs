@@ -26,11 +26,13 @@ namespace ScenariooTest
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
 
     using Scenarioo.Api;
-    using Scenarioo.Api.Serializer;
+    using Scenarioo.Api.Files;
     using Scenarioo.Model.Docu.Entities;
     using Scenarioo.Model.Docu.Entities.Generic;
+    using Scenarioo.Model.Docu.Entities.Generic.Interfaces;
 
     [TestClass]
     public class ScenarioDocuWriterAndReaderTest
@@ -49,6 +51,8 @@ namespace ScenariooTest
 
         private ScenarioDocuWriter writer;
         private ScenarioDocuReader reader;
+        private ScenarioDocuFiles docuFiles;
+        
 
         [TestInitialize]
         public void TestInit()
@@ -63,6 +67,8 @@ namespace ScenariooTest
                 StepIndex);
 
             this.reader = new ScenarioDocuReader(RootDirectory);
+
+            this.docuFiles = new ScenarioDocuFiles(RootDirectory);
         }
 
         [TestCleanup]
@@ -308,10 +314,10 @@ namespace ScenariooTest
             rootNode.AddChild(childWithObjectRef);
 
             // node three with List of Strings as item
-//            var childWithList = new ObjectTreeNode<ObjectList<object>>();
-//            var list = new ObjectList<object> { "item1", "item2", "item3" };
-//            childWithList.Item = list;
-//            rootNode.AddChild(childWithList);
+            var childWithList = new ObjectTreeNode<IObjectTreeNode<object>>();
+            var list = new ObjectList<object> { "item1", "item2", "item3" };
+            childWithList.Item = list;
+            rootNode.AddChild(childWithList);
 
             // node four with details as item
             var childWithDetails = new ObjectTreeNode<object>();
@@ -328,6 +334,71 @@ namespace ScenariooTest
 
             // WHEN: the object was saved.
             writer.SaveScenario(scenario);
+        }
+
+        [TestMethod]
+        public void AsyncWriteOfMultipleFilesAndFlush()
+        {
+
+            // GIVEN: a lot of large steps to write, that have not yet been written 
+            var steps = new Step[10];
+            for (int index = 0; index < 10; index++)
+            {
+                steps[index] = this.CreateBigDataStepForLoadTestAsyncWriting(index + 1);
+            }
+
+            var expectedFileForStep10 = docuFiles.GetScenarioStepFile(
+                BuildName,
+                BranchName,
+                UseCaseName,
+                ScenarioName,
+                ScenarioStepName,
+                10);
+
+            Assert.IsFalse(File.Exists(expectedFileForStep10));
+
+            // WHEN: saving those steps, 
+            foreach (var step in steps)
+            {
+                writer.SaveStep(step);
+            }
+
+            // THEN: the files are not created directly but asynchronously. flush will wait until all save's are finished.
+            Assert.IsFalse(File.Exists(expectedFileForStep10));
+            Assert.IsTrue(File.Exists(expectedFileForStep10));
+
+        }
+
+        private Step CreateBigDataStepForLoadTestAsyncWriting(int index)
+        {
+
+            var step = new Step();
+
+            // Description
+            var stepDescription = new StepDescription
+                                      {
+                                          Index = index,
+                                          ScreenshotFileName =
+                                              this.docuFiles.GetScreenshotFile(
+                                                  BuildName,
+                                                  BranchName,
+                                                  UseCaseName,
+                                                  ScenarioName,
+                                                  ScenarioStepName,
+                                                  index),
+                                          Title =
+                                              "this is a step with a lot of data in it such that writing should take realy long for testing async writing"
+                                      };
+
+            step.StepDescription = stepDescription;
+
+            // Metdata with a lot of details step.setMetadata(createBigMetadata());
+
+            // Page step.setPage(new Page("test.jsp"));
+
+            // HTML (lot of dummy data, just to generate big data for writing) step.setHtml(createBigHtml());
+
+            return step;
         }
     }
 }

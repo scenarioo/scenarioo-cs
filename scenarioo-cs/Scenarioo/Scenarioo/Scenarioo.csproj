@@ -54,11 +54,13 @@
     <Compile Include="Api\Util\Xml\ScenarioDocuXMLFileUtil.cs" />
     <Compile Include="Api\Util\Xml\ScenarioDocuXMLUtil.cs" />
     <Compile Include="Api\Serializer\GenericSerializer.cs" />
+    <Compile Include="Api\Util\Xml\XmlAttribute.cs" />
+    <Compile Include="Api\Util\Xml\XmlElement.cs" />
     <Compile Include="Model\Docu\Derived\BuildLink.cs" />
     <Compile Include="Model\Docu\Entities\Branch.cs" />
     <Compile Include="Model\Docu\Entities\Build.cs" />
     <Compile Include="Model\Docu\Entities\Generic\Details.cs" />
-    <Compile Include="Model\Docu\Entities\Generic\Interface\IObjectTreeNode.cs" />
+    <Compile Include="Model\Docu\Entities\Generic\Interfaces\IObjectTreeNode.cs" />
     <Compile Include="Model\Docu\Entities\Generic\ObjectDescription.cs" />
     <Compile Include="Model\Docu\Entities\Generic\ObjectList.cs" />
     <Compile Include="Model\Docu\Entities\Generic\ObjectReference.cs" />

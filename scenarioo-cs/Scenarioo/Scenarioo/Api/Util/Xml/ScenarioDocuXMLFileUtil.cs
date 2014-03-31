@@ -25,6 +25,7 @@ namespace Scenarioo.Api.Util.Xml
     using System;
     using System.IO;
     using System.Threading;
+    using System.Threading.Tasks;
 
     using Exception = System.Exception;
 
@@ -40,7 +41,7 @@ namespace Scenarioo.Api.Util.Xml
 
         public static string ScenarioNameSpace = "http://www.scenarioo.org/scenarioo";
 
-        public static string XmklSchema = "http://www.w3.org/2001/XMLSchema";
+        public static string XmlSchema = "http://www.w3.org/2001/XMLSchema";
 
         public static T Unmarshal<T>(string srcFile) where T : class
         {
@@ -75,16 +76,14 @@ namespace Scenarioo.Api.Util.Xml
             }
         }
 
-        //public static async Task Marshal<T>(T entity, string destFile) where T : class
-        public static void Marshal<T>(T entity, string destFile) where T : class
+        public static async Task Marshal<T>(T entity, string destFile) where T : class
         {
             try
             {
                 using (
                     var fs = new FileStream(destFile, FileMode.Create, FileAccess.Write, FileShare.None, Buffer, true))
                 {
-                    // await ScenarioDocuXMLUtil.Marshal(entity, fs);
-                    ScenarioDocuXMLUtil.Marshal(entity, fs);
+                    await ScenarioDocuXMLUtil.Marshal(entity, fs);
                     fs.Flush();
                     fs.Close();
                     fs.Dispose();
