@@ -44,6 +44,7 @@ namespace Scenarioo.Model.Docu.Entities
             {
                 return this.details;
             }
+
             set
             {
                 this.details = value;
@@ -52,11 +53,6 @@ namespace Scenarioo.Model.Docu.Entities
 
         public void AddDetail(string key, Object value)
         {
-            if (this.Details == null)
-            {
-                this.Details = new Details();
-            }
-
             this.Details.AddDetail(key, value);
         }
 

@@ -27,21 +27,21 @@ namespace Scenarioo.Model.Docu.Entities
     using System.Xml.Serialization;
 
     [Serializable]
-    [XmlRoot("asdfasfasf")]
+    [XmlRoot("stepHtml")]
     public class StepHtml
     {
 
         [XmlElement("htmlSource")]
-        public string htmlSource = string.Empty;
+        public string HtmlSource { get; set; }
 
         public StepHtml()
         {
-
+            this.HtmlSource = string.Empty;
         }
 
         public StepHtml(string htmlSource)
         {
-            this.htmlSource = htmlSource;
+            this.HtmlSource = htmlSource;
         }
     }
 }

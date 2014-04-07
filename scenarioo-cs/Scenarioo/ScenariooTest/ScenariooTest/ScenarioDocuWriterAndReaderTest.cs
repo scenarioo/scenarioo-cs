@@ -27,6 +27,7 @@ namespace ScenariooTest
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Text;
 
     using Scenarioo.Api;
     using Scenarioo.Api.Files;
@@ -40,9 +41,13 @@ namespace ScenariooTest
         private const string BranchName = "testBranch";
 
         private const string BuildName = "testBuild";
+
         private const string UseCaseName = "testCase";
+
         private const string ScenarioName = "testScenario";
+
         private const string ScenarioStepName = "step";
+
         private const string RootDirectory = @"c:\temp";
 
         private const string DetailsVersionKey = "version";
@@ -50,31 +55,31 @@ namespace ScenariooTest
         private const int StepIndex = 1;
 
         private ScenarioDocuWriter writer;
+
         private ScenarioDocuReader reader;
+
         private ScenarioDocuFiles docuFiles;
-        
+
 
         [TestInitialize]
         public void TestInit()
         {
+
             this.writer = new ScenarioDocuWriter(
                 RootDirectory,
                 BranchName,
-                BuildName,
-                UseCaseName,
-                ScenarioName,
-                ScenarioStepName,
-                StepIndex);
+                BuildName);
 
             this.reader = new ScenarioDocuReader(RootDirectory);
 
             this.docuFiles = new ScenarioDocuFiles(RootDirectory);
+
         }
 
         [TestCleanup]
         public void TestCleanUp()
         {
-     
+
         }
 
         [TestMethod]
@@ -82,20 +87,20 @@ namespace ScenariooTest
         {
 
             // GIVEN: a typical Branch
-            var branch = new Branch {
-                                           Name = BranchName,
-                                           Description =
-                                               "just a simple development Branch, might as well be the trunk."
-                                       };
+            var branch = new Branch
+                             {
+                                 Name = BranchName,
+                                 Description = "just a simple development Branch, might as well be the trunk."
+                             };
 
 
             // WHEN: the Branch was saved.
             writer.SaveBranchDescription(branch);
 
             // THEN: the Branch can be loaded successfully and correctly
-//            Branch BranchFromFile = reader.LoadBranch(BuildName, BranchName);
-//            Assert.AreEqual(BranchName, BranchFromFile.Name);
-//            Assert.AreEqual(branch.Description, BranchFromFile.Description);
+            var branchFromFile = this.reader.LoadBranch(BuildName, BranchName);
+            Assert.AreEqual(BranchName, branchFromFile.Name);
+            Assert.AreEqual(branch.Description, branchFromFile.Description);
 
         }
 
@@ -104,13 +109,7 @@ namespace ScenariooTest
         {
 
             // GIVEN: a typical Build
-            var build = new Build
-            {
-                Name = BuildName,
-                Date = DateTime.Today,
-                Revision = "10123",
-                Status = "success"
-           };
+            var build = new Build { Name = BuildName, Date = DateTime.Today, Revision = "10123", Status = "success" };
 
             build.AddDetail(DetailsVersionKey, "1.0.1");
 
@@ -120,7 +119,7 @@ namespace ScenariooTest
             // THEN: the Build can be loaded successfully and correctly
 //            var buildFromFile = reader.LoadBuild(BuildName, BranchName);
 //            Assert.AreEqual(build.Name, buildFromFile.Name);
-//
+            
 //            Assert.AreEqual(build.Date, buildFromFile.Date);
 //            Assert.AreEqual(build.Revision, buildFromFile.Revision);
 //            Assert.AreEqual(build.Status, buildFromFile.Status);
@@ -137,30 +136,20 @@ namespace ScenariooTest
                                   Name = UseCaseName,
                                   Description = "this is a typical use case with a decription",
                                   Status = "success",
-                                  Details =
-                                      new Details()
-                                          {
-                                              Properties =
-                                                  new Dictionary<string, object>()
-                                                      {
-                                                        {
-                                                            "webtestName",
-                                                            "UseCaseWebTest"
-                                                        }
-                                                      }
-                                          }
                               };
+
+            usecase.AddDetail("webtestName", "UseCaseWebTest");
 
             // WHEN: the usecase was saved.
             writer.SaveUseCase(usecase);
 
             // THEN: the usecase can be loaded successfully and correctly
-//            var useCaseFromFile = reader.LoadUseCase(BuildName, BranchName, UseCaseName);
-//            Assert.AreEqual(usecase.Name, useCaseFromFile.Name);
-//            Assert.AreEqual(usecase.Description, useCaseFromFile.Description);
-//            Assert.AreEqual(usecase.Status, useCaseFromFile.Status);
-//            Assert.AreEqual(usecase.Details.Properties.Keys, useCaseFromFile.Details.Properties.Keys);
-//            Assert.AreEqual(usecase.Details.Properties.Values, useCaseFromFile.Details.Properties.Values);
+            //            var useCaseFromFile = reader.LoadUseCase(BuildName, BranchName, UseCaseName);
+            //            Assert.AreEqual(usecase.Name, useCaseFromFile.Name);
+            //            Assert.AreEqual(usecase.Description, useCaseFromFile.Description);
+            //            Assert.AreEqual(usecase.Status, useCaseFromFile.Status);
+            //            Assert.AreEqual(usecase.Details.Properties.Keys, useCaseFromFile.Details.Properties.Keys);
+            //            Assert.AreEqual(usecase.Details.Properties.Values, useCaseFromFile.Details.Properties.Values);
 
         }
 
@@ -179,15 +168,15 @@ namespace ScenariooTest
             scenario.AddDetail("userRole", "customer");
 
             // WHEN: the scenario was saved.
-            writer.SaveScenario(scenario);
+            writer.SaveScenario(UseCaseName, scenario);
 
             // THEN: the scenario can be loaded successfully and correctly
-//            var scenarioFromFile = reader.LoadScenario(BuildName, BranchName, UseCaseName, ScenarioName);
-//            Assert.AreEqual(scenario.Name, scenarioFromFile.Name);
-//            Assert.AreEqual(scenario.Description, scenarioFromFile.Description);
-//            Assert.AreEqual(scenario.Status, scenarioFromFile.Status);
-//            Assert.AreEqual(scenario.Details.Properties.Keys, scenarioFromFile.Details.Properties.Keys);
-//            Assert.AreEqual(scenario.Details.Properties.Values, scenarioFromFile.Details.Properties.Values);
+            //            var scenarioFromFile = reader.LoadScenario(BuildName, BranchName, UseCaseName, ScenarioName);
+            //            Assert.AreEqual(scenario.Name, scenarioFromFile.Name);
+            //            Assert.AreEqual(scenario.Description, scenarioFromFile.Description);
+            //            Assert.AreEqual(scenario.Status, scenarioFromFile.Status);
+            //            Assert.AreEqual(scenario.Details.Properties.Keys, scenarioFromFile.Details.Properties.Keys);
+            //            Assert.AreEqual(scenario.Details.Properties.Values, scenarioFromFile.Details.Properties.Values);
 
         }
 
@@ -197,56 +186,40 @@ namespace ScenariooTest
 
             // GIVEN: a typical step
             var step = new Step();
-            var stepDescription = new StepDescription
-                                      {
-                                          Index =  StepIndex,
-                                          Title = "Test Step",
-                                          Status = "success"
-                                      };
+            var stepDescription = new StepDescription { Index = StepIndex, Title = "Test Step", Status = "success" };
             step.StepDescription = stepDescription;
 
-            step.StepHtml = new StepHtml { htmlSource = "<html>just some page text</html>" };
-            step.Page = new Page { Name = "customer/overview.jsp"};
+            step.StepHtml = new StepHtml { HtmlSource = "<html>just some page text</html>" };
+            step.Page = new Page { Name = "customer/overview.jsp" };
 
-            var stepMetadata = new StepMetadata
+            step.StepMetadata = new StepMetadata
                                    {
                                        VisibleText = "just some page text",
-                                       Details =
-                                           new Details()
-                                               {
-                                                   Properties =
-                                                       new Dictionary<string, object>()
-                                                           {
-                                                               {
-                                                                   "mockedServicesConfiguration",
-                                                                   "dummy_config_xy.properties"
-                                                               }
-                                                           }
-                                               }
                                    };
-            step.StepMetadata = stepMetadata;
+
+            step.StepMetadata.AddDetail("mockedServicesConfiguration", "dummy_config_xy.properties");
 
             // WHEN: the step was saved.
-            writer.SaveStep(step);
+            writer.SaveStep(UseCaseName, ScenarioName, step);
 
             // THEN: the step can be loaded successfully and correctly
-//            var stepFromFile = reader.LoadScenarioStep(
-//                BuildName,
-//                BranchName,
-//                UseCaseName,
-//                ScenarioName,
-//                ScenarioStepName,
-//                StepIndex);
+            //            var stepFromFile = reader.LoadScenarioStep(
+            //                BuildName,
+            //                BranchName,
+            //                UseCaseName,
+            //                ScenarioName,
+            //                ScenarioStepName,
+            //                StepIndex);
 
-//            Assert.AreEqual(StepIndex, stepFromFile.StepDescription.Index);
-//            Assert.AreEqual(step.StepDescription.Title, stepFromFile.StepDescription.Title);
-//            Assert.AreEqual(step.StepDescription.Status,stepFromFile.StepDescription.Status);
-//            Assert.AreEqual(step.StepHtml.htmlSource, stepFromFile.StepHtml.htmlSource);
-//            Assert.AreEqual(step.Page.Name, stepFromFile.Page.Name);
-//            Assert.AreEqual(
-//                step.StepMetadata.Details.Properties.Keys,
-//                stepFromFile.StepMetadata.Details.Properties.Keys);
-//            Assert.AreEqual(step.StepMetadata.Details.Properties.Values, stepFromFile.StepMetadata.Details.Properties.Values);
+            //            Assert.AreEqual(StepIndex, stepFromFile.StepDescription.Index);
+            //            Assert.AreEqual(step.StepDescription.Title, stepFromFile.StepDescription.Title);
+            //            Assert.AreEqual(step.StepDescription.Status,stepFromFile.StepDescription.Status);
+            //            Assert.AreEqual(step.StepHtml.htmlSource, stepFromFile.StepHtml.htmlSource);
+            //            Assert.AreEqual(step.Page.Name, stepFromFile.Page.Name);
+            //            Assert.AreEqual(
+            //                step.StepMetadata.Details.Properties.Keys,
+            //                stepFromFile.StepMetadata.Details.Properties.Keys);
+            //            Assert.AreEqual(step.StepMetadata.Details.Properties.Values, stepFromFile.StepMetadata.Details.Properties.Values);
 
         }
 
@@ -276,7 +249,7 @@ namespace ScenariooTest
             scenario.Details.AddDetail("list", objList);
 
             // WHEN: the object was saved.
-            writer.SaveScenario(scenario);
+            writer.SaveScenario(UseCaseName, scenario);
 
             // THEN: the collections get loaded correctly again.
             //Scenario scenarioFromFile = reader.loadScenario(TEST_Branch_NAME, TEST_BUILD_NAME, TEST_CASE_NAME,
@@ -298,7 +271,9 @@ namespace ScenariooTest
 
             // Root node with string as item
             var rootNode = new ObjectTreeNode<object> { Item = "Root" };
-            rootNode.AddDetail("detailKey", "Tree nodes can have again details, use same serialization as already tested!");
+            rootNode.AddDetail(
+                "detailKey",
+                "Tree nodes can have again details, use same serialization as already tested!");
 
             // node one with object description as item
             var childWithObject = new ObjectTreeNode<object>();
@@ -325,15 +300,16 @@ namespace ScenariooTest
             detailsMap.AddDetail("key1", "value1");
             detailsMap.AddDetail("key2", "value2");
             detailsMap.AddDetail("anyGenericObjectReference", new ObjectReference("serviceCall", "MainDB.getUsers"));
-            detailsMap.AddDetail("anyGenericObject", new ObjectDescription("configuration",
-                    "my_dummy_mocks_configuration.properties"));
+            detailsMap.AddDetail(
+                "anyGenericObject",
+                new ObjectDescription("configuration", "my_dummy_mocks_configuration.properties"));
             childWithDetails.Item = detailsMap;
             rootNode.AddChild(childWithDetails);
 
             scenario.AddDetail("exampleTree", rootNode);
 
             // WHEN: the object was saved.
-            writer.SaveScenario(scenario);
+            writer.SaveScenario(UseCaseName, scenario);
         }
 
         [TestMethod]
@@ -342,31 +318,33 @@ namespace ScenariooTest
 
             // GIVEN: a lot of large steps to write, that have not yet been written 
             var steps = new Step[10];
-            for (int index = 0; index < 10; index++)
+            for (var index = 0; index < 10; index++)
             {
                 steps[index] = this.CreateBigDataStepForLoadTestAsyncWriting(index + 1);
             }
 
-            var expectedFileForStep10 = docuFiles.GetScenarioStepFile(
+            var expectedFileForSteps = docuFiles.GetScenarioStepFile(
                 BuildName,
                 BranchName,
                 UseCaseName,
                 ScenarioName,
-                ScenarioStepName,
                 10);
 
-            Assert.IsFalse(File.Exists(expectedFileForStep10));
+            if (File.Exists(expectedFileForSteps))
+            {
+                File.Delete(expectedFileForSteps);
+            }
+
+            Assert.IsFalse(File.Exists(expectedFileForSteps));
 
             // WHEN: saving those steps, 
             foreach (var step in steps)
             {
-                writer.SaveStep(step);
+                writer.SaveStep(UseCaseName, ScenarioName, step);
             }
 
             // THEN: the files are not created directly but asynchronously. flush will wait until all save's are finished.
-            Assert.IsFalse(File.Exists(expectedFileForStep10));
-            Assert.IsTrue(File.Exists(expectedFileForStep10));
-
+            Assert.IsTrue(File.Exists(expectedFileForSteps));
         }
 
         private Step CreateBigDataStepForLoadTestAsyncWriting(int index)
@@ -387,18 +365,50 @@ namespace ScenariooTest
                                                   ScenarioStepName,
                                                   index),
                                           Title =
-                                              "this is a step with a lot of data in it such that writing should take realy long for testing async writing"
+                                              "this is a step with a lot of data in it such that writing should take realy long for testing async writing\n"
                                       };
 
             step.StepDescription = stepDescription;
 
-            // Metdata with a lot of details step.setMetadata(createBigMetadata());
+            // Metdata with a lot of details 
+            step.StepMetadata = CreateBigMetadata();
 
-            // Page step.setPage(new Page("test.jsp"));
+            // Page 
+            step.Page = new Page("test.jsp");
 
-            // HTML (lot of dummy data, just to generate big data for writing) step.setHtml(createBigHtml());
+            // HTML (lot of dummy data, just to generate big data for writing) 
+            step.StepHtml = this.CreateBigHtml();
 
             return step;
+        }
+
+        public StepHtml CreateBigHtml()
+        {
+
+            var builder = new StringBuilder();
+            builder.Append("<html><head></head><body>");
+            builder.Append(
+                "<p>This is just a dummy html code with lot of content to generate a lot of big data to write for load testing.<p>");
+            for (int i = 0; i < 1000; i++)
+            {
+                builder.Append(
+                    "<div class=\"dummyParagraph" + i
+                    + "\">This is just a dummy html code with lot of content to generate a lot of big data to write for load testing.</div>");
+            }
+            builder.Append("</body></html>");
+
+            var html = new StepHtml { HtmlSource = builder.ToString() };
+            return html;
+        }
+
+        private StepMetadata CreateBigMetadata()
+        {
+            var stepMetadata = new StepMetadata();
+            for (var i = 0; i < 1000; i++)
+            {
+                stepMetadata.Details.AddDetail("detail" + i, "just a detail to produce a lot of data that needs marshalling and writing.");
+            }
+            return stepMetadata;
         }
     }
 }

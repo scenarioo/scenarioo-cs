@@ -70,7 +70,6 @@ namespace Scenarioo.Api.Util.Xml
                 var desirializedObject = ScenarioDocuXMLUtil.Unmarshal<T>(fs);
                 fs.Flush();
                 fs.Close();
-                fs.Dispose();
 
                 return desirializedObject;
             }
@@ -78,27 +77,34 @@ namespace Scenarioo.Api.Util.Xml
 
         public static async Task Marshal<T>(T entity, string destFile) where T : class
         {
-            try
+            Lock(
+                destFile,
+                (f) =>
+                    {
+                        try
+                        {
+                            var cbuffer = new byte[] { };
+                            f.Write(cbuffer, 0, cbuffer.Length);
+                        }
+                        catch (IOException e)
+                        {
+                            throw new Exception(
+                                string.Format(
+                                    "Could not marshall Object of type:{0} into file:{1}",
+                                    entity.GetType().Name,
+                                    destFile),
+                                e);
+                        }
+                    });
+
+            using (var fs = new FileStream(destFile, FileMode.Create, FileAccess.Write, FileShare.None, Buffer, true))
             {
-                using (
-                    var fs = new FileStream(destFile, FileMode.Create, FileAccess.Write, FileShare.None, Buffer, true))
-                {
-                    await ScenarioDocuXMLUtil.Marshal(entity, fs);
-                    fs.Flush();
-                    fs.Close();
-                    fs.Dispose();
-                }
-            }
-            catch (Exception e)
-            {
-                throw new Exception(
-                    string.Format(
-                        "Could not marshall Object of type:{0} into file:{1}",
-                        entity.GetType().Name,
-                        destFile),
-                    e);
+                await ScenarioDocuXMLUtil.Marshal(entity, fs);
+                fs.Flush();
+                fs.Close();
             }
         }
+
 
         public static void Lock(string srcPath, Action<FileStream> action)
         {

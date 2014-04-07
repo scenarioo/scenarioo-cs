@@ -34,9 +34,9 @@ namespace Scenarioo.Api.Files
 
         private const string FileNameBuild = "build.xml";
 
-        private const string FileNameScenarioScreenshot = "screenshots";
+        private const string DirectoryNameScenarioScreenshot = "screenshots";
 
-        private const string FileNameScenarioStep = "steps";
+        private const string DirectoryNameScenarioSteps = "steps";
 
         private const string FileNameScenario = "scenario.xml";
 
@@ -97,11 +97,11 @@ namespace Scenarioo.Api.Files
                 FileNameScenario);
         }
 
-        public string GetScenarioStepFile(string buildName, string branchName, string useCaseName, string scenarioName, string scenarioStepName, int stepIndex)
+        public string GetScenarioStepFile(string buildName, string branchName, string useCaseName, string scenarioName, int stepIndex)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.GetScenarioStepDirectory(buildName, branchName, useCaseName, scenarioName, scenarioStepName),
+                this.GetScenarioStepDirectory(buildName, branchName, useCaseName, scenarioName),
                 Path.DirectorySeparatorChar,
                 string.Format(@"{0}{1}", stepIndex.ToString(this.digitFormat), ".xml"));
         }
@@ -158,13 +158,13 @@ namespace Scenarioo.Api.Files
                 FilesUtil.EncodeName(scenarioName));
         }
 
-        public string GetScenarioStepDirectory(string buildName, string branchName, string useCaseName, string scenarioName, string scenarioStepName)
+        public string GetScenarioStepDirectory(string buildName, string branchName, string useCaseName, string scenarioName)
         {
             return string.Format(
                 @"{0}{1}{2}",
                 this.GetScenarioDirectory(buildName, branchName, useCaseName, scenarioName),
                 Path.DirectorySeparatorChar,
-                FilesUtil.EncodeName(scenarioStepName));
+                FilesUtil.EncodeName(DirectoryNameScenarioSteps));
         }
 
         private object GetScreenshotDirectory(string buildName, string branchName, string useCaseName, string scenarioName)
@@ -173,7 +173,7 @@ namespace Scenarioo.Api.Files
                 @"{0}{1}{2}",
                 this.GetScenarioDirectory(buildName, branchName, useCaseName, scenarioName),
                 Path.DirectorySeparatorChar,
-                FilesUtil.EncodeName(FileNameScenarioScreenshot));
+                FilesUtil.EncodeName(DirectoryNameScenarioScreenshot));
         }
 
         private static string CreateNumberFormatWithMinimumIntegerDigits(int minimumIntegerDigits, string digitPatern)

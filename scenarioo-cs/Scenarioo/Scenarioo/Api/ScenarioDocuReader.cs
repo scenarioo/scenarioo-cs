@@ -73,7 +73,6 @@ namespace Scenarioo.Api
                         branchName,
                         useCaseName,
                         scenarioName,
-                        scenarioStepName,
                         stepIndex));
         }
 
