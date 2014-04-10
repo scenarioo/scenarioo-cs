@@ -47,11 +47,9 @@ namespace Scenarioo.Api.Util.Files
             }
         }
 
-
         public static string[] GetListOfFiles(string directory)
         {
-
-    		if (!Directory.Exists(directory))
+            if (!Directory.Exists(directory))
             {
                 throw new ResourceNotFoundException(directory);
             }
@@ -61,7 +59,6 @@ namespace Scenarioo.Api.Util.Files
 
         public static string[] GetListOfFilesFromSubdirs(string directory, string filename)
         {
-
             if (!Directory.Exists(directory))
             {
                 throw new ResourceNotFoundException(directory);
@@ -76,6 +73,5 @@ namespace Scenarioo.Api.Util.Files
             Array.Sort(files);
             return files;
         }
-
     }
 }

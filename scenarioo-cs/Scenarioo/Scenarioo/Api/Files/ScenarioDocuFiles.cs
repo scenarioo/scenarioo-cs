@@ -61,58 +61,63 @@ namespace Scenarioo.Api.Files
             }
         }
 
-        public string GetBranchFile(string buildName, string branchName)
+        public string GetBranchFile(string branchName)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.GetBranchDirectory(buildName, branchName),
+                this.GetBranchDirectory(branchName),
                 Path.DirectorySeparatorChar,
                 FileNameBranch);
         }
 
-        public string GetBuildFile(string buildName)
+        public string GetBuildFile(string branchName, string buildName)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.GetBuildDirectory(buildName),
+                this.GetBuildDirectory(branchName, buildName),
                 Path.DirectorySeparatorChar,
                 FileNameBuild);
         }
 
-        public string GetUseCaseFile(string buildName, string branchName, string useCaseName)
+        public string GetUseCaseFile(string branchName, string buildName, string useCaseName)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.GetUseCaseDirectory(buildName, branchName, useCaseName),
+                this.GetUseCaseDirectory(branchName, buildName, useCaseName),
                 Path.DirectorySeparatorChar,
                 FileNameUseCase);
         }
 
-        public string GetScenarioFile(string buildName, string branchName, string useCaseName, string scenarioName)
+        public string GetScenarioFile(string branchName, string buildName, string useCaseName, string scenarioName)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.GetScenarioDirectory(buildName, branchName, useCaseName, scenarioName),
+                this.GetScenarioDirectory(branchName, buildName, useCaseName, scenarioName),
                 Path.DirectorySeparatorChar,
                 FileNameScenario);
         }
 
-        public string GetScenarioStepFile(string buildName, string branchName, string useCaseName, string scenarioName, int stepIndex)
+        public string GetScenarioStepFile(string branchName, string buildName, string useCaseName, string scenarioName, int stepIndex)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.GetScenarioStepDirectory(buildName, branchName, useCaseName, scenarioName),
+                this.GetScenarioStepDirectory(branchName, buildName, useCaseName, scenarioName),
                 Path.DirectorySeparatorChar,
                 string.Format(@"{0}{1}", stepIndex.ToString(this.digitFormat), ".xml"));
         }
 
-        public string GetScreenshotFile(string buildName, string branchName, string useCaseName, string scenarioName, string scenarioStepName, int stepIndex)
+        public string GetScreenshotFile(string branchName, string buildName, string useCaseName, string scenarioName, int stepIndex)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.GetScreenshotDirectory(buildName, branchName, useCaseName, scenarioName),
+                this.GetScreenshotDirectory(branchName, buildName, useCaseName, scenarioName),
                 Path.DirectorySeparatorChar,
                 string.Format(@"{0}{1}", stepIndex.ToString(this.digitFormat), ".png"));
+        }
+
+        public string GetScreenshotFileName(int stepIndex)
+        {
+            return string.Format(@"{0}{1}", stepIndex.ToString(this.digitFormat), ".png");
         }
 
 
@@ -122,56 +127,56 @@ namespace Scenarioo.Api.Files
         /// <param name="buildName"></param>
         /// <param name="branchName"></param>
         /// <returns></returns>
-        public string GetBranchDirectory(string buildName, string branchName)
+        public string GetBuildDirectory(string branchName, string buildName)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.GetBuildDirectory(buildName),
+                this.GetBranchDirectory(branchName),
                 Path.DirectorySeparatorChar,
-                FilesUtil.EncodeName(branchName));
+                FilesUtil.EncodeName(buildName));
         }
 
-        public string GetBuildDirectory(string buildName)
+        public string GetBranchDirectory(string branchName)
         {
             return string.Format(
                 @"{0}{1}{2}",
                 this.rootDirectory,
                 Path.DirectorySeparatorChar,
-                FilesUtil.EncodeName(buildName));
+                FilesUtil.EncodeName(branchName));
         }
 
-        public string GetUseCaseDirectory(string buildName, string branchName, string useCaseName)
+        public string GetUseCaseDirectory(string branchName, string buildName, string useCaseName)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                GetBranchDirectory(buildName, branchName),
+                this.GetBuildDirectory(branchName, buildName),
                 Path.DirectorySeparatorChar,
                 FilesUtil.EncodeName(useCaseName));
         }
 
-        public string GetScenarioDirectory(string buildName, string branchName, string useCaseName, string scenarioName)
+        public string GetScenarioDirectory(string branchName, string buildName, string useCaseName, string scenarioName)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.GetUseCaseDirectory(buildName, branchName, useCaseName),
+                this.GetUseCaseDirectory(branchName, buildName, useCaseName),
                 Path.DirectorySeparatorChar,
                 FilesUtil.EncodeName(scenarioName));
         }
 
-        public string GetScenarioStepDirectory(string buildName, string branchName, string useCaseName, string scenarioName)
+        public string GetScenarioStepDirectory(string branchName, string buildName, string useCaseName, string scenarioName)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.GetScenarioDirectory(buildName, branchName, useCaseName, scenarioName),
+                this.GetScenarioDirectory(branchName, buildName, useCaseName, scenarioName),
                 Path.DirectorySeparatorChar,
                 FilesUtil.EncodeName(DirectoryNameScenarioSteps));
         }
 
-        private object GetScreenshotDirectory(string buildName, string branchName, string useCaseName, string scenarioName)
+        public string GetScreenshotDirectory(string branchName, string buildName, string useCaseName, string scenarioName)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.GetScenarioDirectory(buildName, branchName, useCaseName, scenarioName),
+                this.GetScenarioDirectory(branchName, buildName, useCaseName, scenarioName),
                 Path.DirectorySeparatorChar,
                 FilesUtil.EncodeName(DirectoryNameScenarioScreenshot));
         }
@@ -187,6 +192,7 @@ namespace Scenarioo.Api.Files
 
             return string.Concat(format.ToArray());
         }
+
     }
 
 }

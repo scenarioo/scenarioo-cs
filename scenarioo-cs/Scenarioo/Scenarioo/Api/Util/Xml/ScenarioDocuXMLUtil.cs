@@ -34,7 +34,7 @@ namespace Scenarioo.Api.Util.Xml
 
     public class ScenarioDocuXMLUtil
     {
-        public static T Unmarshal<T>(FileStream fs) where T : class
+        public static T UnmarshalXml<T>(FileStream fs) where T : class
         {
 
             if (fs == null)
@@ -56,7 +56,7 @@ namespace Scenarioo.Api.Util.Xml
             }
         }
 
-        public static async Task Marshal<T>(T entity, FileStream st) where T : class
+        public static async Task MarshalXml<T>(T entity, FileStream st) where T : class
         {
             if (st == null || entity == null)
             {
@@ -66,9 +66,12 @@ namespace Scenarioo.Api.Util.Xml
             try
             {
                 var utf8 = new UTF8Encoding(false);
-                var textWriter = new XmlTextWriter(st, utf8) { Indentation = 4, Formatting = Formatting.Indented };
                 var serializer = new XmlSerializer(typeof(T));
-                await Task.Run(() => serializer.Serialize(textWriter, entity));
+                await
+                    Task.Run(
+                        () =>
+                        serializer.Serialize(
+                            new XmlTextWriter(st, utf8) { Indentation = 4, Formatting = Formatting.Indented }, entity));
             }
             catch (SerializationException ex)
             {

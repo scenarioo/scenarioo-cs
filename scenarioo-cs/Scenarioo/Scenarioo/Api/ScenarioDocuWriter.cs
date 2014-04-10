@@ -25,6 +25,7 @@ namespace Scenarioo.Api
     using System.IO;
 
     using Scenarioo.Api.Files;
+    using Scenarioo.Api.Util.Files;
     using Scenarioo.Api.Util.Xml;
     using Scenarioo.Model.Docu.Entities;
 
@@ -35,10 +36,6 @@ namespace Scenarioo.Api
         private readonly string branchName;
 
         private readonly string buildName;
-
-        private readonly string scenarioName;
-
-        private readonly string scenarioStepName;
 
         private string DestinationRootDirectory { get; set; }
 
@@ -70,14 +67,19 @@ namespace Scenarioo.Api
             CreateDirectoryIfNotYetExists(this.GetUseCaseDirectory(useCase));
         }
 
-        private void CreateScenariooDirectoryIfNotYetExists(string useCaseName, Scenario scenario)
+        private void CreateScenarioDirectoryIfNotYetExists(string useCaseName, Scenario scenario)
         {
             CreateDirectoryIfNotYetExists(this.GetScenarioDirectory(useCaseName, scenario));
         }
 
-        private void CreateScenariooStepDirectoryIfNotYetExists(string useCaseName, string scenarioName)
+        private void CreateStepDirectoryIfNotYetExists(string useCaseName, string scenarioName)
         {
             CreateDirectoryIfNotYetExists(this.GetStepsDirectory(useCaseName, scenarioName));
+        }
+
+        private void CreateScreenshotDirectoryIfNotYetExists(string useCaseName, string scenarioName)
+        {
+            CreateDirectoryIfNotYetExists(this.GetScreenshotDirectory(useCaseName, scenarioName));
         }
 
         private void CreateDirectoryIfNotYetExists(string directory)
@@ -90,31 +92,36 @@ namespace Scenarioo.Api
             }
         }
 
-        private static void ExecuteAsyncWrite<T>(T entity, string destFile) where T : class
+        private static void ExecuteAsyncXmlWriter<T>(T entity, string destFile) where T : class
         {
-            ScenarioDocuXMLFileUtil.Marshal(entity, destFile);
+            ScenarioDocuXMLFileUtil.MarshalXml(entity, destFile);
+        }
+
+        private static void ExecuteAsyncImageWriter(string fileName, byte[] file)
+        {
+            ScenarioDocuImageFileUtil.MarshalImage(fileName, file);
         }
 
         private string GetBuildDirectory()
         {
-            return this.DocuFiles.GetBuildDirectory(this.buildName);
+            return this.DocuFiles.GetBuildDirectory(this.branchName, this.buildName);
         }
 
         private string GetBranchDirectory()
         {
-            return this.DocuFiles.GetBranchDirectory(this.buildName, this.branchName);
+            return this.DocuFiles.GetBranchDirectory(this.branchName);
         }
 
         private string GetUseCaseDirectory(UseCase useCase)
         {
-            return this.DocuFiles.GetUseCaseDirectory(this.buildName, this.branchName, useCase.Name);
+            return this.DocuFiles.GetUseCaseDirectory(this.branchName, this.buildName, useCase.Name);
         }
 
         private string GetStepsDirectory(string useCaseName, string scenarioName)
         {
             return this.DocuFiles.GetScenarioStepDirectory(
-                this.buildName,
                 this.branchName,
+                this.buildName,
                 useCaseName,
                 scenarioName);
         }
@@ -122,54 +129,75 @@ namespace Scenarioo.Api
         private string GetScenarioDirectory(string useCaseName, Scenario scenario)
         {
             return this.DocuFiles.GetScenarioDirectory(
-                this.buildName,
                 this.branchName,
+                this.buildName,
                 useCaseName,
                 scenario.Name);
         }
 
+        private string GetScreenshotDirectory(string useCaseName, string scenarioName)
+        {
+            return this.DocuFiles.GetScreenshotDirectory(
+                this.branchName, 
+                this.buildName, 
+                useCaseName, 
+                scenarioName);
+        }
+
         public void SaveBuildDescription(Build build)
         {
-            var destBuildFile = this.DocuFiles.GetBuildFile(this.buildName);
+            var destBuildFile = this.DocuFiles.GetBuildFile(this.branchName, this.buildName);
             this.CreateBuildDirectoryIfNotYetExists();
-            ExecuteAsyncWrite(build, destBuildFile);
+            ExecuteAsyncXmlWriter(build, destBuildFile);
         }
 
         public void SaveBranchDescription(Branch branch)
         {
-            var destBranchFile = this.DocuFiles.GetBranchFile(this.buildName, branch.Name);
+            var destBranchFile = this.DocuFiles.GetBranchFile(this.branchName);
             this.CreateBranchDirectoryIfNotYetExists();
-            ExecuteAsyncWrite(branch, destBranchFile);
+            ExecuteAsyncXmlWriter(branch, destBranchFile);
         }
 
         public void SaveUseCase(UseCase useCase)
         {
-            var desUseCaseFile = this.DocuFiles.GetUseCaseFile(this.buildName, this.branchName, useCase.Name);
+            var desUseCaseFile = this.DocuFiles.GetUseCaseFile(this.branchName, this.buildName, useCase.Name);
             this.CreateUseCaseDirectoryIfNotYetExists(useCase);
-            ExecuteAsyncWrite(useCase, desUseCaseFile);
+            ExecuteAsyncXmlWriter(useCase, desUseCaseFile);
         }
 
         public void SaveScenario(string useCaseName, Scenario scenario)
         {
             var desScenarioFile = this.DocuFiles.GetScenarioFile(
-                this.buildName,
                 this.branchName,
+                this.buildName,
                 useCaseName,
                 scenario.Name);
-            this.CreateScenariooDirectoryIfNotYetExists(useCaseName, scenario);
-            ExecuteAsyncWrite(scenario, desScenarioFile);
+            this.CreateScenarioDirectoryIfNotYetExists(useCaseName, scenario);
+            ExecuteAsyncXmlWriter(scenario, desScenarioFile);
         }
 
         public void SaveStep(string useCaseName, string scenarioName, Step step)
         {
             var desScenarioStepFile = this.DocuFiles.GetScenarioStepFile(
-                this.buildName,
                 this.branchName,
+                this.buildName,
                 useCaseName,
                 scenarioName,
                 step.StepDescription.Index);
-            this.CreateScenariooStepDirectoryIfNotYetExists(useCaseName, scenarioName);
-            ExecuteAsyncWrite(step, desScenarioStepFile);
+            this.CreateStepDirectoryIfNotYetExists(useCaseName, scenarioName);
+            ExecuteAsyncXmlWriter(step, desScenarioStepFile);
+        }
+
+        public void SaveScreenshot(string usecaseName, string scenarioName, Step step, byte[] file)
+        {
+            var desScreenshotFile = this.DocuFiles.GetScreenshotFile(
+                this.branchName, 
+                this.buildName, 
+                usecaseName, 
+                scenarioName, 
+                step.StepDescription.Index);
+            this.CreateScreenshotDirectoryIfNotYetExists(usecaseName, scenarioName);
+            ExecuteAsyncImageWriter(desScreenshotFile, file);
         }
     }
 }

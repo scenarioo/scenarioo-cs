@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
@@ -51,6 +52,8 @@
     <Compile Include="Api\ScenarioDocuWriter.cs" />
     <Compile Include="Api\Util\Files\AlphanumericFileComparator.cs" />
     <Compile Include="Api\Util\Files\FilesUtil.cs" />
+    <Compile Include="Api\Util\Image\ScenarioDocuImageFileUtil.cs" />
+    <Compile Include="Api\Util\Image\ScenarioDocuImageUtil.cs" />
     <Compile Include="Api\Util\Xml\ScenarioDocuXMLFileUtil.cs" />
     <Compile Include="Api\Util\Xml\ScenarioDocuXMLUtil.cs" />
     <Compile Include="Api\Serializer\GenericSerializer.cs" />

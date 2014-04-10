@@ -43,7 +43,7 @@ namespace Scenarioo.Api.Util.Xml
 
         public static string XmlSchema = "http://www.w3.org/2001/XMLSchema";
 
-        public static T Unmarshal<T>(string srcFile) where T : class
+        public static T UnmarshalXml<T>(string srcFile) where T : class
         {
             if (!File.Exists(srcFile))
             {
@@ -67,7 +67,7 @@ namespace Scenarioo.Api.Util.Xml
 
             using (var fs = new FileStream(srcFile, FileMode.Open, FileAccess.Read, FileShare.None, Buffer, true))
             {
-                var desirializedObject = ScenarioDocuXMLUtil.Unmarshal<T>(fs);
+                var desirializedObject = ScenarioDocuXMLUtil.UnmarshalXml<T>(fs);
                 fs.Flush();
                 fs.Close();
 
@@ -75,7 +75,7 @@ namespace Scenarioo.Api.Util.Xml
             }
         }
 
-        public static async Task Marshal<T>(T entity, string destFile) where T : class
+        public static async Task MarshalXml<T>(T entity, string destFile) where T : class
         {
             Lock(
                 destFile,
@@ -99,12 +99,11 @@ namespace Scenarioo.Api.Util.Xml
 
             using (var fs = new FileStream(destFile, FileMode.Create, FileAccess.Write, FileShare.None, Buffer, true))
             {
-                await ScenarioDocuXMLUtil.Marshal(entity, fs);
+                await ScenarioDocuXMLUtil.MarshalXml(entity, fs);
                 fs.Flush();
                 fs.Close();
             }
         }
-
 
         public static void Lock(string srcPath, Action<FileStream> action)
         {
@@ -123,23 +122,22 @@ namespace Scenarioo.Api.Util.Xml
                 catch (IOException)
                 {
                     var fileSystemWatcher = new FileSystemWatcher(Path.GetDirectoryName(srcPath))
-                                                {
-                                                    EnableRaisingEvents
-                                                        = true
-                                                };
+                    {
+                        EnableRaisingEvents
+                            = true
+                    };
 
                     fileSystemWatcher.Changed += (o, e) =>
+                    {
+                        if (Path.GetFullPath(e.FullPath) == Path.GetFullPath(srcPath))
                         {
-                            if (Path.GetFullPath(e.FullPath) == Path.GetFullPath(srcPath))
-                            {
-                                autoResetEvent.Set();
-                            }
-                        };
+                            autoResetEvent.Set();
+                        }
+                    };
 
                     autoResetEvent.WaitOne();
                 }
             }
         }
-
     }
 }

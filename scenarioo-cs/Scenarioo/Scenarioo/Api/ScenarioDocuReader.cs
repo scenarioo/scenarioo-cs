@@ -35,42 +35,42 @@ namespace Scenarioo.Api
             this.docuFiles = new ScenarioDocuFiles(rootDirectory);
         }
 
-        public Branch LoadBranch(string buildName, string branchName)
+        public Branch LoadBranch(string branchName)
         {
-            return ScenarioDocuXMLFileUtil.Unmarshal<Branch>(docuFiles.GetBranchFile(buildName, branchName));
+            return ScenarioDocuXMLFileUtil.UnmarshalXml<Branch>(docuFiles.GetBranchFile(branchName));
         }
 
-        public Build LoadBuild(string buildName, string branchName)
+        public Build LoadBuild(string branchName, string buildName)
         {
-            return ScenarioDocuXMLFileUtil.Unmarshal<Build>(docuFiles.GetBuildFile(buildName));
+            return ScenarioDocuXMLFileUtil.UnmarshalXml<Build>(docuFiles.GetBuildFile(branchName, buildName));
         }
 
-        public UseCase LoadUseCase(string buildName, string branchName, string useCaseName)
+        public UseCase LoadUseCase(string branchName, string buildName, string useCaseName)
         {
             return
-                ScenarioDocuXMLFileUtil.Unmarshal<UseCase>(docuFiles.GetUseCaseFile(buildName, branchName, useCaseName));
+                ScenarioDocuXMLFileUtil.UnmarshalXml<UseCase>(docuFiles.GetUseCaseFile(branchName, buildName, useCaseName));
         }
 
-        public Scenario LoadScenario(string buildName, string branchName, string useCaseName, string scenarioName)
+        public Scenario LoadScenario(string branchName, string buildName, string useCaseName, string scenarioName)
         {
             return
-                ScenarioDocuXMLFileUtil.Unmarshal<Scenario>(
-                    docuFiles.GetScenarioFile(buildName, branchName, useCaseName, scenarioName));
+                ScenarioDocuXMLFileUtil.UnmarshalXml<Scenario>(
+                    docuFiles.GetScenarioFile(branchName, buildName, useCaseName, scenarioName));
         }
 
         public Step LoadScenarioStep(
-            string buildName,
             string branchName,
+            string buildName,
             string useCaseName,
             string scenarioName,
             string scenarioStepName,
             int stepIndex)
         {
             return
-                ScenarioDocuXMLFileUtil.Unmarshal<Step>(
+                ScenarioDocuXMLFileUtil.UnmarshalXml<Step>(
                     docuFiles.GetScenarioStepFile(
-                        buildName,
                         branchName,
+                        buildName,
                         useCaseName,
                         scenarioName,
                         stepIndex));

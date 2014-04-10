@@ -98,7 +98,7 @@ namespace ScenariooTest
             writer.SaveBranchDescription(branch);
 
             // THEN: the Branch can be loaded successfully and correctly
-            var branchFromFile = this.reader.LoadBranch(BuildName, BranchName);
+            var branchFromFile = this.reader.LoadBranch(BranchName);
             Assert.AreEqual(BranchName, branchFromFile.Name);
             Assert.AreEqual(branch.Description, branchFromFile.Description);
 
@@ -324,8 +324,8 @@ namespace ScenariooTest
             }
 
             var expectedFileForSteps = docuFiles.GetScenarioStepFile(
-                BuildName,
                 BranchName,
+                BuildName,
                 UseCaseName,
                 ScenarioName,
                 10);
@@ -358,11 +358,10 @@ namespace ScenariooTest
                                           Index = index,
                                           ScreenshotFileName =
                                               this.docuFiles.GetScreenshotFile(
-                                                  BuildName,
                                                   BranchName,
+                                                  BuildName,
                                                   UseCaseName,
                                                   ScenarioName,
-                                                  ScenarioStepName,
                                                   index),
                                           Title =
                                               "this is a step with a lot of data in it such that writing should take realy long for testing async writing\n"
