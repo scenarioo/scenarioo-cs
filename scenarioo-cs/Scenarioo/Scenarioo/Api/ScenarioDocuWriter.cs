@@ -202,7 +202,7 @@ namespace Scenarioo.Api
             ExecuteAsyncImageWriter(desScreenshotFile, file);
         }
 
-        public void WaitAll()
+        public void Flush()
         {
             while (ScenarioDocuXMLFileUtil.RunningTasks.Count > 0)
             {

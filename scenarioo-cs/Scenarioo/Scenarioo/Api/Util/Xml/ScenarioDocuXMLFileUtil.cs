@@ -21,16 +21,13 @@
  */
 
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Scenarioo.Api.Util.Xml
 {
-    using System;
-    using System.IO;
-    using System.Threading;
-    using System.Threading.Tasks;
-
     using Exception = System.Exception;
 
     public class ScenarioDocuXMLFileUtil

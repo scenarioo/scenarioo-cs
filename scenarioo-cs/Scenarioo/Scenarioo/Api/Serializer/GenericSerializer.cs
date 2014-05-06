@@ -13,7 +13,7 @@
     using XmlElement = Scenarioo.Api.Util.Xml.XmlElement;
 
     /// <summary>
-    /// Enables to serialize generic collections and scenarioo specific generic types
+    /// Responsible for serializing generic collections and scenarioo specific generic types
     /// </summary>
     public class GenericSerializer
     {
@@ -45,6 +45,7 @@
             {
                 return firstOrDefault.Name;
             }
+
             return string.Empty;
         }
 
@@ -57,7 +58,7 @@
         {
 
             // Primitive handles only a couple of datatypes byte, int, bool... 
-            // string ist NOT a primitive type and it don`t will be recognized as such
+            // Explanation: string ist NOT a primitive type and it don`t will be recognized as such
             if (value.GetType().IsPrimitive)
             {
                 writer.WriteStartElement("value");
@@ -74,7 +75,6 @@
                 this.SerializeList(writer, value);
                 writer.WriteEndElement();
             }
-            // ReSharper disable once OperatorIsCanBeUsed
             else if (value.GetType() == typeof(KeyValuePair<string, object>))
             {
                 this.SerializeKeyValuePair(writer, value);
@@ -121,7 +121,6 @@
             {
                SerializeString(writer, value);
             }
-
         }
 
         /// <summary>
@@ -283,16 +282,16 @@
         }
 
         /// <summary>
-        /// The serialize generic item.
+        /// Serializes a Scenarioo-Item
         /// </summary>
         /// <param name="writer">
-        /// The writer.
+        /// Writer on which element and attributes will be placed.
         /// </param>
         /// <param name="elementName">
         /// The element name.
         /// </param>
         /// <param name="value">
-        /// The value.
+        /// The element value.
         /// </param>
         /// <typeparam name="T">
         /// </typeparam>

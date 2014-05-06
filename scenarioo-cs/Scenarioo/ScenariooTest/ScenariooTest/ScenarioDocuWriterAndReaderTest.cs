@@ -92,9 +92,9 @@ namespace ScenariooTest
                              };
 
 
-            // WHEN: the Branch was saved. The files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
+            // WHEN: the Branch was saved. The files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
             this.writer.SaveBranchDescription(branch);
-            this.writer.WaitAll();            
+            this.writer.Flush();            
 
             // THEN: the Branch can be loaded successfully and correctly
             var branchFromFile = this.reader.LoadBranch(BranchName);
@@ -115,8 +115,8 @@ namespace ScenariooTest
             // WHEN: the Build was saved.
             this.writer.SaveBuildDescription(build);
 
-            // THEN: the files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
-            this.writer.WaitAll();
+            // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
+            this.writer.Flush();
 
             // THEN: the Build can be loaded successfully and correctly
 //            var buildFromFile = reader.LoadBuild(BuildName, BranchName);
@@ -145,8 +145,8 @@ namespace ScenariooTest
             // WHEN: the usecase was saved.
             writer.SaveUseCase(usecase);
 
-            // THEN: the files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
-            this.writer.WaitAll();
+            // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
+            this.writer.Flush();
 
             // THEN: the usecase can be loaded successfully and correctly
             //            var useCaseFromFile = reader.LoadUseCase(BuildName, BranchName, UseCaseName);
@@ -176,7 +176,7 @@ namespace ScenariooTest
             this.writer.SaveScenario(UseCaseName, scenario);
 
             // THEN: the files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
-            this.writer.WaitAll();
+            this.writer.Flush();
 
             // THEN: the scenario can be loaded successfully and correctly
             //            var scenarioFromFile = reader.LoadScenario(BuildName, BranchName, UseCaseName, ScenarioName);
@@ -211,7 +211,7 @@ namespace ScenariooTest
             writer.SaveStep(UseCaseName, ScenarioName, step);
 
             // THEN: the files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
-            this.writer.WaitAll();
+            this.writer.Flush();
 
             // THEN: the step can be loaded successfully and correctly
             //            var stepFromFile = reader.LoadScenarioStep(
@@ -262,8 +262,8 @@ namespace ScenariooTest
             // WHEN: the object was saved.
             this.writer.SaveScenario(UseCaseName, scenario);
 
-            // THEN: the files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
-            this.writer.WaitAll();
+            // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
+            this.writer.Flush();
 
             // THEN: the collections get loaded correctly again.
             //Scenario scenarioFromFile = reader.loadScenario(TEST_Branch_NAME, TEST_BUILD_NAME, TEST_CASE_NAME,
@@ -338,8 +338,8 @@ namespace ScenariooTest
             // WHEN: the object was saved.
             this.writer.SaveScenario(UseCaseName, scenario);
 
-            // THEN: the files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
-            this.writer.WaitAll();
+            // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
+            this.writer.Flush();
         }
 
         [TestMethod]
@@ -372,8 +372,8 @@ namespace ScenariooTest
                 this.writer.SaveStep(UseCaseName, ScenarioName, step);
             }
 
-            // THEN: the files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
-            this.writer.WaitAll();
+            // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
+            this.writer.Flush();
             Assert.IsTrue(File.Exists(expectedFileForSteps));
         }
 
