@@ -18,9 +18,9 @@
     public class GenericSerializer
     {
 
-        private readonly List<XmlElement> elementObjectBindings = new List<XmlElement>();
+        private readonly List<XmlElement> _elementObjectBindings = new List<XmlElement>();
 
-        private readonly List<XmlAttribute> attributeObjectBindings = new List<XmlAttribute>();
+        private readonly List<XmlAttribute> _attributeObjectBindings = new List<XmlAttribute>();
 
         public string DetailElementName { get; set; }
 
@@ -28,19 +28,19 @@
 
         public void AddElementObjectBinding(XmlElement element, object type)
         {
-            this.elementObjectBindings.RemoveAll(e => e.BindingObject == type);
-            this.elementObjectBindings.Add(element);
+            this._elementObjectBindings.RemoveAll(e => e.BindingObject == type);
+            this._elementObjectBindings.Add(element);
         }
 
         public void AddAttributeObjectBinding(XmlAttribute attribute)
         {
-            this.attributeObjectBindings.RemoveAll(e => ReferenceEquals(e.BindingObject.GetType(), attribute.BindingObject.GetType()));
-            this.attributeObjectBindings.Add(attribute);
+            this._attributeObjectBindings.RemoveAll(e => ReferenceEquals(e.BindingObject.GetType(), attribute.BindingObject.GetType()));
+            this._attributeObjectBindings.Add(attribute);
         }
 
         private string ResolveElementName(object type)
         {
-            var firstOrDefault = this.elementObjectBindings.FirstOrDefault(e => ReferenceEquals(e.BindingObject, type));
+            var firstOrDefault = this._elementObjectBindings.FirstOrDefault(e => ReferenceEquals(e.BindingObject, type));
             if (firstOrDefault != null)
             {
                 return firstOrDefault.Name;
@@ -67,21 +67,21 @@
             }
             else if (value.GetType().IsGenericType && value.GetType().GetGenericTypeDefinition() == typeof(ObjectList<>))
             {
-                writer.WriteStartElement(ResolveElementName(typeof(ObjectList<>)));
-                WriteResolvedAttributes(writer, attributeObjectBindings, typeof(ObjectList<>));
+                writer.WriteStartElement(this.ResolveElementName(typeof(ObjectList<>)));
+                this.WriteResolvedAttributes(writer, this._attributeObjectBindings, typeof(ObjectList<>));
                 writer.WriteAttributeString("xmlns" + ":xsi", ScenarioDocuXMLFileUtil.SchemaInstanceNamespace);
                 writer.WriteAttributeString("xsi:type", "objectList");
-                SerializeList(writer, value);
+                this.SerializeList(writer, value);
                 writer.WriteEndElement();
             }
             // ReSharper disable once OperatorIsCanBeUsed
             else if (value.GetType() == typeof(KeyValuePair<string, object>))
             {
-                SerializeKeyValuePair(writer, value);
+                this.SerializeKeyValuePair(writer, value);
             }
             else if (value.GetType() == typeof(Details))
             {
-                SerializeDetails(writer, ((Details)(object)value));
+                this.SerializeDetails(writer, (Details)(object)value);
             }
             else if (value.GetType().IsGenericType
                      && value.GetType().GetGenericTypeDefinition() == typeof(ObjectTreeNode<>))
@@ -90,32 +90,32 @@
                 writer.WriteAttributeString("xmlns:xsi", ScenarioDocuXMLFileUtil.SchemaInstanceNamespace);
                 writer.WriteAttributeString("xsi:type", "objectTreeNode");
 
-                SerializeObjectTreeNode(writer, value);
+                this.SerializeObjectTreeNode<object>(writer, value);
 
                 writer.WriteEndElement();
             }
             else if (value.GetType() == typeof(ObjectDescription))
             {
                 this.SuppressProperties = true;
-                var objDescription = ((ObjectDescription)(object)value);
-                SerializeObjectDescription(
+                var objDescription = (ObjectDescription)(object)value;
+                this.SerializeObjectDescription(
                     writer,
                     objDescription.Name,
                     objDescription.Type,
                     "objectDescription",
-                    ResolveElementName(typeof(ObjectDescription)),
+                    this.ResolveElementName(typeof(ObjectDescription)),
                     objDescription);
                 this.SuppressProperties = false;
             }
             else if (value.GetType() == typeof(ObjectReference))
             {
-                var objectReference = ((ObjectReference)(object)value);
-                SerializeObjectReference(
+                var objectReference = (ObjectReference)(object)value;
+                this.SerializeObjectReference(
                     writer,
                     objectReference.Name,
                     objectReference.Type,
                     "objectReference",
-                    ResolveElementName(typeof(ObjectDescription)));
+                    this.ResolveElementName(typeof(ObjectDescription)));
             }
             else if (value is string)
             {
@@ -124,7 +124,18 @@
 
         }
 
-        public void SerializeObjectTreeNode<T>(XmlWriter writer, T objTreeNode)
+        /// <summary>
+        /// The serialize object tree node.
+        /// </summary>
+        /// <param name="writer">
+        /// The writer.
+        /// </param>
+        /// <param name="objTreeNode">
+        /// The obj tree node.
+        /// </param>
+        /// <typeparam name="T">
+        /// </typeparam>
+        private void SerializeObjectTreeNode<T>(XmlWriter writer, object objTreeNode)
         {
             this.AddElementObjectBinding(new XmlElement(typeof(ObjectDescription), "item"), typeof(ObjectDescription));
             this.AddElementObjectBinding(new XmlElement(typeof(ObjectReference), "item"), typeof(ObjectReference));
@@ -133,7 +144,7 @@
             this.DetailElementName = "item";
 
 
-            var value = ((IObjectTreeNode<T>)objTreeNode);
+            var value = (IObjectTreeNode<object>)objTreeNode;
 
 
             // ReSharper disable once CompareNonConstrainedGenericWithNull
@@ -173,7 +184,7 @@
         // Serialization methods
         private void SerializeKeyValuePair<T>(XmlWriter writer, T value)
         {
-            var keyValuePair = ((KeyValuePair<string, object>)(object)value);
+            var keyValuePair = (KeyValuePair<string, object>)(object)value;
 
             writer.WriteStartElement("entry");
             writer.WriteElementString("key", keyValuePair.Key);
@@ -221,7 +232,7 @@
 
             if (objDescription.Details.Properties.Any())
             {
-                SerializeDetails(writer, objDescription.Details);
+                this.SerializeDetails(writer, objDescription.Details);
             }
 
             writer.WriteEndElement();
@@ -234,25 +245,24 @@
                 return;
             }
 
-            if (!SuppressProperties)
+            if (!this.SuppressProperties)
             {
                 this.AddElementObjectBinding(new XmlElement(typeof(ObjectDescription), "value"), typeof(ObjectDescription));
-                this.AddElementObjectBinding(new XmlElement(typeof(Details), DetailElementName), typeof(Details));
+                this.AddElementObjectBinding(new XmlElement(typeof(Details), this.DetailElementName), typeof(Details));
                 this.AddAttributeObjectBinding(new XmlAttribute(typeof(Details), "xsi:type", "details"));
                 writer.WriteStartElement(
                     this.ResolveElementName(typeof(Details)));
-                WriteResolvedAttributes(writer, this.attributeObjectBindings, typeof(Details));
+                this.WriteResolvedAttributes(writer, this._attributeObjectBindings, typeof(Details));
             }
             else
             {
                 this.AddElementObjectBinding(new XmlElement(typeof(Details), "details"), typeof(Details));
-                this.attributeObjectBindings.RemoveAll(e => e.BindingObject == typeof(Details));
+                this._attributeObjectBindings.RemoveAll(e => e.BindingObject == typeof(Details));
                 writer.WriteStartElement(this.ResolveElementName(typeof(Details)));
-                WriteResolvedAttributes(writer, attributeObjectBindings, typeof(Details));
+                this.WriteResolvedAttributes(writer, this._attributeObjectBindings, typeof(Details));
             }
-
             
-            if (!SuppressProperties)
+            if (!this.SuppressProperties)
             {
                 writer.WriteStartElement("properties");
             }
@@ -266,12 +276,26 @@
             writer.WriteEndElement();
 
 
-            if (!SuppressProperties)
+            if (!this.SuppressProperties)
             {
                 writer.WriteEndElement();
             }
         }
 
+        /// <summary>
+        /// The serialize generic item.
+        /// </summary>
+        /// <param name="writer">
+        /// The writer.
+        /// </param>
+        /// <param name="elementName">
+        /// The element name.
+        /// </param>
+        /// <param name="value">
+        /// The value.
+        /// </param>
+        /// <typeparam name="T">
+        /// </typeparam>
         private void SerializeGenericItem<T>(XmlWriter writer, string elementName, T value)
         {
             writer.WriteStartElement(elementName);

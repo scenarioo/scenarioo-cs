@@ -20,6 +20,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+
 namespace Scenarioo.Api.Util.Xml
 {
     using System;
@@ -31,7 +35,11 @@ namespace Scenarioo.Api.Util.Xml
 
     public class ScenarioDocuXMLFileUtil
     {
-        private const int Buffer = 8;
+        private const int _buffer = 8;
+
+        private const int _maxConcurrentTasks = 10;
+
+        public static IList<Task> RunningTasks = new List<Task>();
 
         public static string XmlKeyIdentifier = "key";
 
@@ -65,7 +73,7 @@ namespace Scenarioo.Api.Util.Xml
                         }
                     });
 
-            using (var fs = new FileStream(srcFile, FileMode.Open, FileAccess.Read, FileShare.None, Buffer, true))
+            using (var fs = new FileStream(srcFile, FileMode.Open, FileAccess.Read, FileShare.None, _buffer, true))
             {
                 var desirializedObject = ScenarioDocuXMLUtil.UnmarshalXml<T>(fs);
                 fs.Flush();
@@ -75,7 +83,20 @@ namespace Scenarioo.Api.Util.Xml
             }
         }
 
-        public static async Task MarshalXml<T>(T entity, string destFile) where T : class
+        /// <summary>
+        /// Starts an asynchronus task for marhsalling an XML
+        /// </summary>
+        /// <param name="entity">
+        /// The entity.
+        /// </param>
+        /// <param name="destFile">
+        /// The dest file.
+        /// </param>
+        /// <typeparam name="T">
+        /// </typeparam>
+        /// <exception cref="Exception">
+        /// </exception>
+        public static void MarshalXml<T>(T entity, string destFile) where T : class
         {
             Lock(
                 destFile,
@@ -96,13 +117,34 @@ namespace Scenarioo.Api.Util.Xml
                                 e);
                         }
                     });
-
-            using (var fs = new FileStream(destFile, FileMode.Create, FileAccess.Write, FileShare.None, Buffer, true))
+            do
             {
-                await ScenarioDocuXMLUtil.MarshalXml(entity, fs);
-                fs.Flush();
-                fs.Close();
+                if (RunningTasks.Count <= _maxConcurrentTasks)
+                {
+                    var task = new Task(
+                        () =>
+                            {
+                                using (
+                                    var fs = new FileStream(
+                                        destFile, FileMode.Create, FileAccess.Write, FileShare.None, _buffer, true))
+                                {
+                                    ScenarioDocuXMLUtil.MarshalXml(entity, fs);
+
+                                    fs.Flush();
+                                    fs.Close();
+                                }
+                            });
+
+                    task.Start();
+
+                    RunningTasks.Add(task);
+                }
+
+                RemoveFinishedTasks();
+
+                Thread.Sleep(10);
             }
+            while (RunningTasks.Count > _maxConcurrentTasks);
         }
 
         public static void Lock(string srcPath, Action<FileStream> action)
@@ -136,6 +178,18 @@ namespace Scenarioo.Api.Util.Xml
                     };
 
                     autoResetEvent.WaitOne();
+                }
+            }
+        }
+
+        public static void RemoveFinishedTasks()
+        {
+            for (int i = 0; i < RunningTasks.Count; i++)
+            {
+                if (RunningTasks[i].IsCompleted ||
+                    RunningTasks[i].IsCanceled || RunningTasks[i].IsFaulted)
+                {
+                    RunningTasks.Remove(RunningTasks[i]);
                 }
             }
         }

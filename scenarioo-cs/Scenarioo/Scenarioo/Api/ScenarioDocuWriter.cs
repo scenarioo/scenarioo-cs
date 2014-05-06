@@ -20,6 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System.Threading;
+
 namespace Scenarioo.Api
 {
     using System.IO;
@@ -198,6 +200,16 @@ namespace Scenarioo.Api
                 step.StepDescription.Index);
             this.CreateScreenshotDirectoryIfNotYetExists(usecaseName, scenarioName);
             ExecuteAsyncImageWriter(desScreenshotFile, file);
+        }
+
+        public void WaitAll()
+        {
+            while (ScenarioDocuXMLFileUtil.RunningTasks.Count > 0)
+            {
+                ScenarioDocuXMLFileUtil.RemoveFinishedTasks();
+
+                Thread.Sleep(100);
+            }
         }
     }
 }

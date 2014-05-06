@@ -20,8 +20,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System.Threading.Tasks;
-
 namespace Scenarioo.Api.Util.Files
 {
     using System.IO;
@@ -31,11 +29,11 @@ namespace Scenarioo.Api.Util.Files
     public class ScenarioDocuImageFileUtil
     {
 
-        public static async Task MarshalImage(string fileName, byte[] file)
+        public static void MarshalImage(string fileName, byte[] file)
         {
             using (var memStream = new MemoryStream(file))
             {
-                await ScenarioDocuImageUtil.MarshalImage(fileName, memStream);
+                ScenarioDocuImageUtil.MarshalImage(fileName, memStream);
                 memStream.Flush();
                 memStream.Close();
             }

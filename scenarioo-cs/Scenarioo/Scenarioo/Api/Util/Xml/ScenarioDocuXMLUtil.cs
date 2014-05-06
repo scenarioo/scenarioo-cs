@@ -19,18 +19,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+using System;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace Scenarioo.Api.Util.Xml
 {
-    using System;
-    using System.IO;
-    using System.Runtime.Serialization;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Xml;
-    using System.Xml.Serialization;
-
     using Exception = System.Exception;
+
 
     public class ScenarioDocuXMLUtil
     {
@@ -56,7 +55,7 @@ namespace Scenarioo.Api.Util.Xml
             }
         }
 
-        public static async Task MarshalXml<T>(T entity, FileStream st) where T : class
+        public static void MarshalXml<T>(T entity, FileStream st) where T : class
         {
             if (st == null || entity == null)
             {
@@ -67,11 +66,10 @@ namespace Scenarioo.Api.Util.Xml
             {
                 var utf8 = new UTF8Encoding(false);
                 var serializer = new XmlSerializer(typeof(T));
-                await
-                    Task.Run(
-                        () =>
-                        serializer.Serialize(
-                            new XmlTextWriter(st, utf8) { Indentation = 4, Formatting = Formatting.Indented }, entity));
+
+                serializer.Serialize(
+                    new XmlTextWriter(st, utf8) { Indentation = 4, Formatting = Formatting.Indented }, entity);
+
             }
             catch (SerializationException ex)
             {

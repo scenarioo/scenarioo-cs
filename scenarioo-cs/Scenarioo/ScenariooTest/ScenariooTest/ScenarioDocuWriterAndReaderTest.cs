@@ -21,20 +21,18 @@
  */
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.IO;
+using System.Text;
+
+using Scenarioo.Api;
+using Scenarioo.Api.Files;
+using Scenarioo.Model.Docu.Entities;
+using Scenarioo.Model.Docu.Entities.Generic;
+using Scenarioo.Model.Docu.Entities.Generic.Interfaces;
 
 namespace ScenariooTest
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Text;
-
-    using Scenarioo.Api;
-    using Scenarioo.Api.Files;
-    using Scenarioo.Model.Docu.Entities;
-    using Scenarioo.Model.Docu.Entities.Generic;
-    using Scenarioo.Model.Docu.Entities.Generic.Interfaces;
-
     [TestClass]
     public class ScenarioDocuWriterAndReaderTest
     {
@@ -94,8 +92,9 @@ namespace ScenariooTest
                              };
 
 
-            // WHEN: the Branch was saved.
-            writer.SaveBranchDescription(branch);
+            // WHEN: the Branch was saved. The files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
+            this.writer.SaveBranchDescription(branch);
+            this.writer.WaitAll();            
 
             // THEN: the Branch can be loaded successfully and correctly
             var branchFromFile = this.reader.LoadBranch(BranchName);
@@ -114,7 +113,10 @@ namespace ScenariooTest
             build.AddDetail(DetailsVersionKey, "1.0.1");
 
             // WHEN: the Build was saved.
-            writer.SaveBuildDescription(build);
+            this.writer.SaveBuildDescription(build);
+
+            // THEN: the files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
+            this.writer.WaitAll();
 
             // THEN: the Build can be loaded successfully and correctly
 //            var buildFromFile = reader.LoadBuild(BuildName, BranchName);
@@ -143,6 +145,9 @@ namespace ScenariooTest
             // WHEN: the usecase was saved.
             writer.SaveUseCase(usecase);
 
+            // THEN: the files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
+            this.writer.WaitAll();
+
             // THEN: the usecase can be loaded successfully and correctly
             //            var useCaseFromFile = reader.LoadUseCase(BuildName, BranchName, UseCaseName);
             //            Assert.AreEqual(usecase.Name, useCaseFromFile.Name);
@@ -168,7 +173,10 @@ namespace ScenariooTest
             scenario.AddDetail("userRole", "customer");
 
             // WHEN: the scenario was saved.
-            writer.SaveScenario(UseCaseName, scenario);
+            this.writer.SaveScenario(UseCaseName, scenario);
+
+            // THEN: the files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
+            this.writer.WaitAll();
 
             // THEN: the scenario can be loaded successfully and correctly
             //            var scenarioFromFile = reader.LoadScenario(BuildName, BranchName, UseCaseName, ScenarioName);
@@ -201,6 +209,9 @@ namespace ScenariooTest
 
             // WHEN: the step was saved.
             writer.SaveStep(UseCaseName, ScenarioName, step);
+
+            // THEN: the files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
+            this.writer.WaitAll();
 
             // THEN: the step can be loaded successfully and correctly
             //            var stepFromFile = reader.LoadScenarioStep(
@@ -249,7 +260,10 @@ namespace ScenariooTest
             scenario.Details.AddDetail("list", objList);
 
             // WHEN: the object was saved.
-            writer.SaveScenario(UseCaseName, scenario);
+            this.writer.SaveScenario(UseCaseName, scenario);
+
+            // THEN: the files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
+            this.writer.WaitAll();
 
             // THEN: the collections get loaded correctly again.
             //Scenario scenarioFromFile = reader.loadScenario(TEST_Branch_NAME, TEST_BUILD_NAME, TEST_CASE_NAME,
@@ -288,6 +302,19 @@ namespace ScenariooTest
             childWithObjectRef.Item = objRef;
             rootNode.AddChild(childWithObjectRef);
 
+            // Child from Child
+            var childFromChild = new ObjectTreeNode<object>();
+            var objRef2 = new ObjectDescription("ChildFromChild1", "test");
+            childFromChild.Item = objRef2;
+
+            // Child from Child
+            var childFromChild2 = new ObjectTreeNode<object>();
+            objRef2 = new ObjectDescription("ChildFromChild2", "test");
+            childFromChild2.Item = objRef2;
+
+            childFromChild.AddChild(childFromChild2);
+            childWithObjectRef.AddChild(childFromChild);
+
             // node three with List of Strings as item
             var childWithList = new ObjectTreeNode<IObjectTreeNode<object>>();
             var list = new ObjectList<object> { "item1", "item2", "item3" };
@@ -309,13 +336,15 @@ namespace ScenariooTest
             scenario.AddDetail("exampleTree", rootNode);
 
             // WHEN: the object was saved.
-            writer.SaveScenario(UseCaseName, scenario);
+            this.writer.SaveScenario(UseCaseName, scenario);
+
+            // THEN: the files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
+            this.writer.WaitAll();
         }
 
         [TestMethod]
         public void AsyncWriteOfMultipleFilesAndFlush()
         {
-
             // GIVEN: a lot of large steps to write, that have not yet been written 
             var steps = new Step[10];
             for (var index = 0; index < 10; index++)
@@ -323,7 +352,7 @@ namespace ScenariooTest
                 steps[index] = this.CreateBigDataStepForLoadTestAsyncWriting(index + 1);
             }
 
-            var expectedFileForSteps = docuFiles.GetScenarioStepFile(
+            var expectedFileForSteps = this.docuFiles.GetScenarioStepFile(
                 BranchName,
                 BuildName,
                 UseCaseName,
@@ -340,10 +369,11 @@ namespace ScenariooTest
             // WHEN: saving those steps, 
             foreach (var step in steps)
             {
-                writer.SaveStep(UseCaseName, ScenarioName, step);
+                this.writer.SaveStep(UseCaseName, ScenarioName, step);
             }
 
-            // THEN: the files are not created directly but asynchronously. flush will wait until all save's are finished.
+            // THEN: the files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
+            this.writer.WaitAll();
             Assert.IsTrue(File.Exists(expectedFileForSteps));
         }
 

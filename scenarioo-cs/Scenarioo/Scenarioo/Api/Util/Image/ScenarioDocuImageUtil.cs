@@ -9,7 +9,7 @@ namespace Scenarioo.Api.Util.Image
 
     public class ScenarioDocuImageUtil
     {
-        public static async Task MarshalImage(string file, MemoryStream st)
+        public static void MarshalImage(string file, MemoryStream st)
         {
             if (st == null)
             {
@@ -19,7 +19,7 @@ namespace Scenarioo.Api.Util.Image
             try
             {
                 var image = System.Drawing.Image.FromStream(st);
-                await Task.Run(() => image.Save(file, ImageFormat.Png));
+                image.Save(file, ImageFormat.Png);
             }
             catch (SerializationException ex)
             {
