@@ -115,43 +115,34 @@ namespace Scenarioo.Api.Util.Xml
                         }
                     });
 
-            using (var fs = new FileStream(destFile, FileMode.Create, FileAccess.Write, FileShare.None, _buffer, true))
+            do
             {
-                ScenarioDocuXMLUtil.MarshalXml(entity, fs);
+                if (RunningTasks.Count <= _maxConcurrentTasks)
+                {
+                    var task = new Task(
+                        () =>
+                            {
+                                using (
+                                    var fs = new FileStream(
+                                        destFile, FileMode.Create, FileAccess.Write, FileShare.None, _buffer, true))
+                                {
+                                    ScenarioDocuXMLUtil.MarshalXml(entity, fs);
 
-                fs.Flush();
-                fs.Close();
+                                    fs.Flush();
+                                    fs.Close();
+                                }
+                            });
+
+                    task.Start();
+
+                    RunningTasks.Add(task);
+                }
+
+                RemoveFinishedTasks();
+
+                Thread.Sleep(10);
             }
-
-
-            //            do
-//            {
-//                if (RunningTasks.Count <= _maxConcurrentTasks)
-//                {
-//                    var task = new Task(
-//                        () =>
-//                            {
-//                                using (
-//                                    var fs = new FileStream(
-//                                        destFile, FileMode.Create, FileAccess.Write, FileShare.None, _buffer, true))
-//                                {
-//                                    ScenarioDocuXMLUtil.MarshalXml(entity, fs);
-//
-//                                    fs.Flush();
-//                                    fs.Close();
-//                                }
-//                            });
-//
-//                    task.Start();
-//
-//                    RunningTasks.Add(task);
-//                }
-//
-//                RemoveFinishedTasks();
-//
-//                Thread.Sleep(10);
-//            }
-//            while (RunningTasks.Count > _maxConcurrentTasks);
+            while (RunningTasks.Count > _maxConcurrentTasks);
         }
 
         public static void Lock(string srcPath, Action<FileStream> action)
