@@ -20,10 +20,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Scenarioo.Api.Configuration
-{
-    public class ScenarioDocuGeneratorConfiguration
-    {
+using System.Collections.Generic;
 
+namespace Scenarioo.Api.Util.Xml
+{
+    public class XmlTag
+    {
+        public List<XmlAttribute> Attributes { get; set; }
+
+        public XmlElement Element { get; set; }
+
+        public object BindingObject { get; set; }
+
+        public XmlTag()
+        {
+            
+        }
+
+        public XmlTag(XmlElement element, List<XmlAttribute> attributes, object bindingObject)
+        {
+            this.Attributes = attributes;
+            this.Element = element;
+            this.BindingObject = bindingObject;
+        }
     }
 }

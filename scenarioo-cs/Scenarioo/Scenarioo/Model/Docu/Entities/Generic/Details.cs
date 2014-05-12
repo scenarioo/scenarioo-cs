@@ -81,22 +81,36 @@ namespace Scenarioo.Model.Docu.Entities.Generic
 
                 var value = this.Properties[key];
 
-                // Configure serializer behavior
+                // Configure serializer behavior for element and attributes
                 var genericSerializer = new GenericSerializer();
                 genericSerializer.AddAttributeObjectBinding(
                     new XmlAttribute(typeof(Details), "xmlns:xsi", ScenarioDocuXMLFileUtil.SchemaInstanceNamespace));
+
+                // Prepare elment and attribute names
                 genericSerializer.AddAttributeObjectBinding(new XmlAttribute(typeof(Details), "xsi:type", "details"));
                 genericSerializer.AddElementObjectBinding(new XmlElement(typeof(Details), "value"), typeof(Details));
                 genericSerializer.AddElementObjectBinding(new XmlElement(typeof(ObjectDescription), "value"), typeof(ObjectDescription));
                 genericSerializer.AddElementObjectBinding(new XmlElement(typeof(ObjectReference), "value"), typeof(ObjectReference));
                 genericSerializer.AddElementObjectBinding(new XmlElement(typeof(ObjectList<>), "value"), typeof(ObjectList<>));
+                
+                // Prepare xml tags
+                genericSerializer.AddXmlTag(
+                    new XmlTag(
+                        new XmlElement(typeof(ObjectTreeNode<object>), "value"),
+                        new List<XmlAttribute>()
+                        {
+                            new XmlAttribute("xmlns:xsi", ScenarioDocuXMLFileUtil.SchemaInstanceNamespace),
+                            new XmlAttribute("xsi:type", "objectTreeNode")
+                        },
+                        typeof(ObjectTreeNode<object>)),
+                    typeof(ObjectTreeNode<object>));
+
                 genericSerializer.SuppressProperties = false;
                 genericSerializer.DetailElementName = "value";
 
                 genericSerializer.SerializeDetails(writer, value);
 
                 writer.WriteEndElement();
-
             }
 
         }

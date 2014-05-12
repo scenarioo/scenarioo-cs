@@ -19,13 +19,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Scenarioo.Api.Files
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-
     using Scenarioo.Api.Util.Files;
 
     public class ScenarioDocuFiles

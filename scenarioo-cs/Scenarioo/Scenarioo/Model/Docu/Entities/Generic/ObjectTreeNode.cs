@@ -37,7 +37,7 @@ namespace Scenarioo.Model.Docu.Entities.Generic
         public Details Details { get; set; }
 
         [XmlArray("children")]
-        private readonly List<ObjectTreeNode<T>> children = new List<ObjectTreeNode<T>>();
+        private readonly List<ObjectTreeNode<T>> _children = new List<ObjectTreeNode<T>>();
 
         [XmlElement("item")]
         public T Item { get; set; }
@@ -45,13 +45,12 @@ namespace Scenarioo.Model.Docu.Entities.Generic
         [XmlNamespaceDeclarations]
         public XmlSerializerNamespaces Xmlns;
 
-
         public ObjectTreeNode()
         {
-
         }
 
-        public ObjectTreeNode(T item): base()
+        public ObjectTreeNode(T item)
+            : base()
         {
             this.Item = item;
         }
@@ -61,7 +60,7 @@ namespace Scenarioo.Model.Docu.Entities.Generic
         {
             get
             {
-                return this.children;
+                return this._children;
             }
 
         }
@@ -78,7 +77,7 @@ namespace Scenarioo.Model.Docu.Entities.Generic
 
         public void AddChild(ObjectTreeNode<T> child)
         {
-            this.children.Add(child);
+            this._children.Add(child);
         }
 
         public void AddChildren(IEnumerable<ObjectTreeNode<T>> childrenValue)
@@ -86,13 +85,13 @@ namespace Scenarioo.Model.Docu.Entities.Generic
             var objectTreeNodes = childrenValue as ObjectTreeNode<T>[] ?? childrenValue.ToArray();
             if (objectTreeNodes.Any())
             {
-                this.children.AddRange(objectTreeNodes);
+                this._children.AddRange(objectTreeNodes);
             }
         }
 
         public void AddChild(ObjectTreeNode<IObjectTreeNode<object>> childWithList)
         {
-            this.children.Add(new ObjectTreeNode<T>()
+            this._children.Add(new ObjectTreeNode<T>()
                                   {
                                       Item = (T)childWithList.Item,
                                   });

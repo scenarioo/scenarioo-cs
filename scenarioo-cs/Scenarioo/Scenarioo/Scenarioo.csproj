@@ -59,6 +59,7 @@
     <Compile Include="Api\Serializer\GenericSerializer.cs" />
     <Compile Include="Api\Util\Xml\XmlAttribute.cs" />
     <Compile Include="Api\Util\Xml\XmlElement.cs" />
+    <Compile Include="Api\Util\Xml\XmlTag.cs" />
     <Compile Include="Model\Docu\Derived\BuildLink.cs" />
     <Compile Include="Model\Docu\Entities\Branch.cs" />
     <Compile Include="Model\Docu\Entities\Build.cs" />

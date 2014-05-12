@@ -52,25 +52,25 @@ namespace ScenariooTest
 
         private const int StepIndex = 1;
 
-        private ScenarioDocuWriter writer;
+        private ScenarioDocuWriter _writer;
 
-        private ScenarioDocuReader reader;
+        private ScenarioDocuReader _reader;
 
-        private ScenarioDocuFiles docuFiles;
+        private ScenarioDocuFiles _docuFiles;
 
 
         [TestInitialize]
         public void TestInit()
         {
 
-            this.writer = new ScenarioDocuWriter(
+            this._writer = new ScenarioDocuWriter(
                 RootDirectory,
                 BranchName,
                 BuildName);
 
-            this.reader = new ScenarioDocuReader(RootDirectory);
+            this._reader = new ScenarioDocuReader(RootDirectory);
 
-            this.docuFiles = new ScenarioDocuFiles(RootDirectory);
+            this._docuFiles = new ScenarioDocuFiles(RootDirectory);
 
         }
 
@@ -93,11 +93,11 @@ namespace ScenariooTest
 
 
             // WHEN: the Branch was saved. The files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
-            this.writer.SaveBranchDescription(branch);
-            this.writer.Flush();            
+            this._writer.SaveBranchDescription(branch);
+            this._writer.Flush();            
 
             // THEN: the Branch can be loaded successfully and correctly
-            var branchFromFile = this.reader.LoadBranch(BranchName);
+            var branchFromFile = this._reader.LoadBranch(BranchName);
             Assert.AreEqual(BranchName, branchFromFile.Name);
             Assert.AreEqual(branch.Description, branchFromFile.Description);
 
@@ -113,10 +113,10 @@ namespace ScenariooTest
             build.AddDetail(DetailsVersionKey, "1.0.1");
 
             // WHEN: the Build was saved.
-            this.writer.SaveBuildDescription(build);
+            this._writer.SaveBuildDescription(build);
 
             // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
-            this.writer.Flush();
+            this._writer.Flush();
 
             // THEN: the Build can be loaded successfully and correctly
 //            var buildFromFile = reader.LoadBuild(BuildName, BranchName);
@@ -143,10 +143,10 @@ namespace ScenariooTest
             usecase.AddDetail("webtestName", "UseCaseWebTest");
 
             // WHEN: the usecase was saved.
-            writer.SaveUseCase(usecase);
+            this._writer.SaveUseCase(usecase);
 
             // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
-            this.writer.Flush();
+            this._writer.Flush();
 
             // THEN: the usecase can be loaded successfully and correctly
             //            var useCaseFromFile = reader.LoadUseCase(BuildName, BranchName, UseCaseName);
@@ -173,10 +173,10 @@ namespace ScenariooTest
             scenario.AddDetail("userRole", "customer");
 
             // WHEN: the scenario was saved.
-            this.writer.SaveScenario(UseCaseName, scenario);
+            this._writer.SaveScenario(UseCaseName, scenario);
 
             // THEN: the files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
-            this.writer.Flush();
+            this._writer.Flush();
 
             // THEN: the scenario can be loaded successfully and correctly
             //            var scenarioFromFile = reader.LoadScenario(BuildName, BranchName, UseCaseName, ScenarioName);
@@ -208,10 +208,10 @@ namespace ScenariooTest
             step.StepMetadata.AddDetail("mockedServicesConfiguration", "dummy_config_xy.properties");
 
             // WHEN: the step was saved.
-            writer.SaveStep(UseCaseName, ScenarioName, step);
+            this._writer.SaveStep(UseCaseName, ScenarioName, step);
 
             // THEN: the files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
-            this.writer.Flush();
+            this._writer.Flush();
 
             // THEN: the step can be loaded successfully and correctly
             //            var stepFromFile = reader.LoadScenarioStep(
@@ -231,7 +231,6 @@ namespace ScenariooTest
             //                step.StepMetadata.Details.Properties.Keys,
             //                stepFromFile.StepMetadata.Details.Properties.Keys);
             //            Assert.AreEqual(step.StepMetadata.Details.Properties.Values, stepFromFile.StepMetadata.Details.Properties.Values);
-
         }
 
         [TestMethod]
@@ -260,10 +259,10 @@ namespace ScenariooTest
             scenario.Details.AddDetail("list", objList);
 
             // WHEN: the object was saved.
-            this.writer.SaveScenario(UseCaseName, scenario);
+            this._writer.SaveScenario(UseCaseName, scenario);
 
             // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
-            this.writer.Flush();
+            this._writer.Flush();
 
             // THEN: the collections get loaded correctly again.
             //Scenario scenarioFromFile = reader.loadScenario(TEST_Branch_NAME, TEST_BUILD_NAME, TEST_CASE_NAME,
@@ -302,20 +301,7 @@ namespace ScenariooTest
             childWithObjectRef.Item = objRef;
             rootNode.AddChild(childWithObjectRef);
 
-            // Child from Child
-            var childFromChild = new ObjectTreeNode<object>();
-            var objRef2 = new ObjectDescription("ChildFromChild1", "test");
-            childFromChild.Item = objRef2;
-
-            // Child from Child
-            var childFromChild2 = new ObjectTreeNode<object>();
-            objRef2 = new ObjectDescription("ChildFromChild2", "test");
-            childFromChild2.Item = objRef2;
-
-            childFromChild.AddChild(childFromChild2);
-            childWithObjectRef.AddChild(childFromChild);
-
-            // node three with List of Strings as item
+           // node three with List of Strings as item
             var childWithList = new ObjectTreeNode<IObjectTreeNode<object>>();
             var list = new ObjectList<object> { "item1", "item2", "item3" };
             childWithList.Item = list;
@@ -336,10 +322,10 @@ namespace ScenariooTest
             scenario.AddDetail("exampleTree", rootNode);
 
             // WHEN: the object was saved.
-            this.writer.SaveScenario(UseCaseName, scenario);
+            this._writer.SaveScenario(UseCaseName, scenario);
 
             // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
-            this.writer.Flush();
+            this._writer.Flush();
         }
 
         [TestMethod]
@@ -352,7 +338,7 @@ namespace ScenariooTest
                 steps[index] = this.CreateBigDataStepForLoadTestAsyncWriting(index + 1);
             }
 
-            var expectedFileForSteps = this.docuFiles.GetScenarioStepFile(
+            var expectedFileForSteps = this._docuFiles.GetScenarioStepFile(
                 BranchName,
                 BuildName,
                 UseCaseName,
@@ -369,11 +355,11 @@ namespace ScenariooTest
             // WHEN: saving those steps, 
             foreach (var step in steps)
             {
-                this.writer.SaveStep(UseCaseName, ScenarioName, step);
+                this._writer.SaveStep(UseCaseName, ScenarioName, step);
             }
 
             // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
-            this.writer.Flush();
+            this._writer.Flush();
             Assert.IsTrue(File.Exists(expectedFileForSteps));
         }
 
@@ -387,7 +373,7 @@ namespace ScenariooTest
                                       {
                                           Index = index,
                                           ScreenshotFileName =
-                                              this.docuFiles.GetScreenshotFile(
+                                              this._docuFiles.GetScreenshotFile(
                                                   BranchName,
                                                   BuildName,
                                                   UseCaseName,

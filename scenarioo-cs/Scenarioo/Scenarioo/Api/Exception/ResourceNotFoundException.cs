@@ -22,7 +22,7 @@
 
 namespace Scenarioo.Api.Exception
 {
-    class ResourceNotFoundException : System.Exception
+    public class ResourceNotFoundException : System.Exception
     {
         private string message;
 

@@ -42,11 +42,11 @@ namespace Scenarioo.Api.Util.Xml
 
         public static string XmlValueIdentifier = "value";
 
-        public static string SchemaInstanceNamespace = "http://www.w3.org/2001/XMLSchema-instance";
+        public const string SchemaInstanceNamespace = "http://www.w3.org/2001/XMLSchema-instance";
 
-        public static string ScenarioNameSpace = "http://www.scenarioo.org/scenarioo";
+        public const string ScenarioNameSpace = "http://www.scenarioo.org/scenarioo";
 
-        public static string XmlSchema = "http://www.w3.org/2001/XMLSchema";
+        public const string XmlSchema = "http://www.w3.org/2001/XMLSchema";
 
         public static T UnmarshalXml<T>(string srcFile) where T : class
         {
@@ -114,34 +114,44 @@ namespace Scenarioo.Api.Util.Xml
                                 e);
                         }
                     });
-            do
+
+            using (var fs = new FileStream(destFile, FileMode.Create, FileAccess.Write, FileShare.None, _buffer, true))
             {
-                if (RunningTasks.Count <= _maxConcurrentTasks)
-                {
-                    var task = new Task(
-                        () =>
-                            {
-                                using (
-                                    var fs = new FileStream(
-                                        destFile, FileMode.Create, FileAccess.Write, FileShare.None, _buffer, true))
-                                {
-                                    ScenarioDocuXMLUtil.MarshalXml(entity, fs);
+                ScenarioDocuXMLUtil.MarshalXml(entity, fs);
 
-                                    fs.Flush();
-                                    fs.Close();
-                                }
-                            });
-
-                    task.Start();
-
-                    RunningTasks.Add(task);
-                }
-
-                RemoveFinishedTasks();
-
-                Thread.Sleep(10);
+                fs.Flush();
+                fs.Close();
             }
-            while (RunningTasks.Count > _maxConcurrentTasks);
+
+
+            //            do
+//            {
+//                if (RunningTasks.Count <= _maxConcurrentTasks)
+//                {
+//                    var task = new Task(
+//                        () =>
+//                            {
+//                                using (
+//                                    var fs = new FileStream(
+//                                        destFile, FileMode.Create, FileAccess.Write, FileShare.None, _buffer, true))
+//                                {
+//                                    ScenarioDocuXMLUtil.MarshalXml(entity, fs);
+//
+//                                    fs.Flush();
+//                                    fs.Close();
+//                                }
+//                            });
+//
+//                    task.Start();
+//
+//                    RunningTasks.Add(task);
+//                }
+//
+//                RemoveFinishedTasks();
+//
+//                Thread.Sleep(10);
+//            }
+//            while (RunningTasks.Count > _maxConcurrentTasks);
         }
 
         public static void Lock(string srcPath, Action<FileStream> action)

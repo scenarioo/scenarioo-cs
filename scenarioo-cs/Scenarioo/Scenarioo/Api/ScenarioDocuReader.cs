@@ -28,34 +28,34 @@ namespace Scenarioo.Api
 
     public class ScenarioDocuReader
     {
-        private readonly ScenarioDocuFiles docuFiles;
+        private readonly ScenarioDocuFiles _docuFiles;
 
         public ScenarioDocuReader(string rootDirectory)
         {
-            this.docuFiles = new ScenarioDocuFiles(rootDirectory);
+            this._docuFiles = new ScenarioDocuFiles(rootDirectory);
         }
 
         public Branch LoadBranch(string branchName)
         {
-            return ScenarioDocuXMLFileUtil.UnmarshalXml<Branch>(docuFiles.GetBranchFile(branchName));
+            return ScenarioDocuXMLFileUtil.UnmarshalXml<Branch>(this._docuFiles.GetBranchFile(branchName));
         }
 
         public Build LoadBuild(string branchName, string buildName)
         {
-            return ScenarioDocuXMLFileUtil.UnmarshalXml<Build>(docuFiles.GetBuildFile(branchName, buildName));
+            return ScenarioDocuXMLFileUtil.UnmarshalXml<Build>(this._docuFiles.GetBuildFile(branchName, buildName));
         }
 
         public UseCase LoadUseCase(string branchName, string buildName, string useCaseName)
         {
             return
-                ScenarioDocuXMLFileUtil.UnmarshalXml<UseCase>(docuFiles.GetUseCaseFile(branchName, buildName, useCaseName));
+                ScenarioDocuXMLFileUtil.UnmarshalXml<UseCase>(this._docuFiles.GetUseCaseFile(branchName, buildName, useCaseName));
         }
 
         public Scenario LoadScenario(string branchName, string buildName, string useCaseName, string scenarioName)
         {
             return
                 ScenarioDocuXMLFileUtil.UnmarshalXml<Scenario>(
-                    docuFiles.GetScenarioFile(branchName, buildName, useCaseName, scenarioName));
+                    this._docuFiles.GetScenarioFile(branchName, buildName, useCaseName, scenarioName));
         }
 
         public Step LoadScenarioStep(
@@ -68,7 +68,7 @@ namespace Scenarioo.Api
         {
             return
                 ScenarioDocuXMLFileUtil.UnmarshalXml<Step>(
-                    docuFiles.GetScenarioStepFile(
+                    this._docuFiles.GetScenarioStepFile(
                         branchName,
                         buildName,
                         useCaseName,
