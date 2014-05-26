@@ -23,13 +23,13 @@
 using System;
 using System.Text;
 
+using System.IO;
+using System.Web;
+
+using Scenarioo.Api.Exception;
+
 namespace Scenarioo.Api.Util.Files
 {
-    using System.IO;
-    using System.Web;
-
-    using Scenarioo.Api.Exception;
-
     public class FilesUtil
     {
         public static string EncodeName(string name)
@@ -47,6 +47,14 @@ namespace Scenarioo.Api.Util.Files
             }
         }
 
+        /// <summary>
+        /// Read all files from 'directory'.
+        /// </summary>
+        /// <param name="directory">
+        /// </param>
+        /// <returns>
+        /// All files in given directory
+        /// </returns>
         public static string[] GetListOfFiles(string directory)
         {
             if (!Directory.Exists(directory))
@@ -57,6 +65,12 @@ namespace Scenarioo.Api.Util.Files
             return Directory.GetFiles(directory);
         }
 
+        /// <summary>
+        /// Read all files with given name from all subdirectories of 'directory'.
+        /// </summary>
+        /// <param name="directory"></param>
+        /// <param name="filename"></param>
+        /// <returns>All all files from subdirectories</returns>
         public static string[] GetListOfFilesFromSubdirs(string directory, string filename)
         {
             if (!Directory.Exists(directory))
@@ -67,6 +81,11 @@ namespace Scenarioo.Api.Util.Files
             return Directory.GetFiles(directory, "*", SearchOption.AllDirectories);
         }
 
+        /// <summary>
+        /// List all files in the given directory sorted alphanumerically using a collator.
+        /// </summary>
+        /// <param name="directory"></param>
+        /// <returns>All files in directory orderd by alpanumeric</returns>
         public static string[] ListFiles(string directory)
         {
             var files = GetListOfFiles(directory);

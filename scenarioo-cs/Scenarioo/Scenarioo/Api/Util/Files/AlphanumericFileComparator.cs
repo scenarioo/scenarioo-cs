@@ -22,6 +22,9 @@
 
 namespace Scenarioo.Api.Util.Files
 {
+    /// <summary>
+    ///  A comparator to sort files by their name in alphanumeric order.
+    /// </summary>
     public class AlphanumericFileComparator
     {
     }

@@ -24,6 +24,10 @@ using System.Collections.Generic;
 
 namespace Scenarioo.Api.Util.Xml
 {
+    /// <summary>
+    /// Contains an xml-tag which will be binded to an object type. This is relevant
+    /// to decide, which xml-tag has to be binded to an object type during serialization
+    /// </summary>
     public class XmlTag
     {
         public List<XmlAttribute> Attributes { get; set; }

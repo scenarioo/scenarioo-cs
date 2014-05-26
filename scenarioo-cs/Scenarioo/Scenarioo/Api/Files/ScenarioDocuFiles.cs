@@ -27,6 +27,9 @@ namespace Scenarioo.Api.Files
 {
     using Scenarioo.Api.Util.Files;
 
+    /// <summary>
+    /// Represents the file structure of the documentation.
+    /// </summary>
     public class ScenarioDocuFiles
     {
         private const string FileNameBranch = "branch.xml";
@@ -105,6 +108,15 @@ namespace Scenarioo.Api.Files
                 string.Format(@"{0}{1}", stepIndex.ToString(this.digitFormat), ".xml"));
         }
 
+        /// <summary>
+        /// Get the file name of the file where the screenshot of a step is stored.
+        /// </summary>
+        /// <param name="branchName"></param>
+        /// <param name="buildName"></param>
+        /// <param name="useCaseName"></param>
+        /// <param name="scenarioName"></param>
+        /// <param name="stepIndex"></param>
+        /// <returns></returns>
         public string GetScreenshotFile(string branchName, string buildName, string useCaseName, string scenarioName, int stepIndex)
         {
             return string.Format(

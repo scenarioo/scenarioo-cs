@@ -214,7 +214,7 @@ namespace ScenariooTest
             this._writer.Flush();
 
             // THEN: the step can be loaded successfully and correctly
-            //            var stepFromFile = reader.LoadScenarioStep(
+            //            var stepFromFile = reader.LoadStep(
             //                BuildName,
             //                BranchName,
             //                UseCaseName,
@@ -232,7 +232,10 @@ namespace ScenariooTest
             //                stepFromFile.StepMetadata.Details.Properties.Keys);
             //            Assert.AreEqual(step.StepMetadata.Details.Properties.Values, stepFromFile.StepMetadata.Details.Properties.Values);
         }
-
+        
+        /// <summary>
+        /// Tests writing and reading of a scenario docu file containing some basic collections that need to be supported.
+        /// </summary>
         [TestMethod]
         public void WriteAndReadGenericCollectionsInDetails()
         {
@@ -328,6 +331,10 @@ namespace ScenariooTest
             this._writer.Flush();
         }
 
+
+        /// <summary>
+        /// Test that the files are written asynchronously and that the flush method waits correctly for the last file to bewritten.
+        /// </summary>
         [TestMethod]
         public void AsyncWriteOfMultipleFilesAndFlush()
         {
@@ -397,6 +404,10 @@ namespace ScenariooTest
             return step;
         }
 
+        /// <summary>
+        /// Simply generate a big dummy html for load testing of writing.
+        /// </summary>
+        /// <returns>Created Html</returns>
         public StepHtml CreateBigHtml()
         {
 
@@ -416,6 +427,10 @@ namespace ScenariooTest
             return html;
         }
 
+        /// <summary>
+        /// Simply generate StepMetadata object with a lot of details to get a big step for load testing of writing.
+        /// </summary>
+        /// <returns>Generated StepMetadata</returns>
         private StepMetadata CreateBigMetadata()
         {
             var stepMetadata = new StepMetadata();
@@ -423,6 +438,7 @@ namespace ScenariooTest
             {
                 stepMetadata.Details.AddDetail("detail" + i, "just a detail to produce a lot of data that needs marshalling and writing.");
             }
+
             return stepMetadata;
         }
     }

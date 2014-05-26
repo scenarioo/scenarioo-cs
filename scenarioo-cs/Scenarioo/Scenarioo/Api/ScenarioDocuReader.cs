@@ -20,12 +20,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System;
+
 namespace Scenarioo.Api
 {
     using Scenarioo.Api.Files;
     using Scenarioo.Api.Util.Xml;
     using Scenarioo.Model.Docu.Entities;
 
+    /// <summary>
+    /// Gives access to the generated scenario docu files in the filesystem.
+    /// </summary>
     public class ScenarioDocuReader
     {
         private readonly ScenarioDocuFiles _docuFiles;
@@ -58,7 +63,7 @@ namespace Scenarioo.Api
                     this._docuFiles.GetScenarioFile(branchName, buildName, useCaseName, scenarioName));
         }
 
-        public Step LoadScenarioStep(
+        public Step LoadStep(
             string branchName,
             string buildName,
             string useCaseName,
@@ -76,6 +81,10 @@ namespace Scenarioo.Api
                         stepIndex));
         }
 
+        public Step[] LoadSteps(
+            string branchName, string buildName, string useCaseName, string scenarioName, string scenarioStepName)
+        {
+            throw new NotImplementedException();
+        }
     }
-
 }

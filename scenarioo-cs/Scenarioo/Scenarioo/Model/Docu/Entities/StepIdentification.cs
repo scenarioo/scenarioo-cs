@@ -26,6 +26,10 @@ namespace Scenarioo.Model.Docu.Entities
 {
     using System.Xml.Serialization;
 
+    /// <summary>
+    /// Only for internal use, wherever ths class is used on the model, this is for internal use only, will be removed in
+    /// next major version of the API.
+    /// </summary>
     [Serializable]
     [XmlRoot("stepIdentification")]
     class StepIdentification

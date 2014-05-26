@@ -31,6 +31,11 @@ namespace Scenarioo.Api
     using Scenarioo.Api.Util.Xml;
     using Scenarioo.Model.Docu.Entities;
 
+    /// <summary>
+    ///  Generator to produce documentation files for a specific build.
+    /// The writer performs all save operations as asynchronous writes, to not block the webtests tht are typically calling
+    /// the save operations to save docu content.
+    /// </summary>
     public class ScenarioDocuWriter
     {
         public ScenarioDocuFiles DocuFiles { get; set; }
@@ -41,6 +46,18 @@ namespace Scenarioo.Api
 
         private string DestinationRootDirectory { get; set; }
 
+        /// <summary>
+        /// Initialize with directory inside which to generate the documentation contents.
+        /// </summary>
+        /// <param name="destinationRootDirectory">
+        /// The destination root directory.
+        /// </param>
+        /// <param name="branchName">
+        /// Name of the branch we are generating content for
+        /// </param>
+        /// <param name="buildName">
+        /// Name of the build (concrete identifier like revision and date) for which we are generating content.
+        /// </param>
         public ScenarioDocuWriter(
             string destinationRootDirectory,
             string branchName,
@@ -137,6 +154,19 @@ namespace Scenarioo.Api
                 scenario.Name);
         }
 
+        /// <summary>
+        /// In case you want to define your screenshot names differently than by step name, you can save it on your own, into
+        /// the following directory for a scenario.
+        /// </summary>
+        /// <param name="useCaseName">
+        /// The use case name from which screenshot should be retrieved
+        /// </param>
+        /// <param name="scenarioName">
+        /// The scenario name from which screenshot should be retrieved
+        /// </param>
+        /// <returns>
+        /// Screenshot directory
+        /// </returns>
         private string GetScreenshotDirectory(string useCaseName, string scenarioName)
         {
             return this.DocuFiles.GetScreenshotDirectory(
@@ -146,6 +176,10 @@ namespace Scenarioo.Api
                 scenarioName);
         }
 
+        /// <summary>
+        /// Save the build description to appropriate directory.
+        /// </summary>
+        /// <param name="build">The build description to write</param>
         public void SaveBuildDescription(Build build)
         {
             var destBuildFile = this.DocuFiles.GetBuildFile(this._branchName, this._buildName);
@@ -153,6 +187,10 @@ namespace Scenarioo.Api
             ExecuteAsyncXmlWriter(build, destBuildFile);
         }
 
+        /// <summary>
+        /// Save the branch description to appropriate directory.
+        /// </summary>
+        /// <param name="branch">The branch description to write.</param>
         public void SaveBranchDescription(Branch branch)
         {
             var destBranchFile = this.DocuFiles.GetBranchFile(this._branchName);
@@ -160,6 +198,10 @@ namespace Scenarioo.Api
             ExecuteAsyncXmlWriter(branch, destBranchFile);
         }
 
+        /// <summary>
+        /// Save the use case description to appropriate directory and file.
+        /// </summary>
+        /// <param name="useCase">The use case description to write</param>
         public void SaveUseCase(UseCase useCase)
         {
             var desUseCaseFile = this.DocuFiles.GetUseCaseFile(this._branchName, this._buildName, useCase.Name);
@@ -190,6 +232,13 @@ namespace Scenarioo.Api
             ExecuteAsyncXmlWriter(step, desScenarioStepFile);
         }
 
+        /// <summary>
+        /// Save Screenshot as a PNG file in usual file for step.
+        /// </summary>
+        /// <param name="usecaseName">The use case name</param>
+        /// <param name="scenarioName">The scenario name</param>
+        /// <param name="step">The step</param>
+        /// <param name="file">Bytes of screenshot</param>
         public void SaveScreenshot(string usecaseName, string scenarioName, Step step, byte[] file)
         {
             var desScreenshotFile = this.DocuFiles.GetScreenshotFile(
@@ -202,6 +251,11 @@ namespace Scenarioo.Api
             ExecuteAsyncImageWriter(desScreenshotFile, file);
         }
 
+        /// <summary>
+        /// Finish asynchronous writing of all saved files. This has to be called in the end, to ensure all data saved in
+        /// this generator is written to the filesystem.
+        /// Will block until writing has finished.
+        /// </summary>
         public void Flush()
         {
             while (ScenarioDocuXMLFileUtil.RunningTasks.Count > 0)

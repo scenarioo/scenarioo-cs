@@ -37,7 +37,7 @@ namespace Scenarioo.Api.Serializer
     /// <summary>
     /// Responsible for serializing generic collections and scenarioo specific generic types
     /// to ensure conformity against Java. Scenario server shall be enabled to deserialize 
-    /// the xml. The approach to generate a schema delivered not enough "complexity" covering properly 
+    /// the xml via JAXB. The approach to generate code from given schema doesnt't provides "complexity" covering properly 
     /// cases like a generic is child of a generic. So this implementation takes place as a first step.
     /// </summary>
     public class GenericSerializer
@@ -171,7 +171,7 @@ namespace Scenarioo.Api.Serializer
         }
 
         /// <summary>
-        /// Serializes the object tree node
+        /// Serializes the object tree node.
         /// </summary>
         /// <param name="writer">
         /// XMLWriter stream.
@@ -238,7 +238,12 @@ namespace Scenarioo.Api.Serializer
             this.isTreeNodeRootElement = true;
         }
 
-        // Serialization methods
+        /// <summary>
+        /// Serializes a key-value pair
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="writer"></param>
+        /// <param name="value"></param>
         private void SerializeKeyValuePair<T>(XmlWriter writer, T value)
         {
             var keyValuePair = (KeyValuePair<string, object>)(object)value;
@@ -295,6 +300,11 @@ namespace Scenarioo.Api.Serializer
             writer.WriteEndElement();
         }
 
+        /// <summary>
+        /// Seralizes details with given attributes and elements
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="details"></param>
         private void SerializeDetails(XmlWriter writer, Details details)
         {
             if (details == null)
@@ -340,10 +350,10 @@ namespace Scenarioo.Api.Serializer
         }
 
         /// <summary>
-        /// Serializes a Scenarioo-Item
+        /// Serializes a Item
         /// </summary>
         /// <param name="writer">
-        /// Writer on which element and attributes will be placed.
+        /// Writer on which element and attributes will be written.
         /// </param>
         /// <param name="elementName">
         /// Element name.

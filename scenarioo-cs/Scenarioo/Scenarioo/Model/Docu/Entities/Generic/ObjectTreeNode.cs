@@ -36,6 +36,9 @@ namespace Scenarioo.Model.Docu.Entities.Generic
         [XmlElement("details")]
         public Details Details { get; set; }
 
+        /// <summary>
+        /// Get the children as unmodifiable list with the expected item type.
+        /// </summary>
         [XmlArray("children")]
         private readonly List<ObjectTreeNode<T>> _children = new List<ObjectTreeNode<T>>();
 
@@ -62,9 +65,14 @@ namespace Scenarioo.Model.Docu.Entities.Generic
             {
                 return this._children;
             }
-
         }
 
+        /// <summary>
+        /// Add a detail directly to the current node (this is different than the details on the contained item, because the
+        /// same item could be referenced in different nodes having different details).
+        /// </summary>
+        /// <param name="key">Key of detail</param>
+        /// <param name="value">Value of detail</param>
         public void AddDetail(string key, object value)
         {
             if (this.Details == null)
@@ -75,6 +83,10 @@ namespace Scenarioo.Model.Docu.Entities.Generic
             this.Details.AddDetail(key, value);
         }
 
+        /// <summary>
+        /// Add a child node. child nodes can be of different item type than the current node.
+        /// </summary>
+        /// <param name="child">Child to be added</param>
         public void AddChild(ObjectTreeNode<T> child)
         {
             this._children.Add(child);
@@ -96,7 +108,5 @@ namespace Scenarioo.Model.Docu.Entities.Generic
                                       Item = (T)childWithList.Item,
                                   });
         }
-
     }
-
 }

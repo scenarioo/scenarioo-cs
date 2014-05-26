@@ -20,13 +20,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System;
+using System.Xml.Serialization;
+
 namespace Scenarioo.Model.Docu.Entities.Generic
 {
-    using System;
-    using System.Xml.Serialization;
-
-    using Scenarioo.Model.Docu.Entities.Generic.Interfaces;
-
+    /// <summary>
+    /// Description of a generic (application specific) object to store in the documentation.
+    /// May contain other childs or references to other objects in the store as child objects inside details.
+    /// </summary>
     [Serializable]
     [XmlRoot("objectDescription")]
     public class ObjectDescription

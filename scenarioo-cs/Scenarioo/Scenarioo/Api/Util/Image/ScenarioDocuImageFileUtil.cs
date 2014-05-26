@@ -1,4 +1,4 @@
-﻿        /* scenarioo-api
+﻿/* scenarioo-api
  * Copyright (C) 2014, scenarioo.org Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,9 @@ namespace Scenarioo.Api.Util.Files
 
     public class ScenarioDocuImageFileUtil
     {
-
+        /// <summary>
+        /// Wrapper for marshaling an image to filesystem
+        /// </summary>
         public static void MarshalImage(string fileName, byte[] file)
         {
             using (var memStream = new MemoryStream(file))

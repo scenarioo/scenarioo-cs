@@ -26,16 +26,17 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Scenarioo.Api.Configuration;
+
 namespace Scenarioo.Api.Util.Xml
 {
     using Exception = System.Exception;
 
+    /// <summary>
+    /// Writing or reading of all ScenarioDocu entities to XML files and back
+    /// </summary>
     public class ScenarioDocuXMLFileUtil
     {
-        private const int _buffer = 8;
-
-        private const int _maxConcurrentTasks = 10;
-
         public static IList<Task> RunningTasks = new List<Task>();
 
         public static string XmlKeyIdentifier = "key";
@@ -70,7 +71,7 @@ namespace Scenarioo.Api.Util.Xml
                         }
                     });
 
-            using (var fs = new FileStream(srcFile, FileMode.Open, FileAccess.Read, FileShare.None, _buffer, true))
+            using (var fs = new FileStream(srcFile, FileMode.Open, FileAccess.Read, FileShare.None, ScenarioDocuGeneratorConfiguration.AsyncWritingBufferSize, true))
             {
                 var desirializedObject = ScenarioDocuXMLUtil.UnmarshalXml<T>(fs);
                 fs.Flush();
@@ -81,13 +82,13 @@ namespace Scenarioo.Api.Util.Xml
         }
 
         /// <summary>
-        /// Starts an asynchronus task for marhsalling an XML
+        /// Starts an asynchronus task for marhsalling an XML in a Thread-Pool
         /// </summary>
         /// <param name="entity">
-        /// The entity.
+        /// Entity to-be marshaled
         /// </param>
         /// <param name="destFile">
-        /// The dest file.
+        /// Destination filename
         /// </param>
         /// <typeparam name="T">
         /// </typeparam>
@@ -117,14 +118,14 @@ namespace Scenarioo.Api.Util.Xml
 
             do
             {
-                if (RunningTasks.Count <= _maxConcurrentTasks)
+                if (RunningTasks.Count <= ScenarioDocuGeneratorConfiguration.MaxConcurrentTasks)
                 {
                     var task = new Task(
                         () =>
                             {
                                 using (
                                     var fs = new FileStream(
-                                        destFile, FileMode.Create, FileAccess.Write, FileShare.None, _buffer, true))
+                                        destFile, FileMode.Create, FileAccess.Write, FileShare.None, ScenarioDocuGeneratorConfiguration.MaxConcurrentTasks, true))
                                 {
                                     ScenarioDocuXMLUtil.MarshalXml(entity, fs);
 
@@ -140,9 +141,9 @@ namespace Scenarioo.Api.Util.Xml
 
                 RemoveFinishedTasks();
 
-                Thread.Sleep(10);
+                Thread.Sleep(100);
             }
-            while (RunningTasks.Count > _maxConcurrentTasks);
+            while (RunningTasks.Count > ScenarioDocuGeneratorConfiguration.MaxConcurrentTasks);
         }
 
         public static void Lock(string srcPath, Action<FileStream> action)
@@ -184,8 +185,7 @@ namespace Scenarioo.Api.Util.Xml
         {
             for (int i = 0; i < RunningTasks.Count; i++)
             {
-                if (RunningTasks[i].IsCompleted ||
-                    RunningTasks[i].IsCanceled || RunningTasks[i].IsFaulted)
+                if (RunningTasks[i].IsCompleted || RunningTasks[i].IsCanceled || RunningTasks[i].IsFaulted)
                 {
                     RunningTasks.Remove(RunningTasks[i]);
                 }

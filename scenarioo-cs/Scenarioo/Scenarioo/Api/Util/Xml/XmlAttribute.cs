@@ -21,6 +21,10 @@
  */
 namespace Scenarioo.Api.Util.Xml
 {
+    /// <summary>
+    /// Contains attributes which will be binded to an object type. This is relevant
+    /// to decide, which attribute has to be binded to an object type during serialization
+    /// </summary>
     public class XmlAttribute
     {
         public string Name { get; set; }
@@ -41,7 +45,5 @@ namespace Scenarioo.Api.Util.Xml
             this.Value = value;
             this.BindingObject = bindingObject;
         }
-
-
     }
 }
