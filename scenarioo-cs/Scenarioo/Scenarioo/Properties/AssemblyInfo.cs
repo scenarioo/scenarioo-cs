@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
@@ -8,9 +7,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Scenarioo")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Zuehlke Engineering AG")]
-[assembly: AssemblyProduct("Scenarioo")]
-[assembly: AssemblyCopyright("Copyright © Zuehlke Engineering AG 2014")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Scenarioo-CS")]
+[assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
