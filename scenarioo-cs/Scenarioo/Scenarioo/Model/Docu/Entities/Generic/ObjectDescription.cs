@@ -26,15 +26,13 @@ using System.Xml.Serialization;
 namespace Scenarioo.Model.Docu.Entities.Generic
 {
     /// <summary>
-    /// Description of a generic (application specific) object to store in the documentation.
-    /// May contain other childs or references to other objects in the store as child objects inside details.
+    /// Description of an application specific object to store in the documentation.
     /// </summary>
     [Serializable]
     [XmlRoot("objectDescription")]
     public class ObjectDescription
     {
         public string Name { get; set; }
-
 
         public string Type { get; set; }
 
@@ -52,7 +50,6 @@ namespace Scenarioo.Model.Docu.Entities.Generic
             }
         }
 
-
         public ObjectDescription()
         {
 
@@ -68,6 +65,5 @@ namespace Scenarioo.Model.Docu.Entities.Generic
         {
             this.Details.AddDetail(key, value);
         }
-
     }
 }

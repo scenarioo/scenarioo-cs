@@ -34,6 +34,19 @@ namespace Scenarioo.Model.Docu.Entities.Generic
     using XmlAttribute = Scenarioo.Api.Util.Xml.XmlAttribute;
     using XmlElement = Scenarioo.Api.Util.Xml.XmlElement;
 
+    /// <summary>
+    /// Collection of application specific additional information to store and display in the scenarioo documentation.
+    /// A client of the scenarioo-API can add any key-value-data to this detail informations.
+    /// Following type of objects are possible values inside the details:
+    ///  - String: for usual text information
+    ///  - ObjectDescription: for describing an object (described through a type and a name and additional
+    ///    key-value-details again)
+    ///  - ObjectReference: for referencing an ObjectDescription that was already stored elsewhere, only
+    ///    through its type and name without storing all the details information again.
+    ///  - ObjectList: for a list of such value items (same types allowed as content types again)
+    ///  - ObjectTreeNode: for complex tree structures (containing same content types as possible node objects
+    ///    again
+    /// </summary>
     [Serializable]
     [XmlRoot("details")]
     public class Details: IXmlSerializable

@@ -24,6 +24,5 @@ namespace Scenarioo.Api.Exception
 {
     public class ScenarioDocuSaveException: System.Exception
     {
-
     }
 }

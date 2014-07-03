@@ -28,15 +28,27 @@ namespace Scenarioo.Model.Docu.Entities
 
     using Scenarioo.Model.Docu.Entities.Generic;
 
+    /// <summary>
+    /// Metadata for a step. This is a container for all additional detail data about a step that is only displayed on
+    /// details page for a step.
+    /// </summary>
     [Serializable]
     [XmlRoot("metadata")]
     public class StepMetadata
     {
+        /// <summary>
+        /// (optional) You can set all visible text of a step here to provide possibility to search inside visible step text.
+        /// But currently the scenarioo webapplication does not yet support full text search anyway and also not to display
+        /// this visible text anywhere in the webapplication.
+        /// </summary>
         [XmlElement("visibleText")]
         public string VisibleText { get; set; }
 
         private Details details = new Details();
 
+        /// <summary>
+        ///  Additional application specific details with additional metadata informations.
+        /// </summary>
         [XmlElement("details")]
         public Details Details
         {
@@ -51,11 +63,12 @@ namespace Scenarioo.Model.Docu.Entities
             }
         }
 
+        /// <summary>
+        /// Add application specific details as key-value-data-items.
+        /// </summary>
         public void AddDetail(string key, Object value)
         {
             this.Details.AddDetail(key, value);
         }
-
-
     }
 }
