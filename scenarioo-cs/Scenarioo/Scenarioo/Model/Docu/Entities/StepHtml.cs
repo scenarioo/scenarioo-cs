@@ -30,10 +30,6 @@ namespace Scenarioo.Model.Docu.Entities
     [XmlRoot("stepHtml")]
     public class StepHtml
     {
-
-        [XmlElement("htmlSource")]
-        public string HtmlSource { get; set; }
-
         public StepHtml()
         {
             this.HtmlSource = string.Empty;
@@ -43,5 +39,8 @@ namespace Scenarioo.Model.Docu.Entities
         {
             this.HtmlSource = htmlSource;
         }
+
+        [XmlElement("htmlSource")]
+        public string HtmlSource { get; set; }
     }
 }

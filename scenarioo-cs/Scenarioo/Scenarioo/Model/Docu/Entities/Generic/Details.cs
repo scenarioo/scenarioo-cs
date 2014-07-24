@@ -35,8 +35,8 @@ namespace Scenarioo.Model.Docu.Entities.Generic
     using XmlElement = Scenarioo.Api.Util.Xml.XmlElement;
 
     /// <summary>
-    /// Collection of application specific additional information to store and display in the scenarioo documentation.
-    /// A client of the scenarioo-API can add any key-value-data to this detail informations.
+    /// Collection of application specific additional information to store and display in the Scenarioo documentation.
+    /// A client of the Scenarioo API can add any key-value-data to this detail informations.
     /// Following type of objects are possible values inside the details:
     ///  - String: for usual text information
     ///  - ObjectDescription: for describing an object (described through a type and a name and additional
@@ -51,13 +51,12 @@ namespace Scenarioo.Model.Docu.Entities.Generic
     [XmlRoot("details")]
     public class Details: IXmlSerializable
     {
-
-        public Dictionary<string, object> Properties { get; set; }
-
         public Details()
         {
             this.Properties = new Dictionary<string, object>();
         }
+
+        public Dictionary<string, object> Properties { get; set; }
 
         public void AddDetail(string key, object value)
         {
@@ -83,7 +82,6 @@ namespace Scenarioo.Model.Docu.Entities.Generic
 
         public void WriteXml(XmlWriter writer)
         {
-
             foreach (var key in this.Properties.Keys)
             {
                 writer.WriteStartElement("entry");
@@ -102,19 +100,23 @@ namespace Scenarioo.Model.Docu.Entities.Generic
                 // Prepare elment and attribute names
                 genericSerializer.AddAttributeObjectBinding(new XmlAttribute(typeof(Details), "xsi:type", "details"));
                 genericSerializer.AddElementObjectBinding(new XmlElement(typeof(Details), "value"), typeof(Details));
-                genericSerializer.AddElementObjectBinding(new XmlElement(typeof(ObjectDescription), "value"), typeof(ObjectDescription));
-                genericSerializer.AddElementObjectBinding(new XmlElement(typeof(ObjectReference), "value"), typeof(ObjectReference));
-                genericSerializer.AddElementObjectBinding(new XmlElement(typeof(ObjectList<>), "value"), typeof(ObjectList<>));
-                
+                genericSerializer.AddElementObjectBinding(
+                    new XmlElement(typeof(ObjectDescription), "value"), typeof(ObjectDescription));
+                genericSerializer.AddElementObjectBinding(
+                    new XmlElement(typeof(ObjectReference), "value"), typeof(ObjectReference));
+                genericSerializer.AddElementObjectBinding(
+                    new XmlElement(typeof(ObjectList<>), "value"), typeof(ObjectList<>));
+
                 // Prepare xml tags
                 genericSerializer.AddXmlTag(
                     new XmlTag(
                         new XmlElement(typeof(ObjectTreeNode<object>), "value"),
-                        new List<XmlAttribute>()
-                        {
-                            new XmlAttribute("xmlns:xsi", ScenarioDocuXMLFileUtil.SchemaInstanceNamespace),
-                            new XmlAttribute("xsi:type", "objectTreeNode")
-                        },
+                        new List<XmlAttribute>
+                            {
+                                new XmlAttribute(
+                                    "xmlns:xsi", ScenarioDocuXMLFileUtil.SchemaInstanceNamespace),
+                                new XmlAttribute("xsi:type", "objectTreeNode")
+                            },
                         typeof(ObjectTreeNode<object>)),
                     typeof(ObjectTreeNode<object>));
 
@@ -125,7 +127,6 @@ namespace Scenarioo.Model.Docu.Entities.Generic
 
                 writer.WriteEndElement();
             }
-
         }
     }
 }

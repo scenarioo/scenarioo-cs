@@ -33,19 +33,19 @@ namespace Scenarioo.Model.Docu.Entities
     public class StepDescription
     {
         /// <summary>
-        /// The index needs to be the index of this step inside current scenario, starting with 0.
+        /// Gets or sets the index needs to be the index of this step inside current scenario, starting with 0.
         /// </summary>
         [XmlElement("index")]
         public int Index { get; set; }
 
         /// <summary>
-        /// The title of current step. Usually the title shown on the page in the UI.
+        /// Gets or sets the title of current step. Usually the title shown on the page in the UI.
         /// </summary>
         [XmlElement("title")]
         public string Title { get; set; }
 
         /// <summary>
-        /// A status of current step. Usually it is "success", "failed" or "unknown". Use "failed" in case an assertion
+        /// Gets or sets the status of current step. Usually it is "success", "failed" or "unknown". Use "failed" in case an assertion
         /// failed on current step, otherwise use "success" or "unknown". you can use different application-specific strings
         /// for marking any other special states of a step.
         /// </summary>
@@ -62,6 +62,5 @@ namespace Scenarioo.Model.Docu.Entities
         {
             this.Details.AddDetail(key, value);
         }
-
     }
 }

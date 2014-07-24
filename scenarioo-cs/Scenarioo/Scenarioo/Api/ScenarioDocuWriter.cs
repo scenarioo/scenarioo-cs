@@ -20,85 +20,83 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System.IO;
 using System.Threading;
+
+using Scenarioo.Annotations;
+using Scenarioo.Api.Files;
+using Scenarioo.Api.Util.Image;
+using Scenarioo.Api.Util.Xml;
+using Scenarioo.Model.Docu.Entities;
 
 namespace Scenarioo.Api
 {
-    using System.IO;
-
-    using Scenarioo.Api.Files;
-    using Scenarioo.Api.Util.Files;
-    using Scenarioo.Api.Util.Xml;
-    using Scenarioo.Model.Docu.Entities;
-
     /// <summary>
     ///  Generator to produce documentation files for a specific build.
-    /// The writer performs all save operations as asynchronous writes, to not block the webtests tht are typically calling
-    /// the save operations to save docu content.
+    /// The writer performs all save operations as asynchronous writes, to not block the web tests that are typically calling
+    /// the save operations to save documentation content.
     /// </summary>
     public class ScenarioDocuWriter
     {
-        public ScenarioDocuFiles DocuFiles { get; set; }
+        private readonly string branchName;
 
-        private readonly string _branchName;
+        private readonly string buildName;
 
-        private readonly string _buildName;
-
-        private string DestinationRootDirectory { get; set; }
-
-        /// <summary>
-        /// Initialize with directory inside which to generate the documentation contents.
-        /// </summary>
-        /// <param name="destinationRootDirectory">
-        /// The destination root directory.
-        /// </param>
-        /// <param name="branchName">
-        /// Name of the branch we are generating content for
-        /// </param>
-        /// <param name="buildName">
-        /// Name of the build (concrete identifier like revision and date) for which we are generating content.
-        /// </param>
         public ScenarioDocuWriter(
             string destinationRootDirectory,
             string branchName,
             string buildName)
         {
             this.DocuFiles = new ScenarioDocuFiles(destinationRootDirectory);
-            this._branchName = branchName;
-            this._buildName = buildName;
+            this.branchName = branchName;
+            this.buildName = buildName;
             this.DestinationRootDirectory = destinationRootDirectory;
 
-            CreateBuildDirectoryIfNotYetExists();
+            this.CreateBuildDirectoryIfNotYetExists();
+        }
+
+        public ScenarioDocuFiles DocuFiles { get; set; }
+
+        private string DestinationRootDirectory { [UsedImplicitly] get; set; }
+
+        private static void ExecuteAsyncXmlWriter<T>(T entity, string destFile) where T : class
+        {
+            ScenarioDocuXMLFileUtil.MarshalXml(entity, destFile);
+        }
+
+        private static void ExecuteAsyncImageWriter(string fileName, byte[] file)
+        {
+            ScenarioDocuImageFileUtil.MarshalImage(fileName, file);
         }
 
         private void CreateBuildDirectoryIfNotYetExists()
         {
-            CreateDirectoryIfNotYetExists(this.GetBuildDirectory());
+            this.CreateDirectoryIfNotYetExists(this.GetBuildDirectory());
         }
 
         private void CreateBranchDirectoryIfNotYetExists()
         {
-            CreateDirectoryIfNotYetExists(this.GetBranchDirectory());
+            this.CreateDirectoryIfNotYetExists(this.GetBranchDirectory());
         }
 
         private void CreateUseCaseDirectoryIfNotYetExists(UseCase useCase)
         {
-            CreateDirectoryIfNotYetExists(this.GetUseCaseDirectory(useCase));
+            this.CreateDirectoryIfNotYetExists(this.GetUseCaseDirectory(useCase));
         }
 
         private void CreateScenarioDirectoryIfNotYetExists(string useCaseName, Scenario scenario)
         {
-            CreateDirectoryIfNotYetExists(this.GetScenarioDirectory(useCaseName, scenario));
+            this.CreateDirectoryIfNotYetExists(this.GetScenarioDirectory(useCaseName, scenario));
         }
 
         private void CreateStepDirectoryIfNotYetExists(string useCaseName, string scenarioName)
         {
-            CreateDirectoryIfNotYetExists(this.GetStepsDirectory(useCaseName, scenarioName));
+            this.CreateDirectoryIfNotYetExists(this.GetStepsDirectory(useCaseName, scenarioName));
         }
 
         private void CreateScreenshotDirectoryIfNotYetExists(string useCaseName, string scenarioName)
         {
-            CreateDirectoryIfNotYetExists(this.GetScreenshotDirectory(useCaseName, scenarioName));
+            this.CreateDirectoryIfNotYetExists(this.GetScreenshotDirectory(useCaseName, scenarioName));
         }
 
         private void CreateDirectoryIfNotYetExists(string directory)
@@ -111,36 +109,26 @@ namespace Scenarioo.Api
             }
         }
 
-        private static void ExecuteAsyncXmlWriter<T>(T entity, string destFile) where T : class
-        {
-            ScenarioDocuXMLFileUtil.MarshalXml(entity, destFile);
-        }
-
-        private static void ExecuteAsyncImageWriter(string fileName, byte[] file)
-        {
-            ScenarioDocuImageFileUtil.MarshalImage(fileName, file);
-        }
-
         private string GetBuildDirectory()
         {
-            return this.DocuFiles.GetBuildDirectory(this._branchName, this._buildName);
+            return this.DocuFiles.GetBuildDirectory(this.branchName, this.buildName);
         }
 
         private string GetBranchDirectory()
         {
-            return this.DocuFiles.GetBranchDirectory(this._branchName);
+            return this.DocuFiles.GetBranchDirectory(this.branchName);
         }
 
         private string GetUseCaseDirectory(UseCase useCase)
         {
-            return this.DocuFiles.GetUseCaseDirectory(this._branchName, this._buildName, useCase.Name);
+            return this.DocuFiles.GetUseCaseDirectory(this.branchName, this.buildName, useCase.Name);
         }
 
         private string GetStepsDirectory(string useCaseName, string scenarioName)
         {
             return this.DocuFiles.GetScenarioStepDirectory(
-                this._branchName,
-                this._buildName,
+                this.branchName,
+                this.buildName,
                 useCaseName,
                 scenarioName);
         }
@@ -148,8 +136,8 @@ namespace Scenarioo.Api
         private string GetScenarioDirectory(string useCaseName, Scenario scenario)
         {
             return this.DocuFiles.GetScenarioDirectory(
-                this._branchName,
-                this._buildName,
+                this.branchName,
+                this.buildName,
                 useCaseName,
                 scenario.Name);
         }
@@ -170,8 +158,8 @@ namespace Scenarioo.Api
         private string GetScreenshotDirectory(string useCaseName, string scenarioName)
         {
             return this.DocuFiles.GetScreenshotDirectory(
-                this._branchName, 
-                this._buildName, 
+                this.branchName, 
+                this.buildName, 
                 useCaseName, 
                 scenarioName);
         }
@@ -182,7 +170,7 @@ namespace Scenarioo.Api
         /// <param name="build">The build description to write</param>
         public void SaveBuildDescription(Build build)
         {
-            var destBuildFile = this.DocuFiles.GetBuildFile(this._branchName, this._buildName);
+            var destBuildFile = this.DocuFiles.GetBuildFile(this.branchName, this.buildName);
             this.CreateBuildDirectoryIfNotYetExists();
             ExecuteAsyncXmlWriter(build, destBuildFile);
         }
@@ -193,7 +181,7 @@ namespace Scenarioo.Api
         /// <param name="branch">The branch description to write.</param>
         public void SaveBranchDescription(Branch branch)
         {
-            var destBranchFile = this.DocuFiles.GetBranchFile(this._branchName);
+            var destBranchFile = this.DocuFiles.GetBranchFile(this.branchName);
             this.CreateBranchDirectoryIfNotYetExists();
             ExecuteAsyncXmlWriter(branch, destBranchFile);
         }
@@ -204,7 +192,7 @@ namespace Scenarioo.Api
         /// <param name="useCase">The use case description to write</param>
         public void SaveUseCase(UseCase useCase)
         {
-            var desUseCaseFile = this.DocuFiles.GetUseCaseFile(this._branchName, this._buildName, useCase.Name);
+            var desUseCaseFile = this.DocuFiles.GetUseCaseFile(this.branchName, this.buildName, useCase.Name);
             this.CreateUseCaseDirectoryIfNotYetExists(useCase);
             ExecuteAsyncXmlWriter(useCase, desUseCaseFile);
         }
@@ -212,8 +200,8 @@ namespace Scenarioo.Api
         public void SaveScenario(string useCaseName, Scenario scenario)
         {
             var desScenarioFile = this.DocuFiles.GetScenarioFile(
-                this._branchName,
-                this._buildName,
+                this.branchName,
+                this.buildName,
                 useCaseName,
                 scenario.Name);
             this.CreateScenarioDirectoryIfNotYetExists(useCaseName, scenario);
@@ -223,8 +211,8 @@ namespace Scenarioo.Api
         public void SaveStep(string useCaseName, string scenarioName, Step step)
         {
             var desScenarioStepFile = this.DocuFiles.GetScenarioStepFile(
-                this._branchName,
-                this._buildName,
+                this.branchName,
+                this.buildName,
                 useCaseName,
                 scenarioName,
                 step.StepDescription.Index);
@@ -242,8 +230,8 @@ namespace Scenarioo.Api
         public void SaveScreenshot(string usecaseName, string scenarioName, Step step, byte[] file)
         {
             var desScreenshotFile = this.DocuFiles.GetScreenshotFile(
-                this._branchName, 
-                this._buildName, 
+                this.branchName, 
+                this.buildName, 
                 usecaseName, 
                 scenarioName, 
                 step.StepDescription.Index);
@@ -253,7 +241,7 @@ namespace Scenarioo.Api
 
         /// <summary>
         /// Finish asynchronous writing of all saved files. This has to be called in the end, to ensure all data saved in
-        /// this generator is written to the filesystem.
+        /// this generator is written to the file system.
         /// Will block until writing has finished.
         /// </summary>
         public void Flush()

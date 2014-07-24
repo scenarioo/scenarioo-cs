@@ -22,28 +22,28 @@
 namespace Scenarioo.Api.Util.Xml
 {
     /// <summary>
-    /// Contains attributes which will be binded to an object type. This is relevant
-    /// to decide, which attribute has to be binded to an object type during serialization
+    /// Contains attributes which will be bind to an object type. This is relevant
+    /// to decide, which attribute has to be bind to an object type during serialization.
     /// </summary>
     public class XmlAttribute
     {
-        public string Name { get; set; }
-
-        public string Value { get; set; }
-
-        public object BindingObject { get; set; }
-
-        public XmlAttribute(string name, string value)
-        {
-            this.Name = name;
-            this.Value = value;
-        }
-        
         public XmlAttribute(object bindingObject, string name, string value)
         {
             this.Name = name;
             this.Value = value;
             this.BindingObject = bindingObject;
         }
+
+        public XmlAttribute(string name, string value)
+        {
+            this.Name = name;
+            this.Value = value;
+        }
+
+        public string Name { get; set; }
+
+        public string Value { get; set; }
+
+        public object BindingObject { get; set; }
     }
 }

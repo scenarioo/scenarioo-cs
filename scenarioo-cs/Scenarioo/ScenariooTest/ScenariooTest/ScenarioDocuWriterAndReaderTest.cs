@@ -20,10 +20,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
 using System.Text;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Scenarioo.Api;
 using Scenarioo.Api.Files;
@@ -44,46 +45,47 @@ namespace ScenariooTest
 
         private const string ScenarioName = "testScenario";
 
-        private const string ScenarioStepName = "step";
-
-        private const string RootDirectory = @"c:\temp";
-
         private const string DetailsVersionKey = "version";
 
         private const int StepIndex = 1;
+        
+        private string rootDirectory;
 
-        private ScenarioDocuWriter _writer;
+        private ScenarioDocuWriter writer;
 
-        private ScenarioDocuReader _reader;
+        private ScenarioDocuReader reader;
 
-        private ScenarioDocuFiles _docuFiles;
-
+        private ScenarioDocuFiles docuFiles;
 
         [TestInitialize]
         public void TestInit()
         {
+            // Sets outcome directory
+            this.rootDirectory = Path.Combine(Directory.GetCurrentDirectory(), "testoutcome");
 
-            this._writer = new ScenarioDocuWriter(
-                RootDirectory,
+            if (!Directory.Exists(this.rootDirectory))
+            {
+                Directory.CreateDirectory(this.rootDirectory);
+            }
+
+            this.writer = new ScenarioDocuWriter(
+                this.rootDirectory,
                 BranchName,
                 BuildName);
 
-            this._reader = new ScenarioDocuReader(RootDirectory);
+            this.reader = new ScenarioDocuReader(this.rootDirectory);
 
-            this._docuFiles = new ScenarioDocuFiles(RootDirectory);
-
+            this.docuFiles = new ScenarioDocuFiles(this.rootDirectory);
         }
 
         [TestCleanup]
         public void TestCleanUp()
         {
-
         }
 
         [TestMethod]
-        public void WriteAndReadBranchDescription()
+        public void WriteBranchDescription()
         {
-
             // GIVEN: a typical Branch
             var branch = new Branch
                              {
@@ -91,46 +93,36 @@ namespace ScenariooTest
                                  Description = "just a simple development Branch, might as well be the trunk."
                              };
 
-
             // WHEN: the Branch was saved. The files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
-            this._writer.SaveBranchDescription(branch);
-            this._writer.Flush();            
+            this.writer.SaveBranchDescription(branch);
+            this.writer.Flush();            
 
             // THEN: the Branch can be loaded successfully and correctly
-            var branchFromFile = this._reader.LoadBranch(BranchName);
+            var branchFromFile = this.reader.LoadBranch(BranchName);
             Assert.AreEqual(BranchName, branchFromFile.Name);
             Assert.AreEqual(branch.Description, branchFromFile.Description);
-
         }
 
         [TestMethod]
-        public void WriteAndReadBuildDescription()
+        public void WriteBuildDescription()
         {
-
             // GIVEN: a typical Build
             var build = new Build { Name = BuildName, Date = DateTime.Today, Revision = "10123", Status = "success" };
 
             build.AddDetail(DetailsVersionKey, "1.0.1");
 
             // WHEN: the Build was saved.
-            this._writer.SaveBuildDescription(build);
+            this.writer.SaveBuildDescription(build);
 
             // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
-            this._writer.Flush();
+            this.writer.Flush();
 
-            // THEN: the Build can be loaded successfully and correctly
-//            var buildFromFile = reader.LoadBuild(BuildName, BranchName);
-//            Assert.AreEqual(build.Name, buildFromFile.Name);
-            
-//            Assert.AreEqual(build.Date, buildFromFile.Date);
-//            Assert.AreEqual(build.Revision, buildFromFile.Revision);
-//            Assert.AreEqual(build.Status, buildFromFile.Status);
-//            Assert.AreEqual(build.Details.Properties.Keys, buildFromFile.Details.Properties.Keys);
-//            Assert.AreEqual(build.Details.Properties.Values, buildFromFile.Details.Properties.Values);
+            // THEN: the Build file exists
+            Assert.IsTrue(File.Exists(this.docuFiles.GetBuildFile(BranchName, BuildName)));
         }
 
         [TestMethod]
-        public void WriteAndReadUseCaseDescription()
+        public void WriteUseCaseDescription()
         {
             // GIVEN: a typical use case
             var usecase = new UseCase
@@ -143,25 +135,18 @@ namespace ScenariooTest
             usecase.AddDetail("webtestName", "UseCaseWebTest");
 
             // WHEN: the usecase was saved.
-            this._writer.SaveUseCase(usecase);
+            this.writer.SaveUseCase(usecase);
 
             // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
-            this._writer.Flush();
+            this.writer.Flush();
 
-            // THEN: the usecase can be loaded successfully and correctly
-            //            var useCaseFromFile = reader.LoadUseCase(BuildName, BranchName, UseCaseName);
-            //            Assert.AreEqual(usecase.Name, useCaseFromFile.Name);
-            //            Assert.AreEqual(usecase.Description, useCaseFromFile.Description);
-            //            Assert.AreEqual(usecase.Status, useCaseFromFile.Status);
-            //            Assert.AreEqual(usecase.Details.Properties.Keys, useCaseFromFile.Details.Properties.Keys);
-            //            Assert.AreEqual(usecase.Details.Properties.Values, useCaseFromFile.Details.Properties.Values);
-
+            // THEN: the usecase file exists
+            Assert.IsTrue(File.Exists(this.docuFiles.GetUseCaseFile(BranchName, BuildName, UseCaseName)));
         }
 
         [TestMethod]
-        public void WriteAndReadScenarioDescription()
+        public void WriteScenarioDescription()
         {
-
             // GIVEN: a typical scenario
             var scenario = new Scenario
                                {
@@ -173,25 +158,18 @@ namespace ScenariooTest
             scenario.AddDetail("userRole", "customer");
 
             // WHEN: the scenario was saved.
-            this._writer.SaveScenario(UseCaseName, scenario);
+            this.writer.SaveScenario(UseCaseName, scenario);
 
-            // THEN: the files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
-            this._writer.Flush();
+            // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
+            this.writer.Flush();
 
-            // THEN: the scenario can be loaded successfully and correctly
-            //            var scenarioFromFile = reader.LoadScenario(BuildName, BranchName, UseCaseName, ScenarioName);
-            //            Assert.AreEqual(scenario.Name, scenarioFromFile.Name);
-            //            Assert.AreEqual(scenario.Description, scenarioFromFile.Description);
-            //            Assert.AreEqual(scenario.Status, scenarioFromFile.Status);
-            //            Assert.AreEqual(scenario.Details.Properties.Keys, scenarioFromFile.Details.Properties.Keys);
-            //            Assert.AreEqual(scenario.Details.Properties.Values, scenarioFromFile.Details.Properties.Values);
-
+            // THEN: the scneario file exists
+            Assert.IsTrue(File.Exists(this.docuFiles.GetScenarioFile(BranchName, BuildName, UseCaseName, ScenarioName)));
         }
 
         [TestMethod]
-        public void WriteAndReadStep()
+        public void WriteStep()
         {
-
             // GIVEN: a typical step
             var step = new Step();
             var stepDescription = new StepDescription { Index = StepIndex, Title = "Test Step", Status = "success" };
@@ -208,36 +186,17 @@ namespace ScenariooTest
             step.StepMetadata.AddDetail("mockedServicesConfiguration", "dummy_config_xy.properties");
 
             // WHEN: the step was saved.
-            this._writer.SaveStep(UseCaseName, ScenarioName, step);
+            this.writer.SaveStep(UseCaseName, ScenarioName, step);
 
             // THEN: the files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
-            this._writer.Flush();
+            this.writer.Flush();
 
-            // THEN: the step can be loaded successfully and correctly
-            //            var stepFromFile = reader.LoadStep(
-            //                BuildName,
-            //                BranchName,
-            //                UseCaseName,
-            //                ScenarioName,
-            //                ScenarioStepName,
-            //                StepIndex);
-
-            //            Assert.AreEqual(StepIndex, stepFromFile.StepDescription.Index);
-            //            Assert.AreEqual(step.StepDescription.Title, stepFromFile.StepDescription.Title);
-            //            Assert.AreEqual(step.StepDescription.Status,stepFromFile.StepDescription.Status);
-            //            Assert.AreEqual(step.StepHtml.htmlSource, stepFromFile.StepHtml.htmlSource);
-            //            Assert.AreEqual(step.Page.Name, stepFromFile.Page.Name);
-            //            Assert.AreEqual(
-            //                step.StepMetadata.Details.Properties.Keys,
-            //                stepFromFile.StepMetadata.Details.Properties.Keys);
-            //            Assert.AreEqual(step.StepMetadata.Details.Properties.Values, stepFromFile.StepMetadata.Details.Properties.Values);
+            // THEN: at least one step file exists
+            Assert.IsTrue(File.Exists(this.docuFiles.GetScenarioStepFile(BranchName, BuildName, UseCaseName, ScenarioName, 1)));
         }
         
-        /// <summary>
-        /// Tests writing and reading of a scenario docu file containing some basic collections that need to be supported.
-        /// </summary>
         [TestMethod]
-        public void WriteAndReadGenericCollectionsInDetails()
+        public void WriteGenericCollectionsInDetails()
         {
             // GIVEN: any object containing collections in details
             var scenario = new Scenario
@@ -262,17 +221,13 @@ namespace ScenariooTest
             scenario.Details.AddDetail("list", objList);
 
             // WHEN: the object was saved.
-            this._writer.SaveScenario(UseCaseName, scenario);
+            this.writer.SaveScenario(UseCaseName, scenario);
 
             // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
-            this._writer.Flush();
+            this.writer.Flush();
 
-            // THEN: the collections get loaded correctly again.
-            //Scenario scenarioFromFile = reader.loadScenario(TEST_Branch_NAME, TEST_BUILD_NAME, TEST_CASE_NAME,
-            //TEST_SCENARIO_NAME);
-            //assertEquals(list, scenarioFromFile.getDetails().getDetail("list"));
-            //assertEquals(detailsMap, scenarioFromFile.getDetails().getDetail("map"));
-            //assertEquals(scenario.getDetails(), scenarioFromFile.getDetails());
+            // THEN: the scneario file exists
+            Assert.IsTrue(File.Exists(this.docuFiles.GetScenarioFile(BranchName, BuildName, UseCaseName, ScenarioName)));
         }
 
         [TestMethod]
@@ -325,16 +280,15 @@ namespace ScenariooTest
             scenario.AddDetail("exampleTree", rootNode);
 
             // WHEN: the object was saved.
-            this._writer.SaveScenario(UseCaseName, scenario);
+            this.writer.SaveScenario(UseCaseName, scenario);
 
             // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
-            this._writer.Flush();
+            this.writer.Flush();
+
+            // THEN: the scneario file exists
+            Assert.IsTrue(File.Exists(this.docuFiles.GetScenarioFile(BranchName, BuildName, UseCaseName, ScenarioName)));
         }
 
-
-        /// <summary>
-        /// Test that the files are written asynchronously and that the flush method waits correctly for the last file to bewritten.
-        /// </summary>
         [TestMethod]
         public void AsyncWriteOfMultipleFilesAndFlush()
         {
@@ -345,7 +299,7 @@ namespace ScenariooTest
                 steps[index] = this.CreateBigDataStepForLoadTestAsyncWriting(index + 1);
             }
 
-            var expectedFileForSteps = this._docuFiles.GetScenarioStepFile(
+            var expectedFileForSteps = this.docuFiles.GetScenarioStepFile(
                 BranchName,
                 BuildName,
                 UseCaseName,
@@ -362,17 +316,50 @@ namespace ScenariooTest
             // WHEN: saving those steps, 
             foreach (var step in steps)
             {
-                this._writer.SaveStep(UseCaseName, ScenarioName, step);
+                this.writer.SaveStep(UseCaseName, ScenarioName, step);
             }
 
             // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
-            this._writer.Flush();
+            this.writer.Flush();
             Assert.IsTrue(File.Exists(expectedFileForSteps));
+        }
+
+        private static StepHtml CreateBigHtml()
+        {
+            var builder = new StringBuilder();
+            builder.Append("<html><head></head><body>");
+            builder.Append(
+                "<p>This is just a dummy html code with lot of content to generate a lot of big data to write for load testing.<p>");
+            for (int i = 0; i < 1000; i++)
+            {
+                builder.Append(
+                    "<div class=\"dummyParagraph" + i
+                    + "\">This is just a dummy html code with lot of content to generate a lot of big data to write for load testing.</div>");
+            }
+
+            builder.Append("</body></html>");
+
+            var html = new StepHtml { HtmlSource = builder.ToString() };
+            return html;
+        }
+
+        /// <summary>
+        /// Simply generate StepMetadata object with a lot of details to get a big step for load testing of writing.
+        /// </summary>
+        /// <returns>Generated StepMetadata</returns>
+        private static StepMetadata CreateBigMetadata()
+        {
+            var stepMetadata = new StepMetadata();
+            for (var i = 0; i < 1000; i++)
+            {
+                stepMetadata.Details.AddDetail("detail" + i, "just a detail to produce a lot of data that needs marshalling and writing.");
+            }
+
+            return stepMetadata;
         }
 
         private Step CreateBigDataStepForLoadTestAsyncWriting(int index)
         {
-
             var step = new Step();
 
             // Description
@@ -380,7 +367,7 @@ namespace ScenariooTest
                                       {
                                           Index = index,
                                           ScreenshotFileName =
-                                              this._docuFiles.GetScreenshotFile(
+                                              this.docuFiles.GetScreenshotFile(
                                                   BranchName,
                                                   BuildName,
                                                   UseCaseName,
@@ -399,47 +386,9 @@ namespace ScenariooTest
             step.Page = new Page("test.jsp");
 
             // HTML (lot of dummy data, just to generate big data for writing) 
-            step.StepHtml = this.CreateBigHtml();
+            step.StepHtml = CreateBigHtml();
 
             return step;
-        }
-
-        /// <summary>
-        /// Simply generate a big dummy html for load testing of writing.
-        /// </summary>
-        /// <returns>Created Html</returns>
-        public StepHtml CreateBigHtml()
-        {
-
-            var builder = new StringBuilder();
-            builder.Append("<html><head></head><body>");
-            builder.Append(
-                "<p>This is just a dummy html code with lot of content to generate a lot of big data to write for load testing.<p>");
-            for (int i = 0; i < 1000; i++)
-            {
-                builder.Append(
-                    "<div class=\"dummyParagraph" + i
-                    + "\">This is just a dummy html code with lot of content to generate a lot of big data to write for load testing.</div>");
-            }
-            builder.Append("</body></html>");
-
-            var html = new StepHtml { HtmlSource = builder.ToString() };
-            return html;
-        }
-
-        /// <summary>
-        /// Simply generate StepMetadata object with a lot of details to get a big step for load testing of writing.
-        /// </summary>
-        /// <returns>Generated StepMetadata</returns>
-        private StepMetadata CreateBigMetadata()
-        {
-            var stepMetadata = new StepMetadata();
-            for (var i = 0; i < 1000; i++)
-            {
-                stepMetadata.Details.AddDetail("detail" + i, "just a detail to produce a lot of data that needs marshalling and writing.");
-            }
-
-            return stepMetadata;
         }
     }
 }

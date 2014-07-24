@@ -35,73 +35,96 @@ namespace Scenarioo.Api.Serializer
     using XmlElement = Scenarioo.Api.Util.Xml.XmlElement;
 
     /// <summary>
-    /// Responsible for serializing generic collections and scenarioo specific generic types
+    /// Responsible for serializing generic collections and specific generic types
     /// to ensure conformity against Java. Scenario server shall be enabled to deserialize 
-    /// the xml via JAXB. The approach to generate code from given schema doesnt't provides "complexity" covering properly 
+    /// the xml via JAXB. The approach to generate code from given schema does not provide "complexity" covering properly 
     /// cases like a generic is child of a generic. So this implementation takes place as a first step.
     /// </summary>
     public class GenericSerializer
     {
-        private readonly List<XmlElement> _elementObjectBindings = new List<XmlElement>();
+        public bool IsTreeNodeRootElement = true;
 
-        private readonly List<XmlAttribute> _attributeObjectBindings = new List<XmlAttribute>();
+        private readonly List<XmlElement> elementObjectBindings = new List<XmlElement>();
 
-        private readonly List<XmlTag> _xmlTagObjectBindings = new List<XmlTag>();
+        private readonly List<XmlAttribute> attributeObjectBindings = new List<XmlAttribute>();
 
+        private readonly List<XmlTag> xmlTagObjectBindings = new List<XmlTag>();
+        
         public string DetailElementName { get; set; }
 
         public bool SuppressProperties { get; set; }
-
-        public bool isTreeNodeRootElement = true;
-
+        
         public void AddElementObjectBinding(XmlElement element, object type)
         {
-            this._elementObjectBindings.RemoveAll(e => e.BindingObject == type);
-            this._elementObjectBindings.Add(element);
-
+            this.elementObjectBindings.RemoveAll(e => e.BindingObject == type);
+            this.elementObjectBindings.Add(element);
         }
 
         public void AddAttributeObjectBinding(XmlAttribute attribute)
         {
-            this._attributeObjectBindings.RemoveAll(e => ReferenceEquals(e.BindingObject.GetType(), attribute.BindingObject.GetType()));
-            this._attributeObjectBindings.Add(attribute); 
-
+            this.attributeObjectBindings.RemoveAll(e => ReferenceEquals(e.BindingObject.GetType(), attribute.BindingObject.GetType()));
+            this.attributeObjectBindings.Add(attribute);
         }
 
         public void AddXmlTag(XmlTag tag, object type)
         {
-            this._xmlTagObjectBindings.RemoveAll(t => t.BindingObject == type);
-            this._xmlTagObjectBindings.Add(tag);
+            this.xmlTagObjectBindings.RemoveAll(t => t.BindingObject == type);
+            this.xmlTagObjectBindings.Add(tag);
+        }
 
+        private static void SerializeList<T>(XmlWriter writer, T value)
+        {
+            foreach (var item in (IList)value)
+            {
+                writer.WriteStartElement("items");
+                writer.WriteAttributeString("xsi:type", string.Format("{0}{1}", "xs:", item.GetType().Name.ToLower()));
+                writer.WriteValue(item.ToString());
+                writer.WriteEndElement();
+            }
+        }
+
+        private static void SerializeString<T>(XmlWriter writer, T value)
+        {
+            writer.WriteStartElement("value");
+            writer.WriteAttributeString(
+                "xsi:type",
+                string.Format("{0}{1}", "xs:", value.GetType().Name.ToLower()));
+            writer.WriteString(value.ToString());
+            writer.WriteEndElement();
+        }
+
+        private static void SerializeGenericItem<T>(XmlWriter writer, string elementName, T value)
+        {
+            writer.WriteStartElement(elementName);
+            writer.WriteAttributeString(
+                "xsi:type",
+                string.Format("{0}{1}", "xs:", value.GetType().Name.ToLower()));
+            writer.WriteString(value.ToString());
+            writer.WriteEndElement();
+        }
+
+        private static void SerializeObjectReference(XmlWriter writer, string xsName, string xsType, string objectName, string elementName)
+        {
+            writer.WriteStartElement(elementName);
+            writer.WriteAttributeString("xsi:type", objectName);
+            writer.WriteElementString("name", xsName);
+            writer.WriteElementString("type", xsType);
+
+            writer.WriteEndElement();
         }
 
         private XmlTag ResolveXmlTag(object type)
         {
-            var firstOrDefault = this._xmlTagObjectBindings.FirstOrDefault(e => ReferenceEquals(e.BindingObject, type));
-            if (firstOrDefault != null)
-            {
-                return firstOrDefault;
-            }
-
-            return null;
+            return this.xmlTagObjectBindings.FirstOrDefault(e => ReferenceEquals(e.BindingObject, type));
         }
 
         private string ResolveElementName(object type)
         {
-            var firstOrDefault = this._elementObjectBindings.FirstOrDefault(e => ReferenceEquals(e.BindingObject, type));
-            if (firstOrDefault != null)
-            {
-                return firstOrDefault.Name;
-            }
-
-            return string.Empty;
+            var firstOrDefault = this.elementObjectBindings.FirstOrDefault(e => ReferenceEquals(e.BindingObject, type));
+            return firstOrDefault != null ? firstOrDefault.Name : string.Empty;
         }
 
-        /// <summary>
-        /// Serializes all depending generic types from scenarioo and traverse recursively.
-        /// </summary>
-        /// <param name="writer">Streamoutput in which will be serialized</param>
-        /// <param name="value">Any value which shall be serialized</param>
+        // Serializes all depending generic types and traverses recursively.
         public void SerializeDetails<T>(XmlWriter writer, T value)
         {
             // Primitive handles only a couple of datatypes byte, int, bool... 
@@ -116,10 +139,10 @@ namespace Scenarioo.Api.Serializer
             else if (value.GetType().IsGenericType && value.GetType().GetGenericTypeDefinition() == typeof(ObjectList<>))
             {
                 writer.WriteStartElement(this.ResolveElementName(typeof(ObjectList<>)));
-                this.WriteResolvedAttributes(writer, this._attributeObjectBindings, typeof(ObjectList<>));
+                this.WriteResolvedAttributes(writer, this.attributeObjectBindings, typeof(ObjectList<>));
                 writer.WriteAttributeString("xmlns" + ":xsi", ScenarioDocuXMLFileUtil.SchemaInstanceNamespace);
                 writer.WriteAttributeString("xsi:type", "objectList");
-                this.SerializeList(writer, value);
+                SerializeList(writer, value);
                 writer.WriteEndElement();
             }
             else if (value.GetType() == typeof(KeyValuePair<string, object>))
@@ -134,7 +157,7 @@ namespace Scenarioo.Api.Serializer
             {
                 var elementCreated = this.WriteXmlTag(writer, value);
 
-                this.SerializeObjectTreeNode<object>(writer, value);
+                this.SerializeObjectTreeNode(writer, value);
 
                 if (elementCreated)
                 {
@@ -157,7 +180,7 @@ namespace Scenarioo.Api.Serializer
             else if (value.GetType() == typeof(ObjectReference))
             {
                 var objectReference = (ObjectReference)(object)value;
-                this.SerializeObjectReference(
+                SerializeObjectReference(
                     writer,
                     objectReference.Name,
                     objectReference.Type,
@@ -173,15 +196,7 @@ namespace Scenarioo.Api.Serializer
         /// <summary>
         /// Serializes the object tree node.
         /// </summary>
-        /// <param name="writer">
-        /// XMLWriter stream.
-        /// </param>
-        /// <param name="objTreeNode">
-        /// TreeNode which should be serialized.
-        /// </param>
-        /// <typeparam name="T">
-        /// </typeparam>
-        private void SerializeObjectTreeNode<T>(XmlWriter writer, object objTreeNode)
+        private void SerializeObjectTreeNode(XmlWriter writer, object objTreeNode)
         {
             // Changes the element name, because it depends on context where objectTree is placed (e.g. value, item)
             this.AddElementObjectBinding(new XmlElement(typeof(ObjectDescription), "item"), typeof(ObjectDescription));
@@ -196,9 +211,9 @@ namespace Scenarioo.Api.Serializer
             {
                 // Write generic Item only for root in TreeNode and not for
                 // further childs in TreeNode
-                if (this.isTreeNodeRootElement)
+                if (this.IsTreeNodeRootElement)
                 {
-                    this.SerializeGenericItem(writer, "item", value.Item);
+                    SerializeGenericItem(writer, "item", value.Item);
                 }
             }
 
@@ -224,10 +239,10 @@ namespace Scenarioo.Api.Serializer
                 if (child.Children.Count > 0)
                 {
                     // Write value namespace element only for root
-                    this._xmlTagObjectBindings.RemoveAll(e => ReferenceEquals(e.BindingObject, value.GetType()));
+                    this.xmlTagObjectBindings.RemoveAll(e => ReferenceEquals(e.BindingObject, value.GetType()));
 
                     // Don't create item-tag with full qualified namespace
-                    this.isTreeNodeRootElement = false;
+                    this.IsTreeNodeRootElement = false;
 
                     this.SerializeDetails(writer, child);
                 }
@@ -235,15 +250,12 @@ namespace Scenarioo.Api.Serializer
                 writer.WriteEndElement();
             }
 
-            this.isTreeNodeRootElement = true;
+            this.IsTreeNodeRootElement = true;
         }
 
         /// <summary>
         /// Serializes a key-value pair
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="writer"></param>
-        /// <param name="value"></param>
         private void SerializeKeyValuePair<T>(XmlWriter writer, T value)
         {
             var keyValuePair = (KeyValuePair<string, object>)(object)value;
@@ -251,37 +263,6 @@ namespace Scenarioo.Api.Serializer
             writer.WriteStartElement("entry");
             writer.WriteElementString("key", keyValuePair.Key);
             this.SerializeDetails(writer, keyValuePair.Value);
-            writer.WriteEndElement();
-        }
-
-        private void SerializeList<T>(XmlWriter writer, T value)
-        {
-            foreach (var item in (IList)value)
-            {
-                writer.WriteStartElement("items");
-                writer.WriteAttributeString("xsi:type", string.Format("{0}{1}", "xs:", item.GetType().Name.ToLower()));
-                writer.WriteValue(item.ToString());
-                writer.WriteEndElement();
-            }
-        }
-
-        private void SerializeString<T>(XmlWriter writer, T value)
-        {
-            writer.WriteStartElement("value");
-            writer.WriteAttributeString(
-                "xsi:type",
-                string.Format("{0}{1}", "xs:", value.GetType().Name.ToLower()));
-            writer.WriteString(value.ToString());
-            writer.WriteEndElement();
-        }
-
-        private void SerializeObjectReference(XmlWriter writer, string xsName, string xsType, string objectName, string elementName)
-        {
-            writer.WriteStartElement(elementName);
-            writer.WriteAttributeString("xsi:type", objectName);
-            writer.WriteElementString("name", xsName);
-            writer.WriteElementString("type", xsType);
-
             writer.WriteEndElement();
         }
 
@@ -301,10 +282,8 @@ namespace Scenarioo.Api.Serializer
         }
 
         /// <summary>
-        /// Seralizes details with given attributes and elements
+        /// Serialize details with given attributes and elements.
         /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="details"></param>
         private void SerializeDetails(XmlWriter writer, Details details)
         {
             if (details == null)
@@ -319,14 +298,14 @@ namespace Scenarioo.Api.Serializer
                 this.AddAttributeObjectBinding(new XmlAttribute(typeof(Details), "xsi:type", "details"));
                 writer.WriteStartElement(
                     this.ResolveElementName(typeof(Details)));
-                this.WriteResolvedAttributes(writer, this._attributeObjectBindings, typeof(Details));
+                this.WriteResolvedAttributes(writer, this.attributeObjectBindings, typeof(Details));
             }
             else
             {
                 this.AddElementObjectBinding(new XmlElement(typeof(Details), "details"), typeof(Details));
-                this._attributeObjectBindings.RemoveAll(e => e.BindingObject == typeof(Details));
+                this.attributeObjectBindings.RemoveAll(e => e.BindingObject == typeof(Details));
                 writer.WriteStartElement(this.ResolveElementName(typeof(Details)));
-                this.WriteResolvedAttributes(writer, this._attributeObjectBindings, typeof(Details));
+                this.WriteResolvedAttributes(writer, this.attributeObjectBindings, typeof(Details));
             }
             
             if (!this.SuppressProperties)
@@ -339,38 +318,12 @@ namespace Scenarioo.Api.Serializer
                 this.SerializeDetails(writer, item);
             }
 
-
             writer.WriteEndElement();
-
 
             if (!this.SuppressProperties)
             {
                 writer.WriteEndElement();
             }
-        }
-
-        /// <summary>
-        /// Serializes a Item
-        /// </summary>
-        /// <param name="writer">
-        /// Writer on which element and attributes will be written.
-        /// </param>
-        /// <param name="elementName">
-        /// Element name.
-        /// </param>
-        /// <param name="value">
-        /// Element value.
-        /// </param>
-        /// <typeparam name="T">
-        /// </typeparam>
-        private void SerializeGenericItem<T>(XmlWriter writer, string elementName, T value)
-        {
-            writer.WriteStartElement(elementName);
-            writer.WriteAttributeString(
-                "xsi:type",
-                string.Format("{0}{1}", "xs:", value.GetType().Name.ToLower()));
-            writer.WriteString(value.ToString());
-            writer.WriteEndElement();
         }
 
         private void WriteResolvedAttributes(XmlWriter writer, IEnumerable<XmlAttribute> attributes, object attributeBindedObject)

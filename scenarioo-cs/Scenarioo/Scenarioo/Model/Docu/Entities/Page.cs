@@ -32,12 +32,6 @@ namespace Scenarioo.Model.Docu.Entities
     [XmlRoot("page")]
     public class Page
     {
-        [XmlElement("name")]
-        public string Name { get; set; }
-
-        [XmlElement("details")]
-        public Details Details { get; set; }
-
         public Page()
         {
             this.Name = string.Empty;
@@ -48,5 +42,10 @@ namespace Scenarioo.Model.Docu.Entities
             this.Name = name;
         }
 
+        [XmlElement("name")]
+        public string Name { get; set; }
+
+        [XmlElement("details")]
+        public Details Details { get; set; }
     }
 }

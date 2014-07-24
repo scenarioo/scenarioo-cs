@@ -20,10 +20,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using Scenarioo.Annotations;
+
 namespace Scenarioo.Api.Exception
 {
     public class ResourceNotFoundException : System.Exception
     {
+        [UsedImplicitly]
         private string message;
 
         public ResourceNotFoundException(string message)

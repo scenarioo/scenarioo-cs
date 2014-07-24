@@ -32,18 +32,6 @@ namespace Scenarioo.Model.Docu.Entities
     [XmlRoot("scenario")]
     public class Scenario
     {
-        [XmlElement("name")]
-        public string Name { get; set; }
-
-        [XmlElement("description")]
-        public string Description { get; set; }
-
-        [XmlElement("status")]
-        public string Status { get; set; }
-
-        [XmlElement("details")]
-        public Details Details { get; set; }
-
         [XmlNamespaceDeclarations]
         public XmlSerializerNamespaces Xmlns;
 
@@ -60,11 +48,22 @@ namespace Scenarioo.Model.Docu.Entities
         }
 
         public Scenario(string name, string description, int numberOfPages, int numberOfSteps)
-            : base()
         {
             this.Name = name;
             this.Description = description;
         }
+
+        [XmlElement("name")]
+        public string Name { get; set; }
+
+        [XmlElement("description")]
+        public string Description { get; set; }
+
+        [XmlElement("status")]
+        public string Status { get; set; }
+
+        [XmlElement("details")]
+        public Details Details { get; set; }
 
         public void AddDetail(string key, object value)
         {

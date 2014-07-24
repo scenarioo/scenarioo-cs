@@ -32,5 +32,4 @@ namespace Scenarioo.Model.Docu.Entities.Generic.Interfaces
 
         T Item { get; set; }
     }
-
 }

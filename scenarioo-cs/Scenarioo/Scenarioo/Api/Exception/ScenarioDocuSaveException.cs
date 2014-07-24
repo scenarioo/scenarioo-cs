@@ -22,7 +22,7 @@
 
 namespace Scenarioo.Api.Exception
 {
-    public class ScenarioDocuSaveException: System.Exception
+    public class ScenarioDocuSaveException : System.Exception
     {
     }
 }

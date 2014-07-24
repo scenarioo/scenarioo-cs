@@ -33,17 +33,11 @@ namespace Scenarioo.Model.Docu.Entities.Generic
     [Serializable]
     public class ObjectTreeNode<T> : IObjectTreeNode<T>
     {
-        [XmlElement("details")]
-        public Details Details { get; set; }
-
         /// <summary>
         /// Get the children as unmodifiable list with the expected item type.
         /// </summary>
         [XmlArray("children")]
-        private readonly List<ObjectTreeNode<T>> _children = new List<ObjectTreeNode<T>>();
-
-        [XmlElement("item")]
-        public T Item { get; set; }
+        private readonly List<ObjectTreeNode<T>> children = new List<ObjectTreeNode<T>>();
 
         [XmlNamespaceDeclarations]
         public XmlSerializerNamespaces Xmlns;
@@ -53,17 +47,21 @@ namespace Scenarioo.Model.Docu.Entities.Generic
         }
 
         public ObjectTreeNode(T item)
-            : base()
         {
             this.Item = item;
         }
 
+        [XmlElement("details")]
+        public Details Details { get; set; }
+
+        [XmlElement("item")]
+        public T Item { get; set; }
 
         public List<ObjectTreeNode<T>> Children
         {
             get
             {
-                return this._children;
+                return this.children;
             }
         }
 
@@ -89,7 +87,7 @@ namespace Scenarioo.Model.Docu.Entities.Generic
         /// <param name="child">Child to be added</param>
         public void AddChild(ObjectTreeNode<T> child)
         {
-            this._children.Add(child);
+            this.children.Add(child);
         }
 
         public void AddChildren(IEnumerable<ObjectTreeNode<T>> childrenValue)
@@ -97,16 +95,13 @@ namespace Scenarioo.Model.Docu.Entities.Generic
             var objectTreeNodes = childrenValue as ObjectTreeNode<T>[] ?? childrenValue.ToArray();
             if (objectTreeNodes.Any())
             {
-                this._children.AddRange(objectTreeNodes);
+                this.children.AddRange(objectTreeNodes);
             }
         }
 
         public void AddChild(ObjectTreeNode<IObjectTreeNode<object>> childWithList)
         {
-            this._children.Add(new ObjectTreeNode<T>()
-                                  {
-                                      Item = (T)childWithList.Item,
-                                  });
+            this.children.Add(new ObjectTreeNode<T> { Item = (T)childWithList.Item, });
         }
     }
 }

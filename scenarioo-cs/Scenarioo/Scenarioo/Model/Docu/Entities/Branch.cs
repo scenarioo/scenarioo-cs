@@ -32,16 +32,6 @@ namespace Scenarioo.Model.Docu.Entities
     [XmlRoot("branch")]
     public class Branch
     {
-
-        [XmlElement("name")]
-        public string Name { get; set; }
-
-        [XmlElement("description")]
-        public string Description { get; set; }
-
-        [XmlElement("details")]
-        public Details Details { get; set; }
-
         [XmlNamespaceDeclarations]
         public XmlSerializerNamespaces Xmlns;
 
@@ -60,11 +50,19 @@ namespace Scenarioo.Model.Docu.Entities
         }
 
         public Branch(string name, string description)
-
         {
             this.Name = name;
             this.Description = description;
         }
+
+        [XmlElement("name")]
+        public string Name { get; set; }
+
+        [XmlElement("description")]
+        public string Description { get; set; }
+
+        [XmlElement("details")]
+        public Details Details { get; set; }
 
         public void AddDetails(string key, object value)
         {
@@ -75,6 +73,5 @@ namespace Scenarioo.Model.Docu.Entities
 
             this.Details.AddDetail(key, value);
         }
-
     }
 }

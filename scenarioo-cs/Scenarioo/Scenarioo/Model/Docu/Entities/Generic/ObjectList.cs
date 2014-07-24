@@ -32,6 +32,20 @@ namespace Scenarioo.Model.Docu.Entities.Generic
     {
         private IList<T> items = new List<T>();
 
+        public ObjectList(IList<T> items)
+        {
+            this.items = items;
+        }
+
+        public ObjectList(IEnumerable<T> items)
+        {
+            this.items = items.ToList();
+        }
+
+        public ObjectList()
+        {
+        }
+
         public IList<T> Items
         {
             get
@@ -45,66 +59,13 @@ namespace Scenarioo.Model.Docu.Entities.Generic
             }
         }
 
-        public ObjectList(IList<T> items)
-        {
-            this.items = items;
-        }
-
-        public ObjectList(IEnumerable<T> items)
-        {
-            this.items = items.ToList();
-        }
-
-        public ObjectList()
-        {
-            
-        }
-
-        public override int GetHashCode()
-        {
-            const int Prime = 31;
-		    var result = 1;
-		    result = Prime * result + ((this.Items == null) ? 0 : this.Items.GetHashCode());
-		    return result;
-        }
-
-        public override bool Equals(Object obj)
-        {
-            if (this == obj)
-            {
-                return true;
-            }
-            if (obj == null)
-            {
-                return false;
-            }
-            if (this.GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            var other = (ObjectList<T>) obj;
-
-            if (items == null)
-            {
-                if (other.items != null)
-                {
-                    return false;
-                }
-            }
-            else if (!items.Equals(other.items))
-            {
-                return false;
-            }
-            return true;
-        }
-
         public Details Details
         {
             get
             {
                 throw new NotImplementedException();
             }
+
             set
             {
                 throw new NotImplementedException();
@@ -122,10 +83,54 @@ namespace Scenarioo.Model.Docu.Entities.Generic
             {
                 throw new NotImplementedException();
             }
+
             set
             {
                 throw new NotImplementedException();
             }
+        }
+
+        public override int GetHashCode()
+        {
+            const int Prime = 31;
+            var result = 1;
+
+            result = (Prime * result) + ((this.Items == null) ? 0 : this.Items.GetHashCode());
+            return result;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (this == obj)
+            {
+                return true;
+            }
+
+            if (obj == null)
+            {
+                return false;
+            }
+
+            if (this.GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            var other = (ObjectList<T>)obj;
+
+            if (this.items == null)
+            {
+                if (other.items != null)
+                {
+                    return false;
+                }
+            }
+            else if (!this.items.Equals(other.items))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

@@ -37,7 +37,6 @@ namespace Scenarioo.Api.Util.Xml
     {
         public static T UnmarshalXml<T>(FileStream fs) where T : class
         {
-
             if (fs == null)
             {
                 throw new NullReferenceException("FileStream cannot be null");
@@ -49,7 +48,6 @@ namespace Scenarioo.Api.Util.Xml
                 var deserializedObject = serializer.Deserialize(fs) as T;
 
                 return deserializedObject;
-
             }
             catch (SerializationException ex)
             {
@@ -71,7 +69,6 @@ namespace Scenarioo.Api.Util.Xml
 
                 serializer.Serialize(
                     new XmlTextWriter(st, utf8) { Indentation = 4, Formatting = Formatting.Indented }, entity);
-
             }
             catch (SerializationException ex)
             {

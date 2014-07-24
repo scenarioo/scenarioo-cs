@@ -47,8 +47,7 @@ namespace Scenarioo.Api.Files
 
         private readonly string rootDirectory;
 
-        private string digitFormat = CreateNumberFormatWithMinimumIntegerDigits(3, "0");
-
+        private readonly string digitFormat = CreateNumberFormatWithMinimumIntegerDigits(3, "0");
 
         public ScenarioDocuFiles(string rootDirectory)
         {
@@ -60,7 +59,7 @@ namespace Scenarioo.Api.Files
             if (!Directory.Exists(this.rootDirectory))
             {
                 throw new ArgumentException(
-                    string.Format("Directory for docu content generation does not exist: {0}", rootDirectory));
+                    string.Format("Directory for docu content generation does not exist: {0}", this.rootDirectory));
             }
         }
 
@@ -117,7 +116,7 @@ namespace Scenarioo.Api.Files
         /// <param name="useCaseName"></param>
         /// <param name="scenarioName"></param>
         /// <param name="stepIndex"></param>
-        /// <returns></returns>
+        /// <returns>Screenshot filename</returns>
         public string GetScreenshotFile(string branchName, string buildName, string useCaseName, string scenarioName, int stepIndex)
         {
             return string.Format(
@@ -132,13 +131,12 @@ namespace Scenarioo.Api.Files
             return string.Format(@"{0}{1}", stepIndex.ToString(this.digitFormat), ".png");
         }
 
-
         /// <summary>
-        /// Concatenate directory of docu files
+        /// Concatenate directory of documentation files.
         /// </summary>
         /// <param name="buildName"></param>
         /// <param name="branchName"></param>
-        /// <returns></returns>
+        /// <returns>Directory of the build</returns>
         public string GetBuildDirectory(string branchName, string buildName)
         {
             return string.Format(
@@ -204,6 +202,5 @@ namespace Scenarioo.Api.Files
 
             return string.Concat(format.ToArray());
         }
-
     }
 }

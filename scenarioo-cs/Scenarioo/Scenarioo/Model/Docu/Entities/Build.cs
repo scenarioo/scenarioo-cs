@@ -33,6 +33,21 @@ namespace Scenarioo.Model.Docu.Entities
     [XmlRoot("build")]
     public class Build
     {
+        [XmlNamespaceDeclarations]
+        public XmlSerializerNamespaces Xmlns;
+
+        public Build()
+        {
+            this.Xmlns = new XmlSerializerNamespaces();
+            this.Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
+            this.Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
+        }
+
+        public Build(string name)
+        {
+            this.Name = name;
+        }
+
         [XmlElement("name")]
         public string Name { get; set; }
 
@@ -48,23 +63,6 @@ namespace Scenarioo.Model.Docu.Entities
         [XmlElement("details")]
         public Details Details { get; set; }
 
-       
-        [XmlNamespaceDeclarations]
-        public XmlSerializerNamespaces Xmlns;
-
-        public Build()
-        {
-            this.Xmlns = new XmlSerializerNamespaces();
-            this.Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
-            this.Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
-        }
-
-        public Build(string name)
-            : base()
-        {
-            this.Name = name;
-        }
-
         public void AddDetail(string key, object value)
         {
             if (this.Details == null)
@@ -74,6 +72,5 @@ namespace Scenarioo.Model.Docu.Entities
 
             this.Details.AddDetail(key, value);
         }
-
     }
 }

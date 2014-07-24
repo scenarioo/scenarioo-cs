@@ -20,8 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,21 +33,21 @@ namespace Scenarioo.Api.Util.Xml
     using Exception = System.Exception;
 
     /// <summary>
-    /// Writing or reading of all ScenarioDocu entities to XML files and back
+    /// Writing or reading all documentation entities to XML files and back.
     /// </summary>
     public class ScenarioDocuXMLFileUtil
     {
-        public static IList<Task> RunningTasks = new List<Task>();
-
-        public static string XmlKeyIdentifier = "key";
-
-        public static string XmlValueIdentifier = "value";
-
         public const string SchemaInstanceNamespace = "http://www.w3.org/2001/XMLSchema-instance";
 
         public const string ScenarioNameSpace = "http://www.scenarioo.org/scenarioo";
 
         public const string XmlSchema = "http://www.w3.org/2001/XMLSchema";
+
+        public static IList<Task> RunningTasks = new List<Task>();
+
+        public static string XmlKeyIdentifier = "key";
+
+        public static string XmlValueIdentifier = "value";
 
         public static T UnmarshalXml<T>(string srcFile) where T : class
         {
@@ -58,7 +58,7 @@ namespace Scenarioo.Api.Util.Xml
 
             Lock(
                 srcFile,
-                (f) =>
+                f =>
                     {
                         try
                         {
@@ -82,23 +82,13 @@ namespace Scenarioo.Api.Util.Xml
         }
 
         /// <summary>
-        /// Starts an asynchronus task for marhsalling an XML in a Thread-Pool
+        /// Starts an async task for to marshall an XML in a Thread-Pool
         /// </summary>
-        /// <param name="entity">
-        /// Entity to-be marshaled
-        /// </param>
-        /// <param name="destFile">
-        /// Destination filename
-        /// </param>
-        /// <typeparam name="T">
-        /// </typeparam>
-        /// <exception cref="Exception">
-        /// </exception>
         public static void MarshalXml<T>(T entity, string destFile) where T : class
         {
             Lock(
                 destFile,
-                (f) =>
+                f =>
                     {
                         try
                         {
@@ -183,7 +173,7 @@ namespace Scenarioo.Api.Util.Xml
 
         public static void RemoveFinishedTasks()
         {
-            for (int i = 0; i < RunningTasks.Count; i++)
+            for (var i = 0; i < RunningTasks.Count; i++)
             {
                 if (RunningTasks[i].IsCompleted || RunningTasks[i].IsCanceled || RunningTasks[i].IsFaulted)
                 {

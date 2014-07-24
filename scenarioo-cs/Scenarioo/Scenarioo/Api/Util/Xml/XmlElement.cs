@@ -27,19 +27,11 @@ namespace Scenarioo.Api.Util.Xml
     /// </summary>
     public class XmlElement
     {
-        public string Name { get; set; }
-
-        public string ElementString { get; set; }
-
-        public object BindingObject { get; set; }
-
-        public string ObjectName { get; set; }
-
         public XmlElement()
         {
 
         }
-        
+
         public XmlElement(object bindingObject, string name, string elementString)
         {
             this.Name = name;
@@ -52,5 +44,13 @@ namespace Scenarioo.Api.Util.Xml
             this.Name = name;
             this.BindingObject = bindingObject;
         }
+
+        public string Name { get; set; }
+
+        public string ElementString { get; set; }
+
+        public object BindingObject { get; set; }
+
+        public string ObjectName { get; set; }
     }
 }

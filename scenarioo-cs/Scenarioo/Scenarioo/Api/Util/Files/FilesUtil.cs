@@ -21,9 +21,8 @@
  */
 
 using System;
-using System.Text;
-
 using System.IO;
+using System.Text;
 using System.Web;
 
 using Scenarioo.Api.Exception;
@@ -85,7 +84,7 @@ namespace Scenarioo.Api.Util.Files
         /// List all files in the given directory sorted alphanumerically using a collator.
         /// </summary>
         /// <param name="directory"></param>
-        /// <returns>All files in directory orderd by alpanumeric</returns>
+        /// <returns>All files in directory ordered by alphanumeric</returns>
         public static string[] ListFiles(string directory)
         {
             var files = GetListOfFiles(directory);

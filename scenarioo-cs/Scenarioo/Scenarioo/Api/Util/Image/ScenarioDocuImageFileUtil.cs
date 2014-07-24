@@ -20,16 +20,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Scenarioo.Api.Util.Files
+using System.IO;
+
+namespace Scenarioo.Api.Util.Image
 {
-    using System.IO;
-
-    using Scenarioo.Api.Util.Image;
-
     public class ScenarioDocuImageFileUtil
     {
         /// <summary>
-        /// Wrapper for marshaling an image to filesystem
+        /// Wrapper for marshaling an image to file system
         /// </summary>
         public static void MarshalImage(string fileName, byte[] file)
         {
