@@ -23,7 +23,7 @@ build:
 
 test:
   assemblies:
-    - *\ScenariooTest.dll
+    - ScenariooTest.dll
 
 
 #---------------------------------#
