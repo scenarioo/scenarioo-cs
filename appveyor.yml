@@ -1,0 +1,41 @@
+#---------------------------------#
+#       build configuration       #
+#---------------------------------#
+
+# build platform, i.e. x86, x64, AnyCPU. This setting is optional.
+platform: AnyCPU
+
+configuration: Release
+
+# restore NuGet packages before running MSBuild
+before_build:
+  - nuget restore
+  
+# package Scenarioo-cs project
+build:
+  verbosity: minimal
+  publish_wap: true
+
+
+#---------------------------------#
+#       tests configuration       #
+#---------------------------------#
+
+test:
+  assemblies:
+    - *\ScenariooTest.dll
+
+
+#---------------------------------#
+#      artifacts configuration    #
+#---------------------------------#
+
+artifacts:
+
+  # pushing a single file
+  - path: scenarioo-cs.zip
+  
+#---------------------------------#
+#         notifications           #
+#---------------------------------#
+# E-Mail notificaton is will be send by default, no addtionional configuration steps are needed
