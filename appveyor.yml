@@ -50,8 +50,3 @@ build:
 test:
   assemblies:
     - ScenariooTest.dll
-
-
-  
-# Pushing NuGet packages from build scripts
-appveyor PushArtifact Scenarioo-cs.nupkg
