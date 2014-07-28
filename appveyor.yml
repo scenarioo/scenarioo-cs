@@ -36,7 +36,7 @@ configuration: Release
 #  - Release
     
 build:
-  project: Scenarioo-cs.sln      # path to Visual Studio solution or project
+  project: Scenarioo\Scenarioo-cs.sln      # path to Visual Studio solution or project
   publish_nuget: true            # package projects with .nuspec files and push to artifacts
   
   # MSBuild verbosity level
@@ -49,4 +49,4 @@ build:
 
 test:
   assemblies:
-    - ScenariooTest.dll
+    - Scenarioo\ScenariooTest\ScenariooTest\bin\Release\ScenariooTest.dll
