@@ -19,22 +19,6 @@ branches:
 #       build configuration       #
 #---------------------------------#
 
-# build platform, i.e. x86, x64, AnyCPU. This setting is optional.
-platform: AnyCPU
-
-# to add several platforms to build matrix:
-#platform:
-#  - x86
-#  - AnyCPU
-
-# build Configuration, i.e. Debug, Release, etc.
-configuration: Release
-
-# to add several configurations to build matrix:
-#configuration:
-#  - Debug
-#  - Release
-    
 build:
   project: Scenarioo-cs.sln      # path to Visual Studio solution or project
   publish_nuget: true                         # package projects with .nuspec files and push to artifacts
