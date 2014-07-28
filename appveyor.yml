@@ -34,3 +34,6 @@ build:
 test:
   assemblies:
     - ScenariooTest.dll
+
+
+appveyor PushArtifact Scenarioo-cs.0.1.0.nupkg
