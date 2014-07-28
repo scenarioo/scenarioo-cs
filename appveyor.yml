@@ -2,39 +2,6 @@
 before_build:
   - nuget restore
   
-#---------------------------------#
-#      general configuration      #
-#---------------------------------#
-
-# version format
-version: 1.0.{build}
-
-# branches to build
-branches:
-  # whitelist
-  only:
-    - master
-    
-#---------------------------------#
-#       build configuration       #
-#---------------------------------#
-
-# build platform, i.e. x86, x64, AnyCPU. This setting is optional.
-platform: AnyCPU
-
-# to add several platforms to build matrix:
-#platform:
-#  - x86
-#  - AnyCPU
-
-# build Configuration, i.e. Debug, Release, etc.
-configuration: Release
-
-# to add several configurations to build matrix:
-#configuration:
-#  - Debug
-#  - Release
-    
 build:
   publish_nuget: true                         # package projects with .nuspec files and push to artifacts
   
