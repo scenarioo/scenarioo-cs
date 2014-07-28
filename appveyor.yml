@@ -34,6 +34,3 @@ build:
 test:
   assemblies:
     - ScenariooTest.dll
-
-# build NuGet packages    
-nuget pack Scenarioo-cs.nuspec    
