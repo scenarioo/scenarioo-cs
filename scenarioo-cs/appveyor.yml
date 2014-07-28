@@ -1,2 +1,6 @@
+# restore Nuget packages before running MSBuild
+before_build:
+  - nuget restore
+  
 # Pushing NuGet packages from build scripts
 appveyor PushArtifact scenarioo-cs.nupkg
