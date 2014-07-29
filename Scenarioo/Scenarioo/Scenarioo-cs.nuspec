@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Scenarioo-cs</id>
+	<title>Scenarioo-cs API</title>
+	<summary>Simply use the Scenarioo API in your UI tests to automatically generate such a documentation of your application that is always uptodate. Using the Scenarioo web frontent everybody in your project can easily navigate and browse inside this guidebook, through the user scenarios of your software, it is as simple as reading photo-stories. This might be helpfull to all kind of stakeholders in your project, such as developers, requirement engineers, testers, technical support, product owners, project leaders, business or sales representatives, customers or even users.</summary>
+    <version>0.1.0</version>
+    <authors>mautechr</authors>
+    <owners>Scenarioo.org</owners>
+    <licenseUrl>https://github.com/scenarioo/scenarioo/blob/develop/LICENSE.txt</licenseUrl>
+    <projectUrl>http://scenarioo.github.io/scenarioo/</projectUrl>
+    <iconUrl>http://scenarioo.github.io/scenarioo/images/scenarioo-logo.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>The scenarioo C# API helps you to produce user scenario documentations for the scenarioo webapplication out of your UI tests.</description>
+    <releaseNotes>Create and serialize scenarioo documentation through API.</releaseNotes>
+    <copyright>Copyright 2014</copyright>
+    <tags>UI test documentation Scenarioo API automated documentation of applications through UI testing</tags>
+    <dependencies/>
+  </metadata>
+</package>
