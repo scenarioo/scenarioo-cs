@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>Scenarioo-cs</id>
-    <version>0.1.0</version>
-    <authors>mautechr</authors>
-    <owners>Scenarioo</owners>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
     <licenseUrl>https://github.com/scenarioo/scenarioo/blob/develop/LICENSE.txt</licenseUrl>
     <projectUrl>http://scenarioo.github.io/scenarioo/</projectUrl>
     <iconUrl>http://scenarioo.github.io/scenarioo/images/scenarioo-logo.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>The scenarioo C# API helps you to produce user scenario documentations for the scenarioo webapplication out of your UI tests.</description>
+    <description>$description$</description>
     <releaseNotes>It contains all functionality to store documentation from UI tests in order to enable the scenarioo server to import them.</releaseNotes>
     <copyright>Copyright 2014</copyright>
-    <tags>UI test documentation Scenarioo API automated documentation of applications through UI testing</tags>
-    <dependencies/>
+    <tags>Tag1 Tag2</tags>
   </metadata>
 </package>
