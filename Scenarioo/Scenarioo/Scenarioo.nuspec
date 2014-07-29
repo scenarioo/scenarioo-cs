@@ -3,9 +3,9 @@
   <metadata>
     <id>Scenarioo-cs</id>
     <version>$version$</version>
-    <title>Scenario API</title>
-    <authors>Scenario.org</authors>
-    <owners>Scenario.org</owners>
+    <title>Scenarioo API</title>
+    <authors>Scenarioo.org</authors>
+    <owners>Scenarioo.org</owners>
     <licenseUrl>https://github.com/scenarioo/scenarioo/blob/develop/LICENSE.txt</licenseUrl>
     <projectUrl>http://scenarioo.github.io/scenarioo/</projectUrl>
     <iconUrl>http://scenarioo.github.io/scenarioo/images/scenarioo-logo.png</iconUrl>
