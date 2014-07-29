@@ -3,7 +3,6 @@
   <metadata>
     <id>Scenarioo-cs</id>
     <version>$version$</version>    
-    <summary>Simply use the Scenarioo API in your UI tests to automatically generate such a documentation of your application that is always uptodate. Using the Scenarioo web frontent everybody in your project can easily navigate and browse inside this guidebook, through the user scenarios of your software, it is as simple as reading photo-stories. This might be helpfull to all kind of stakeholders in your project, such as developers, requirement engineers, testers, technical support, product owners, project leaders, business or sales representatives, customers or even users.</summary>
     <title>Scenarioo-cs API</title>    
     <authors>Scenarioo.org</authors>
     <owners>Scenarioo.org</owners>
