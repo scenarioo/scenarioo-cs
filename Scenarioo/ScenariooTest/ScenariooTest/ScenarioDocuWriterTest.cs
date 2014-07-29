@@ -34,8 +34,9 @@ using Scenarioo.Model.Docu.Entities.Generic.Interfaces;
 
 namespace ScenariooTest
 {
+
     [TestClass]
-    public class ScenarioDocuWriterAndReaderTest
+    public class ScenarioDocuWriterTest
     {
         private const string BranchName = "testBranch";
 
