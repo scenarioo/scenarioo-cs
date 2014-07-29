@@ -39,7 +39,7 @@ namespace Scenarioo.Model.Docu.Entities
         public int Index { get; set; }
 
         /// <summary>
-        /// Gets or sets the title of current step. Usually the title shown on the page in the UI.
+        /// Gets or sets the title of the current step. Usually the title shown on the page in the UI.
         /// </summary>
         [XmlElement("title")]
         public string Title { get; set; }
