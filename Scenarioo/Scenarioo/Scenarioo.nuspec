@@ -10,7 +10,7 @@
     <projectUrl>http://scenarioo.github.io/scenarioo/</projectUrl>
     <iconUrl>http://scenarioo.github.io/scenarioo/images/scenarioo-logo.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>The scenarioo C# API helps you to produce user scenario documentations for the scenarioo webapplication out of your UI tests.</description>
+    <description>The scenarioo C# API helps you to produce user scenario documentations out of your UI tests, such that your project’s stakeholders can browse it through the Scenarioo webapplication. More information see http://www.scenarioo.org Details about using the scenarioo C# API see https://github.com/scenarioo/scenarioo/wiki/scenarioo-cs</description>
     <releaseNotes>Create and serialize scenarioo documentation through API.</releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>UI test documentation Scenarioo API automated documentation of applications through UI testing</tags>
