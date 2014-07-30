@@ -386,7 +386,7 @@ namespace ScenariooTest
             // Page 
             step.Page = new Page("test.jsp");
 
-            // HTML (lot of dummy data, just to generate big data for writing) 
+            // Creates HTML (lot of dummy data, just to generate big data for writing) 
             step.StepHtml = CreateBigHtml();
 
             return step;
