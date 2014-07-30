@@ -34,7 +34,6 @@ using Scenarioo.Model.Docu.Entities.Generic.Interfaces;
 
 namespace ScenariooTest
 {
-
     [TestClass]
     public class ScenarioDocuWriterTest
     {
@@ -82,6 +81,10 @@ namespace ScenariooTest
         [TestCleanup]
         public void TestCleanUp()
         {
+            if (Directory.Exists(this.rootDirectory))
+            {
+                Directory.Delete(this.rootDirectory, true);
+            }
         }
 
         [TestMethod]
