@@ -21,6 +21,8 @@
  */
 
 using System;
+using System.Collections.Generic;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Scenarioo.Model.Docu.Entities;
@@ -34,7 +36,7 @@ namespace ScenariooTest
         public void AddChaining()
         {
             var labels = new Labels();
-            labels.Add("test-1").Add("test-2");
+            labels.AddLabel("test-1").AddLabel("test-2");
 
             Assert.AreEqual(2, labels.Count);
         }
@@ -42,8 +44,10 @@ namespace ScenariooTest
         [TestMethod]
         public void Set()
         {
-            var labelsToSet = new Labels { "valid", "valid 2" };
-            var labels = labelsToSet;
+            var labels = new Labels();
+            var labelsToSet = new List<string> { "valid", "valid 2" };
+
+            labels.AddLabels(labelsToSet);
 
             Assert.AreEqual(2, labels.Count);
         }
@@ -65,7 +69,7 @@ namespace ScenariooTest
         public void ImmediateValidationForAdd()
         {
             var labels = new Labels();
-            labels.Add("test-1").Add("test.2");
+            labels.AddLabel("test-1").AddLabel("test.2");
         }
 
         [TestMethod]
@@ -73,8 +77,8 @@ namespace ScenariooTest
         public void ImmediateValidationForSet()
         {
             var labels = new Labels();
-            var labelsToSet = new Labels { "valid", ".invalid" };
-            labels.Set(labelsToSet);
+            var labelsToSet = new List<string> { "valid", ".invalid" };
+            labels.AddLabels(labelsToSet);
         }
     }
 }

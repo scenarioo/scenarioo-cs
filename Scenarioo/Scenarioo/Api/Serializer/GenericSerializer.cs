@@ -35,7 +35,7 @@ namespace Scenarioo.Api.Serializer
     using XmlElement = Scenarioo.Api.Util.Xml.XmlElement;
 
     /// <summary>
-    /// Responsible for serializing generic collections and Scenarioo specific generic types
+    /// Responsible for serializing generic collections and specific generic types
     /// to ensure conformity against Java. Scenario server shall be enabled to deserialize 
     /// the xml via JAXB. The approach to generate code from given schema does not provides "complexity" covering properly 
     /// cases like a generic is child of a generic. So this implementation takes place as a first step.
@@ -95,9 +95,9 @@ namespace Scenarioo.Api.Serializer
         }
 
         /// <summary>
-        /// Serializes all depending generic types from Scenarioo and traverse recursively.
+        /// Serializes all depending generic types and traverse recursively.
         /// </summary>
-        /// <param name="writer">Streamoutput in which will be serialized</param>
+        /// <param name="writer">Stream output in which will be serialized</param>
         /// <param name="value">Any value which shall be serialized</param>
         public void SerializeDetails<T>(XmlWriter writer, T value)
         {

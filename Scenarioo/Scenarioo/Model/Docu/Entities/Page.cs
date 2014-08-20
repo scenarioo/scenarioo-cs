@@ -44,13 +44,11 @@ namespace Scenarioo.Model.Docu.Entities
             this.Name = name;
         }
 
-        // TODO: may have some impact on serialization?? Check if any annotaion is needed
-
         /// <summary>
         /// Gets or sets multiple labels to a scenario object.
         /// </summary>
         /// <returns>All labels of this object. Never null.</returns>
-        [XmlElement("Labels")]
+        [XmlElement("labels")]
         public Labels Labels
         {
             get

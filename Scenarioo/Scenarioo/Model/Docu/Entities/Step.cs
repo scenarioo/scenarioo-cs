@@ -29,40 +29,13 @@ namespace Scenarioo.Model.Docu.Entities
     using Scenarioo.Api.Util.Xml;
 
     /// <summary>
-    ///  Contains all the data collected from a webtest for one step of one scenario/webtest (except for the step image, which
+    ///  Contains all the data collected from a web test for one step of one scenario/web test (except for the step image, which
     ///  has to be stored separately
     /// </summary>
     [Serializable]
     [XmlRoot("step")]
     public class Step
     {
-        /// <summary>
-        /// Information about the page this step belongs to (usually there are several steps that show the same UI page).
-        /// This information is optional in case you do not have a page concept in your application.
-        /// </summary>
-        [XmlElement("page")]
-        public Page Page { get; set; }
-
-        /// <summary>
-        /// Most important description information about this step. Only put the most important values and informations about
-        /// a step into this object.
-        /// </summary>
-        [XmlElement("stepDescription")]
-        public StepDescription StepDescription { get; set; }
-
-        /// <summary>
-        /// Optional information for webapplications about the html output of current step.
-        /// </summary>
-        [XmlElement("html")]
-        public StepHtml StepHtml { get; set; }
-
-        /// <summary>
-        /// (optional) Additional metadata that will only be displayed on the step details page. Especially put huge
-        /// additional detail data about a step into this object.
-        /// </summary>
-        [XmlElement("metadata")]
-        public StepMetadata StepMetadata { get; set; }
-
         [XmlNamespaceDeclarations]
         public XmlSerializerNamespaces Xmlns;
 
@@ -73,5 +46,31 @@ namespace Scenarioo.Model.Docu.Entities
             this.Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
         }
 
+        /// <summary>
+        /// Gets or sets information about the page this step belongs to (usually there are several steps that show the same UI page).
+        /// This information is optional in case you do not have a page concept in your application.
+        /// </summary>
+        [XmlElement("page")]
+        public Page Page { get; set; }
+
+        /// <summary>
+        /// Gets or sets most important description information about this step. Only put the most important values and information's about
+        /// a step into this object.
+        /// </summary>
+        [XmlElement("stepDescription")]
+        public StepDescription StepDescription { get; set; }
+
+        /// <summary>
+        /// Gets or sets optional information for web applications about the html output of current step.
+        /// </summary>
+        [XmlElement("html")]
+        public StepHtml StepHtml { get; set; }
+
+        /// <summary>
+        /// Gets or sets additional metadata that will only be displayed on the step details page. Especially put huge
+        /// additional detail data about a step into this object.
+        /// </summary>
+        [XmlElement("metadata")]
+        public StepMetadata StepMetadata { get; set; }
     }
 }

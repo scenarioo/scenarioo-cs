@@ -21,19 +21,18 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-
-using Scenarioo.Annotations;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    public class Labels : IList<string>
+    [Serializable]
+    public class Labels : IXmlSerializable
     {
         private IList<string> labels = new List<string>();
-
-        public bool IsReadOnly { get; [UsedImplicitly] private set; }
 
         public int Count
         {
@@ -43,19 +42,14 @@ namespace Scenarioo.Model.Docu.Entities
             }
         }
 
-        public string this[int index]
+        public IList<string> LabelList
         {
             get
             {
-                return this.labels[index];
-            }
-
-            set
-            {
-                this.labels[index] = value;
+                return this.labels;
             }
         }
-
+        
         /// <summary>
         /// Validates a label for validity. A label must only contain letters, numbers and/or '_', '-'
         /// </summary>
@@ -64,7 +58,7 @@ namespace Scenarioo.Model.Docu.Entities
             return Regex.IsMatch(label, "^[ a-zA-Z0-9_-]+$");
         }
 
-        public Labels Add(string label)
+        public Labels AddLabel(string label)
         {
             if (IsValidLabel(label))
             {
@@ -78,27 +72,7 @@ namespace Scenarioo.Model.Docu.Entities
             return this;
         }
 
-        public void Clear()
-        {
-            this.labels.Clear();
-        }
-
-        public bool Contains(string item)
-        {
-            return this.labels.Contains(item);
-        }
-
-        public void CopyTo(string[] array, int arrayIndex)
-        {
-            this.labels.CopyTo(array, arrayIndex);
-        }
-
-        public bool Remove(string item)
-        {
-            return this.labels.Remove(item);
-        }
-
-        public void Set(IEnumerable<string> labelsToSet)
+        public void AddLabels(IEnumerable<string> labelsToSet)
         {
             var labelsCopy = new List<string>();
             foreach (var label in labelsToSet)
@@ -115,35 +89,23 @@ namespace Scenarioo.Model.Docu.Entities
 
             this.labels = labelsCopy;
         }
-
-        public IEnumerator<string> GetEnumerator()
+        
+        public XmlSchema GetSchema()
         {
-            return this.labels.GetEnumerator();
+            throw new NotImplementedException();
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        public void ReadXml(XmlReader reader)
         {
-            return this.GetEnumerator();
+            throw new NotImplementedException();
         }
 
-        void ICollection<string>.Add(string item)
+        public void WriteXml(XmlWriter writer)
         {
-            this.labels.Add(item);
-        }
-
-        public int IndexOf(string item)
-        {
-            return this.labels.IndexOf(item);
-        }
-
-        public void Insert(int index, string item)
-        {
-            this.labels.Insert(index, item);
-        }
-
-        public void RemoveAt(int index)
-        {
-            this.labels.RemoveAt(index);
+            foreach (var label in this.labels)
+            {
+                writer.WriteElementString("label", label);
+            }
         }
     }
 }

@@ -21,6 +21,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -61,7 +62,7 @@ namespace ScenariooTest
         public void TestInit()
         {
             // Sets outcome directory
-            this.rootDirectory = Path.Combine(Directory.GetCurrentDirectory(), "testoutcome");
+            this.rootDirectory = @"C:\Temp\testBranch"; // Path.Combine(Directory.GetCurrentDirectory(), "testoutcome");
 
             if (!Directory.Exists(this.rootDirectory))
             {
@@ -81,10 +82,10 @@ namespace ScenariooTest
         [TestCleanup]
         public void TestCleanUp()
         {
-            if (Directory.Exists(this.rootDirectory))
-            {
-                Directory.Delete(this.rootDirectory, true);
-            }
+            //if (Directory.Exists(this.rootDirectory))
+            //{
+            //    Directory.Delete(this.rootDirectory, true);
+            //}
         }
 
         [TestMethod]
@@ -137,6 +138,7 @@ namespace ScenariooTest
                               };
 
             usecase.AddDetail("webtestName", "UseCaseWebTest");
+            usecase.Labels.AddLabels(this.CreateLabels());
 
             // WHEN: the usecase was saved.
             this.writer.SaveUseCase(usecase);
@@ -160,6 +162,7 @@ namespace ScenariooTest
                                };
 
             scenario.AddDetail("userRole", "customer");
+            scenario.Labels.AddLabels(this.CreateLabels());
 
             // WHEN: the scenario was saved.
             this.writer.SaveScenario(UseCaseName, scenario);
@@ -176,11 +179,21 @@ namespace ScenariooTest
         {
             // GIVEN: a typical step
             var step = new Step();
-            var stepDescription = new StepDescription { Index = StepIndex, Title = "Test Step", Status = "success" };
-            step.StepDescription = stepDescription;
+            var labels = new Labels();
+            labels.AddLabels(this.CreateLabels());
 
+            var stepDescription = new StepDescription
+                                      {
+                                          Index = StepIndex,
+                                          Title = "Test Step",
+                                          Status = "success",
+                                          Labels = labels,
+                                          ScreenshotFileName = this.docuFiles.GetScreenshotFileName(StepIndex)
+                                      };
+
+            step.StepDescription = stepDescription;
             step.StepHtml = new StepHtml { HtmlSource = "<html>just some page text</html>" };
-            step.Page = new Page { Name = "customer/overview.jsp" };
+            step.Page = new Page { Name = "customer/overview.jsp", Labels = labels };
 
             step.StepMetadata = new StepMetadata
                                    {
@@ -195,7 +208,7 @@ namespace ScenariooTest
             // THEN: the files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
             this.writer.Flush();
 
-            // THEN: at least one step file exists
+            // THEN: at least one step file exists and one scenario file exists
             Assert.IsTrue(File.Exists(this.docuFiles.GetScenarioStepFile(BranchName, BuildName, UseCaseName, ScenarioName, 1)));
         }
         
@@ -393,6 +406,13 @@ namespace ScenariooTest
             step.StepHtml = CreateBigHtml();
 
             return step;
+        }
+
+        private IEnumerable<string> CreateLabels()
+        {
+            var labels = new List<string> { "internetz", "test", "scenarioo-test-case" };
+
+            return labels;
         }
     }
 }
