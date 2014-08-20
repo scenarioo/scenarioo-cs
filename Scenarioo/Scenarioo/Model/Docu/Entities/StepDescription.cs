@@ -22,6 +22,8 @@
 
 using System;
 
+using Scenarioo.Api;
+
 namespace Scenarioo.Model.Docu.Entities
 {
     using System.Xml.Serialization;
@@ -32,6 +34,8 @@ namespace Scenarioo.Model.Docu.Entities
     [XmlRoot("stepDescription")]
     public class StepDescription
     {
+        private Labels labels;
+
         /// <summary>
         /// Gets or sets the index needs to be the index of this step inside current scenario, starting with 0.
         /// </summary>
@@ -52,11 +56,43 @@ namespace Scenarioo.Model.Docu.Entities
         [XmlElement("status")]
         public string Status { get; set; }
 
+        /// <summary>
+        /// Gets or sets the screenshot filename
+        /// Usually this field is automatically set for you by saving a step, therefore you do not have to set it
+        /// manually. Just use <seealso cref="ScenarioDocuWriter#saveScreenshot"/> to save your image as PNG with usual default
+        /// filename and format.
+        /// You can set a different screenshot file name here, if you like to use a different file format, than proposed by
+        /// the API (which is PNG). In this case you have to ensure the following:
+        /// Only set the file name here, without any path, this is defined by conventions
+        /// make sure that the filename is unique for current step inside this scenario
+        /// save the file on your own under the passed name inside following directory:
+        /// <seealso cref="ScenarioDocuWriter#getScreenshotsDirectory(String, String)"/>
+        /// </summary>
         [XmlElement("screenshotFileName")]
         public string ScreenshotFileName { get; set; }
 
         [XmlElement("details")]
         public Details Details { get; set; }
+
+        // TODO: may have some impact on serialization?? Check if any annotaion is needed
+
+        /// <summary>
+        /// Gets or sets multiple labels to a scenario object.
+        /// </summary>
+        /// <returns>All labels of this object. Never null.</returns>
+        [XmlElement("Labels")]
+        public Labels Labels
+        {
+            get
+            {
+                return this.labels ?? (this.labels = new Labels());
+            }
+
+            set
+            {
+                this.labels = value;
+            }
+        }
 
         public void AddDetails(string key, object value)
         {

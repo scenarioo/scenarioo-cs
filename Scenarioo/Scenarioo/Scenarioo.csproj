@@ -72,6 +72,7 @@
     <Compile Include="Model\Docu\Entities\Generic\ObjectList.cs" />
     <Compile Include="Model\Docu\Entities\Generic\ObjectReference.cs" />
     <Compile Include="Model\Docu\Entities\Generic\ObjectTreeNode.cs" />
+    <Compile Include="Model\Docu\Entities\Labels.cs" />
     <Compile Include="Model\Docu\Entities\Page.cs" />
     <Compile Include="Model\Docu\Entities\Scenario.cs" />
     <Compile Include="Model\Docu\Entities\Step.cs" />

@@ -32,26 +32,68 @@ namespace Scenarioo.Model.Docu.Entities
     [XmlRoot("useCase")]
     public class UseCase
     {
-        [XmlElement("name")]
-        public string Name { get; set; }
-
-        [XmlElement("description")]
-        public string Description { get; set; }
-
-        [XmlElement("status")]
-        public string Status { get; set; }
-
-        [XmlElement("details")]
-        public Details Details { get; set; }
-
         [XmlNamespaceDeclarations]
         public XmlSerializerNamespaces Xmlns;
+
+        private Labels labels;
 
         public UseCase()
         {
             this.Xmlns = new XmlSerializerNamespaces();
             this.Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
             this.Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
+        }
+
+        /// <summary>
+        /// Gets or sets a unique name for this use case.
+        /// Make sure to use descriptive names that stay stable as much as possible between multiple builds, such that you
+        /// can compare use cases and its scenarios between different builds.
+        /// </summary>
+        [XmlElement("name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets more detailed description for current scenario (additionally to descriptive name).
+        /// </summary>
+        [XmlElement("description")]
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets status of current step for setting additional application-specific states.
+        /// Status of the scenario (did this test fail or succeed?).
+        /// Usual values are "success" or "failed".
+        /// But you can use application specific additional values, like "not implemented", "unknown" etc. where it makes
+        /// sense. Those additional values will be displayed in warning-style by the web application.
+        /// </summary>
+        [XmlElement("status")]
+        public string Status { get; set; }
+
+        /// <summary>
+        /// Gets or sets additional application specific details with additional metadata information's.
+        /// Add application specific details as key-value-data-items.
+        /// See <see cref="Details"/>
+        /// </summary>
+        [XmlElement("details")]
+        public Details Details { get; set; }
+
+        // TODO: may have some impact on serialization?? Check if any annotaion is needed
+
+        /// <summary>
+        /// Gets or sets multiple labels to a scenario object.
+        /// </summary>
+        /// <returns>All labels of this object. Never null.</returns>
+        [XmlElement("Labels")]
+        public Labels Labels
+        {
+            get
+            {
+                return this.labels ?? (this.labels = new Labels());
+            }
+
+            set
+            {
+                this.labels = value;
+            }
         }
 
         public void AddDetail(string key, object value)
