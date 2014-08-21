@@ -62,7 +62,7 @@ namespace ScenariooTest
         public void TestInit()
         {
             // Sets outcome directory
-            this.rootDirectory = @"C:\Temp\testBranch"; // Path.Combine(Directory.GetCurrentDirectory(), "testoutcome");
+            this.rootDirectory = Path.Combine(Directory.GetCurrentDirectory(), "testoutcome");
 
             if (!Directory.Exists(this.rootDirectory))
             {
@@ -82,10 +82,10 @@ namespace ScenariooTest
         [TestCleanup]
         public void TestCleanUp()
         {
-            //if (Directory.Exists(this.rootDirectory))
-            //{
-            //    Directory.Delete(this.rootDirectory, true);
-            //}
+            if (Directory.Exists(this.rootDirectory))
+            {
+                Directory.Delete(this.rootDirectory, true);
+            }
         }
 
         [TestMethod]
