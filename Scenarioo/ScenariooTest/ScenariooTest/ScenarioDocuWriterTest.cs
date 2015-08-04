@@ -24,7 +24,7 @@ using System;
 using System.IO;
 using System.Text;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 using Scenarioo.Api;
 using Scenarioo.Api.Files;
@@ -34,7 +34,7 @@ using Scenarioo.Model.Docu.Entities.Generic.Interfaces;
 
 namespace ScenariooTest
 {
-    [TestClass]
+    [TestFixture]
     public class ScenarioDocuWriterTest
     {
         private const string BranchName = "testBranch";
@@ -57,7 +57,7 @@ namespace ScenariooTest
 
         private ScenarioDocuFiles docuFiles;
 
-        [TestInitialize]
+        [TestFixtureSetUp]
         public void TestInit()
         {
             // Sets outcome directory
@@ -78,7 +78,7 @@ namespace ScenariooTest
             this.docuFiles = new ScenarioDocuFiles(this.rootDirectory);
         }
 
-        [TestCleanup]
+        [TestFixtureTearDown]
         public void TestCleanUp()
         {
             if (Directory.Exists(this.rootDirectory))
@@ -87,7 +87,7 @@ namespace ScenariooTest
             }
         }
 
-        [TestMethod]
+        [Test]
         public void WriteBranchDescription()
         {
             // GIVEN: a typical Branch
@@ -107,7 +107,7 @@ namespace ScenariooTest
             Assert.AreEqual(branch.Description, branchFromFile.Description);
         }
 
-        [TestMethod]
+        [Test]
         public void WriteBuildDescription()
         {
             // GIVEN: a typical Build
@@ -125,7 +125,7 @@ namespace ScenariooTest
             Assert.IsTrue(File.Exists(this.docuFiles.GetBuildFile(BranchName, BuildName)));
         }
 
-        [TestMethod]
+        [Test]
         public void WriteUseCaseDescription()
         {
             // GIVEN: a typical use case
@@ -148,7 +148,7 @@ namespace ScenariooTest
             Assert.IsTrue(File.Exists(this.docuFiles.GetUseCaseFile(BranchName, BuildName, UseCaseName)));
         }
 
-        [TestMethod]
+        [Test]
         public void WriteScenarioDescription()
         {
             // GIVEN: a typical scenario
@@ -171,7 +171,7 @@ namespace ScenariooTest
             Assert.IsTrue(File.Exists(this.docuFiles.GetScenarioFile(BranchName, BuildName, UseCaseName, ScenarioName)));
         }
 
-        [TestMethod]
+        [Test]
         public void WriteStep()
         {
             // GIVEN: a typical step
@@ -198,8 +198,8 @@ namespace ScenariooTest
             // THEN: at least one step file exists
             Assert.IsTrue(File.Exists(this.docuFiles.GetScenarioStepFile(BranchName, BuildName, UseCaseName, ScenarioName, 1)));
         }
-        
-        [TestMethod]
+
+        [Test]
         public void WriteGenericCollectionsInDetails()
         {
             // GIVEN: any object containing collections in details
@@ -234,7 +234,7 @@ namespace ScenariooTest
             Assert.IsTrue(File.Exists(this.docuFiles.GetScenarioFile(BranchName, BuildName, UseCaseName, ScenarioName)));
         }
 
-        [TestMethod]
+        [Test]
         public void WriteTreeStructureInDetails()
         {
             // GIVEN: any object containing collections in details
@@ -293,7 +293,7 @@ namespace ScenariooTest
             Assert.IsTrue(File.Exists(this.docuFiles.GetScenarioFile(BranchName, BuildName, UseCaseName, ScenarioName)));
         }
 
-        [TestMethod]
+        [Test]
         public void AsyncWriteOfMultipleFilesAndFlush()
         {
             // GIVEN: a lot of large steps to write, that have not yet been written 
