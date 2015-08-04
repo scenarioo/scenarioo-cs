@@ -44,6 +44,7 @@ namespace Scenarioo.Model.Docu.Entities
         }
 
         public Build(string name)
+            : this()
         {
             this.Name = name;
         }
