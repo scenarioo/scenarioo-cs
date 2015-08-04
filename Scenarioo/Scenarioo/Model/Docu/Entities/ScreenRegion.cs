@@ -22,7 +22,7 @@ namespace Scenarioo.Model.Docu.Entities
         {
         }
 
-        public ScreenRegion(int x, int y, int height, int width)
+        public ScreenRegion(int x, int y, int width, int height)
         {
             this.X = x;
             this.Y = y;

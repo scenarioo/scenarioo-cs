@@ -63,7 +63,8 @@ namespace Scenarioo.Model.Docu.Entities
         [XmlElement("metadata")]
         public StepMetadata StepMetadata { get; set; }
 
-        [XmlElement("screenAnnotations")]
+        [XmlArray("screenAnnotations")]
+        [XmlArrayItem("screenAnnotation")]
         public List<ScreenAnnotation> ScreenAnnotations { get; set; }
             
         [XmlNamespaceDeclarations]
@@ -71,9 +72,11 @@ namespace Scenarioo.Model.Docu.Entities
 
         public Step()
         {
-            this.Xmlns = new XmlSerializerNamespaces();
-            this.Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
-            this.Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
+            ScreenAnnotations = new List<ScreenAnnotation>();
+
+            Xmlns = new XmlSerializerNamespaces();
+            Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
+            Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
         }
 
     }

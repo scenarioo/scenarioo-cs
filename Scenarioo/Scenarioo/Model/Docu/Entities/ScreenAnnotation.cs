@@ -18,6 +18,9 @@ namespace Scenarioo.Model.Docu.Entities
         [XmlElement("title")]
         public string Title { get; set; }
 
+        [XmlElement("screenText")]
+        public string ScreenText { get; set; }
+
         [XmlElement("description")]
         public string Description { get; set; }
 
@@ -29,5 +32,20 @@ namespace Scenarioo.Model.Docu.Entities
 
         [XmlElement("details")]
         public Details Details { get; set; }
+
+        public ScreenAnnotation()
+        {
+        }
+
+        public bool ShouldSerializeScreenAnnotationClickAction()
+        {
+            return ClickAction.HasValue;
+        }
+
+        public ScreenAnnotation(ScreenRegion region)
+            : this()
+        {
+            Region = region;
+        }
     }
 }

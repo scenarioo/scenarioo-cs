@@ -37,7 +37,7 @@ namespace ScenariooTest
     [TestFixture]
     public class ScenarioDocuWriterTest
     {
-        private const string BranchName = "testBranch";
+        private const string BranchName = "csharp-writer";
 
         private const string BuildName = "testBuild";
 
@@ -62,7 +62,8 @@ namespace ScenariooTest
         {
             // Sets outcome directory
             this.rootDirectory = Path.Combine(Directory.GetCurrentDirectory(), "testoutcome");
-
+            TestCleanUp();
+            
             if (!Directory.Exists(this.rootDirectory))
             {
                 Directory.CreateDirectory(this.rootDirectory);
@@ -78,7 +79,7 @@ namespace ScenariooTest
             this.docuFiles = new ScenarioDocuFiles(this.rootDirectory);
         }
 
-        [TestFixtureTearDown]
+        //[TestFixtureTearDown]
         public void TestCleanUp()
         {
             if (Directory.Exists(this.rootDirectory))
@@ -172,11 +173,11 @@ namespace ScenariooTest
         }
 
         [Test]
+        //[Explicit]
         public void WriteStep()
         {
-            // GIVEN: a typical step
             var step = new Step();
-            var stepDescription = new StepDescription { Index = StepIndex, Title = "Test Step", Status = "success" };
+            var stepDescription = new StepDescription { Index = StepIndex, Title = "Screen Annotation", Status = "success" };
             step.StepDescription = stepDescription;
 
             step.StepHtml = new StepHtml { HtmlSource = "<html>just some page text</html>" };
@@ -187,16 +188,78 @@ namespace ScenariooTest
                                        VisibleText = "just some page text",
                                    };
 
-            step.StepMetadata.AddDetail("mockedServicesConfiguration", "dummy_config_xy.properties");
-
-            // WHEN: the step was saved.
-            this.writer.SaveStep(UseCaseName, ScenarioName, step);
-
             // THEN: the files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
             this.writer.Flush();
 
             // THEN: at least one step file exists
             Assert.IsTrue(File.Exists(this.docuFiles.GetScenarioStepFile(BranchName, BuildName, UseCaseName, ScenarioName, 1)));
+        }
+
+        [Test]
+        public void Write_Steps_With_Screen_Annotations()
+        {
+            // arrange
+            var usecase = new UseCase
+            {
+                Name = "Screen Annotations",
+                Description = "test screen annotations",
+                Status = "failed",
+            };
+
+            writer.SaveUseCase(usecase);
+
+            var scenario = new Scenario
+            {
+                Name = "All screen annotations on one page",
+                Description = "this is a typical scenario with a decription",
+                Status = "failed",
+            };
+
+            writer.SaveScenario(usecase.Name, scenario);
+            writer.Flush();
+            
+            // act
+            var step = new Step();
+            var stepDescription = new StepDescription { Index = StepIndex, Title = "Test Step", Status = "success" };
+            step.StepDescription = stepDescription;
+
+            step.StepHtml = new StepHtml { HtmlSource = "<html>just some page text</html>" };
+            step.Page = new Page { Name = "Kawasaki Ninja" };
+            step.StepDescription.ScreenshotFileName = "000.png";
+            step.StepDescription.Index = 0;
+
+            step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(10, 50, ScreenAnnotationStyle.Highlight));
+            step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(10, 150, ScreenAnnotationStyle.Click, ScreenAnnotationClickAction.ToUrl, "next-url"));
+            step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(10, 250, ScreenAnnotationStyle.Error));
+            step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(10, 350, ScreenAnnotationStyle.Expected));
+            step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(10, 450, ScreenAnnotationStyle.Info));
+            step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(400, 50, ScreenAnnotationStyle.Keyboard));
+            step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(400, 150, ScreenAnnotationStyle.Warn));
+            step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(400, 250, ScreenAnnotationStyle.Default));
+            step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(400, 350, ScreenAnnotationStyle.NavigateToUrl, ScreenAnnotationClickAction.ToUrl, "blabla"));
+
+            writer.SaveStep(usecase.Name, scenario.Name, step);
+            writer.Flush();
+            
+            writer.SaveScreenshot(usecase.Name, scenario.Name, step, File.ReadAllBytes("data/screenshot.png"));
+            writer.Flush();
+
+            usecase.Status = "success";
+            scenario.Status = "success";
+
+            writer.SaveUseCase(usecase);
+            writer.SaveScenario(usecase.Name, scenario);
+
+            var stepAsString = File.ReadAllText(docuFiles.GetScenarioStepFile(BranchName, BuildName, usecase.Name, scenario.Name, 0));
+
+            // well this is a really sloppy assertion. BUT: we don't have to test the whole serialization because this is done by .NET framework.
+            // we have to do some little things that the java deserializer likes our xml. So we do just some checks on "problem zones". the whole
+            // import should still be checked with an api call on the scenarioo backend.
+            StringAssert.Contains("<style>highlight</style>", stepAsString);
+            StringAssert.Contains("<style>click</style>", stepAsString);
+            StringAssert.Contains("<style>error</style>", stepAsString);
+            StringAssert.Contains("<style>info</style>", stepAsString);
+            StringAssert.Contains("<style>expected</style>", stepAsString);
         }
 
         [Test]

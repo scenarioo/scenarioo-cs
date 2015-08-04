@@ -49,7 +49,7 @@ namespace Scenarioo.Model.Docu.Entities.Generic
     /// </summary>
     [Serializable]
     [XmlRoot("details")]
-    public class Details: IXmlSerializable
+    public class Details : IXmlSerializable
     {
         public Details()
         {

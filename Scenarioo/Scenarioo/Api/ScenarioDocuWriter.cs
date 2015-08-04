@@ -234,7 +234,8 @@ namespace Scenarioo.Api
                 this.buildName, 
                 usecaseName, 
                 scenarioName, 
-                step.StepDescription.Index);
+                step.StepDescription.Index); // TODO: filename!
+            
             this.CreateScreenshotDirectoryIfNotYetExists(usecaseName, scenarioName);
             ExecuteAsyncImageWriter(desScreenshotFile, file);
         }
