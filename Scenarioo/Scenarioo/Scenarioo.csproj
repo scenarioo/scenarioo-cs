@@ -75,6 +75,9 @@
     <Compile Include="Model\Docu\Entities\Page.cs" />
     <Compile Include="Model\Docu\Entities\Scenario.cs" />
     <Compile Include="Model\Docu\Entities\ScreenAnnotation.cs" />
+    <Compile Include="Model\Docu\Entities\ScreenAnnotationClickAction.cs" />
+    <Compile Include="Model\Docu\Entities\ScreenAnnotationStyle.cs" />
+    <Compile Include="Model\Docu\Entities\ScreenRegion.cs" />
     <Compile Include="Model\Docu\Entities\Step.cs" />
     <Compile Include="Model\Docu\Entities\StepDescription.cs" />
     <Compile Include="Model\Docu\Entities\StepHtml.cs" />

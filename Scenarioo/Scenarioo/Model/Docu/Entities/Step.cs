@@ -21,13 +21,13 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Xml.Serialization;
+
+using Scenarioo.Api.Util.Xml;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    using System.Xml.Serialization;
-
-    using Scenarioo.Api.Util.Xml;
-
     /// <summary>
     ///  Contains all the data collected from a webtest for one step of one scenario/webtest (except for the step image, which
     ///  has to be stored separately
@@ -63,6 +63,9 @@ namespace Scenarioo.Model.Docu.Entities
         [XmlElement("metadata")]
         public StepMetadata StepMetadata { get; set; }
 
+        [XmlElement("screenAnnotations")]
+        public List<ScreenAnnotation> ScreenAnnotations { get; set; }
+            
         [XmlNamespaceDeclarations]
         public XmlSerializerNamespaces Xmlns;
 
