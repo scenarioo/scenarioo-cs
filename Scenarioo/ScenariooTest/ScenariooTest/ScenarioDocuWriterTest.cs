@@ -38,92 +38,80 @@ namespace ScenariooTest
     public class ScenarioDocuWriterTest
     {
         private const string BranchName = "csharp-writer";
-
         private const string BuildName = "testBuild";
-
         private const string UseCaseName = "testCase";
-
         private const string ScenarioName = "testScenario";
-
         private const string DetailsVersionKey = "version";
-
         private const int StepIndex = 1;
         
         private string rootDirectory;
 
         private ScenarioDocuWriter writer;
-
         private ScenarioDocuReader reader;
-
         private ScenarioDocuFiles docuFiles;
 
         [TestFixtureSetUp]
         public void TestInit()
         {
             // Sets outcome directory
-            this.rootDirectory = Path.Combine(Directory.GetCurrentDirectory(), "testoutcome");
-            TestCleanUp();
+            rootDirectory = Path.Combine(Directory.GetCurrentDirectory(), "testoutcome");
             
-            if (!Directory.Exists(this.rootDirectory))
+            if (Directory.Exists(rootDirectory))
             {
-                Directory.CreateDirectory(this.rootDirectory);
+                Directory.Delete(rootDirectory, true);    
             }
 
-            this.writer = new ScenarioDocuWriter(
-                this.rootDirectory,
+            Directory.CreateDirectory(rootDirectory);
+
+            writer = new ScenarioDocuWriter(
+                rootDirectory,
                 BranchName,
                 BuildName);
 
-            this.reader = new ScenarioDocuReader(this.rootDirectory);
-
-            this.docuFiles = new ScenarioDocuFiles(this.rootDirectory);
-        }
-
-        //[TestFixtureTearDown]
-        public void TestCleanUp()
-        {
-            if (Directory.Exists(this.rootDirectory))
-            {
-                Directory.Delete(this.rootDirectory, true);
-            }
+            reader = new ScenarioDocuReader(rootDirectory);
+            docuFiles = new ScenarioDocuFiles(rootDirectory);
         }
 
         [Test]
-        public void WriteBranchDescription()
+        public void Serialized_Branch_Name_And_Description_Can_Be_Read()
         {
-            // GIVEN: a typical Branch
+            // arrange
             var branch = new Branch
                              {
                                  Name = BranchName,
                                  Description = "just a simple development Branch, might as well be the trunk."
                              };
 
-            // WHEN: the Branch was saved. The files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
-            this.writer.SaveBranchDescription(branch);
-            this.writer.Flush();            
+            // act
+            writer.SaveBranchDescription(branch);
+            writer.Flush();
 
-            // THEN: the Branch can be loaded successfully and correctly
+            // assert
             var branchFromFile = this.reader.LoadBranch(BranchName);
+
             Assert.AreEqual(BranchName, branchFromFile.Name);
             Assert.AreEqual(branch.Description, branchFromFile.Description);
         }
 
         [Test]
-        public void WriteBuildDescription()
+        public void Serialized_Build_Can_Be_Read()
         {
-            // GIVEN: a typical Build
+            // arrange
             var build = new Build { Name = BuildName, Date = DateTime.Today, Revision = "10123", Status = "success" };
 
             build.AddDetail(DetailsVersionKey, "1.0.1");
 
-            // WHEN: the Build was saved.
-            this.writer.SaveBuildDescription(build);
-
-            // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
-            this.writer.Flush();
+            // act
+            writer.SaveBuildDescription(build);
+            writer.Flush();
 
             // THEN: the Build file exists
-            Assert.IsTrue(File.Exists(this.docuFiles.GetBuildFile(BranchName, BuildName)));
+
+            var result = reader.LoadBuild(BranchName, BuildName);
+
+            Assert.That(BuildName, Is.EqualTo(result.Name));
+            Assert.That("10123", Is.EqualTo(result.Revision));
+            Assert.That("success", Is.EqualTo("success"));
         }
 
         [Test]
