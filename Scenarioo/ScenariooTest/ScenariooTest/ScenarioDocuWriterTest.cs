@@ -132,8 +132,8 @@ namespace ScenariooTest
             // arrange
             var usecase = new UseCase
                               {
-                                  Name = TestContext.CurrentContext.Test.Name,
-                                  Description = "this is a typical use case with a decription",
+                                  Name = SerializationUseCase,
+                                  Description = "Serialization of scenarioo objects with .NET",
                                   Status = "success",
                               };
 
@@ -160,7 +160,7 @@ namespace ScenariooTest
             var scenario = new Scenario
                                {
                                    Name = TestContext.CurrentContext.Test.Name,
-                                   Description = "this is a typical scenario with a decription",
+                                   Description = "Serialize a scenario name, description and status",
                                    Status = "success",
                                };
 
@@ -172,8 +172,8 @@ namespace ScenariooTest
             // assert
             var scenarioXml = File.ReadAllText(docuFiles.GetScenarioFile(BranchName, BuildName, SerializationUseCase, TestContext.CurrentContext.Test.Name));
             
-            StringAssert.Contains(string.Format("<name>{0}</name>"), scenario.Name, scenarioXml);
-            StringAssert.Contains(string.Format("<name>{0}</name>"), scenario.Description, scenarioXml);
+            StringAssert.Contains(string.Format("<name>{0}</name>", scenario.Name), scenarioXml);
+            StringAssert.Contains(string.Format("<description>{0}</description>", scenario.Description), scenarioXml);
             StringAssert.Contains("<status>success</status>", scenarioXml);
         }
 
@@ -208,7 +208,7 @@ namespace ScenariooTest
             var usecase = new UseCase
             {
                 Name = "Screen Annotations",
-                Description = "test screen annotations",
+                Description = "Usecase to show the screen annotations",
                 Status = "failed",
             };
 
@@ -296,13 +296,16 @@ namespace ScenariooTest
 
             // assert (there is no way to deserialize the details atm :()
             Assert.IsTrue(File.Exists(docuFiles.GetScenarioFile(BranchName, BuildName, SerializationUseCase, TestContext.CurrentContext.Test.Name)));
+
+            scenario.Status = "success";
+            writer.SaveScenario(SerializationUseCase, scenario);
         }
 
         [Test]
         public void Serilazed_Details_Object_With_ObjectTreeNode_Exists()
         {
-            // GIVEN: any object containing collections in details
-            var scenario = new Scenario { Name = ScenarioName, Description = "a scenario for testing trees in details" };
+            // arrange
+            var scenario = new Scenario { Name = ScenarioName, Description = "a scenario for testing trees in details", Status = "failed" };
 
             // A tree containing most important item types that need to be supported
             // (same types are allowed for items in tree nodes as for values in Details --> reuse code from
@@ -327,7 +330,7 @@ namespace ScenariooTest
             childWithObjectRef.Item = objRef;
             rootNode.AddChild(childWithObjectRef);
 
-           // node three with List of Strings as item
+            // node three with List of Strings as item
             var childWithList = new ObjectTreeNode<IObjectTreeNode<object>>();
             var list = new ObjectList<object> { "item1", "item2", "item3" };
             childWithList.Item = list;
@@ -347,14 +350,15 @@ namespace ScenariooTest
 
             scenario.AddDetail("exampleTree", rootNode);
 
-            // WHEN: the object was saved.
+            // act
             writer.SaveScenario(SerializationUseCase, scenario);
-
-            // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
             writer.Flush();
 
-            // THEN: the scneario file exists
+            // assert
             Assert.IsTrue(File.Exists(docuFiles.GetScenarioFile(BranchName, BuildName, SerializationUseCase, ScenarioName)));
+
+            scenario.Status = "success";
+            writer.SaveScenario(SerializationUseCase, scenario);
         }
 
         [Test] // TODO: review this async stuff, i'm not sure about that!
