@@ -22,6 +22,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using NUnit.Framework;
@@ -230,7 +231,7 @@ namespace ScenariooTest
             step.StepDescription = stepDescription;
 
             step.StepHtml = new StepHtml { HtmlSource = "<html>just some page text</html>" };
-            step.Page = new Page { Name = "Kawasaki Ninja" };
+            step.Page = new Page { Name = "Sample Screen Annotation Page" };
             step.StepDescription.ScreenshotFileName = "000.png";
             step.StepDescription.Index = 0;
 
@@ -243,6 +244,11 @@ namespace ScenariooTest
             step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(400, 150, ScreenAnnotationStyle.Warn));
             step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(400, 250, ScreenAnnotationStyle.Default));
             step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(400, 350, ScreenAnnotationStyle.NavigateToUrl, ScreenAnnotationClickAction.ToUrl, "blabla"));
+
+            var details = new Details();
+            details.AddDetail("details-key", "details-value");
+            step.ScreenAnnotations.Last().Details = details;
+            
 
             writer.SaveStep(usecase.Name, scenario.Name, step);
             writer.Flush();
