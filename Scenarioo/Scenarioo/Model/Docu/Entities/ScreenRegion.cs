@@ -24,10 +24,11 @@ namespace Scenarioo.Model.Docu.Entities
 
         public ScreenRegion(int x, int y, int width, int height)
         {
-            this.X = x;
-            this.Y = y;
-            this.Height = height;
-            this.Width = width;
+            X = x;
+            Y = y;
+            Height = height;
+            Width = width;
+            Width = width;
         }
     }
 }
