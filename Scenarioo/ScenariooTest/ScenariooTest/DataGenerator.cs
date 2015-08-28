@@ -2,6 +2,9 @@
 
 namespace ScenariooTest
 {
+    /// <summary>
+    /// Data generator for testing purposes.
+    /// </summary>
     public static class DataGenerator
     {
         public static ScreenAnnotation CreateScreenAnnotation(int x, int y, ScreenAnnotationStyle style, ScreenAnnotationClickAction? clickAction = null, string clickActionUrl = "")
