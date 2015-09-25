@@ -234,7 +234,7 @@ namespace Scenarioo.Api
                 this.buildName, 
                 usecaseName, 
                 scenarioName, 
-                step.StepDescription.Index); // TODO: filename!
+                step.StepDescription.Index); // TODO: align to java writer library and use filename!
             
             this.CreateScreenshotDirectoryIfNotYetExists(usecaseName, scenarioName);
             ExecuteAsyncImageWriter(desScreenshotFile, file);
