@@ -29,7 +29,7 @@ namespace Scenarioo.Model.Docu.Entities
         /// <summary>
         /// Let the user navigate to the next step when he clicks on the annotation
         /// </summary>
-        [XmlEnum("toNextStep")]
+        [XmlEnum("TO_NEXT_STEP")]
         ToNextStep,
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace Scenarioo.Model.Docu.Entities
         /// 
         /// The URL will be opened in a seperate browser tab.
         /// </summary>
-        [XmlEnum("toUrl")]
+        [XmlEnum("TO_URL")]
         ToUrl
     }
 }

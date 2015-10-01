@@ -26,31 +26,31 @@ namespace Scenarioo.Model.Docu.Entities
 {
     public enum ScreenAnnotationStyle
     {
-        [XmlEnum("default")]
+        [XmlEnum("DEFAULT")]
         Default,
 
-        [XmlEnum("click")]
+        [XmlEnum("CLICK")]
         Click,
 
-        [XmlEnum("keyboard")]
+        [XmlEnum("KEYBOARD")]
         Keyboard,
 
-        [XmlEnum("expected")]
+        [XmlEnum("EXPECTED")]
         Expected,
 
-        [XmlEnum("navigateToUrl")]
+        [XmlEnum("NAVIGATE_TO_URL")]
         NavigateToUrl,
 
-        [XmlEnum("error")]
+        [XmlEnum("ERROR")]
         Error,
 
-        [XmlEnum("warn")]
+        [XmlEnum("WARN")]
         Warn,
 
-        [XmlEnum("info")]
+        [XmlEnum("INFO")]
         Info,
 
-        [XmlEnum("highlight")]
+        [XmlEnum("HIGHLIGHT")]
         Highlight,
     }
 }
