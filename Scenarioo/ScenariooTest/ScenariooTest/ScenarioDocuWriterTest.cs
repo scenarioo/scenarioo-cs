@@ -267,11 +267,11 @@ namespace ScenariooTest
             // well this is a really sloppy assertion. BUT: we don't have to test the whole serialization because this is done by .NET framework.
             // we have to do some little things that the java deserializer likes our xml. So we do just some checks on "problem zones". the whole
             // import should still be checked with an api call on the scenarioo backend.
-            StringAssert.Contains("<style>highlight</style>", stepAsString);
-            StringAssert.Contains("<style>click</style>", stepAsString);
-            StringAssert.Contains("<style>error</style>", stepAsString);
-            StringAssert.Contains("<style>info</style>", stepAsString);
-            StringAssert.Contains("<style>expected</style>", stepAsString);
+            StringAssert.Contains("<style>HIGHLIGHT</style>", stepAsString);
+            StringAssert.Contains("<style>CLICK</style>", stepAsString);
+            StringAssert.Contains("<style>ERROR</style>", stepAsString);
+            StringAssert.Contains("<style>INFO</style>", stepAsString);
+            StringAssert.Contains("<style>EXPECTED</style>", stepAsString);
         }
 
         [Test]
