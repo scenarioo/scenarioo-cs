@@ -35,7 +35,7 @@ namespace Scenarioo.Model.Docu.Entities
         public ScreenRegion Region { get; set; }
 
         /// <summary>
-        /// (optional) Set the visual style of the annotation (if not set, the same style as 'neutral' will be used).
+        /// (optional) Set the visual style of the annotation (if not set, the same style as 'default' will be used).
         /// </summary>
         [XmlElement("style")]
         public ScreenAnnotationStyle Style { get; set; }

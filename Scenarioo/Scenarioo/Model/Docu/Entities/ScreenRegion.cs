@@ -50,7 +50,6 @@ namespace Scenarioo.Model.Docu.Entities
             Y = y;
             Height = height;
             Width = width;
-            Width = width;
         }
     }
 }

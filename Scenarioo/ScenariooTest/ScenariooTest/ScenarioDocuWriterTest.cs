@@ -73,7 +73,6 @@ namespace ScenariooTest
             docuFiles = new ScenarioDocuFiles(rootDirectory);
         }
 
-        //[TestFixtureTearDown]
         public void TestCleanUp()
         {
             if (Directory.Exists(rootDirectory))
@@ -281,7 +280,7 @@ namespace ScenariooTest
             var scenario = new Scenario
                                {
                                    Name = TestContext.CurrentContext.Test.Name,
-                                   Description = "a scenario for testing collections in details"
+                                   Description = "a scenario for testing collectionps in details"
                                };
 
             // act
@@ -367,7 +366,7 @@ namespace ScenariooTest
             writer.SaveScenario(SerializationUseCase, scenario);
         }
 
-        [Test] // TODO: review this async stuff, i'm not sure about that!
+        [Test] // TODO: review this async stuff, i'm not sure about that! Issue #3
         public void AsyncWriteOfMultipleFilesAndFlush()
         {
             // GIVEN: a lot of large steps to write, that have not yet been written 
