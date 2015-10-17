@@ -21,7 +21,7 @@
   
   build:
     publish_nuget: true
-    verbosity: detailed
+    verbosity: normal
   
   deploy:
   - provider: NuGet
@@ -53,7 +53,7 @@
   
   build:
     publish_nuget: true
-    verbosity: detailed
+    verbosity: normal
 
 -
   branches:
@@ -76,7 +76,7 @@
   
   build:
     publish_nuget: true
-    verbosity: detailed
+    verbosity: normal
 
   deploy:
   - provider: NuGet
