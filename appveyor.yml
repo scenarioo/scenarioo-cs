@@ -82,7 +82,7 @@
   - provider: NuGet
     server: https://nuget.org
     api_key:
-      secure: BNq82MzBbX3y8T5N9yhqpJYTM32aEjuabo6W1GNazkSdmQU3cXrsXjpKRTpXnWGN9kwvAPmHOGZXfpIn215n2OHF/9ExXy/zjZpRo9hwDr0=
+      secure: 74aGO6tf6vNU0RRESbiWpDc10ZzZMETG02KpQedI/Ecnnx8yMoZknu/SdUP0BaMk
 
 # "fall back" configuration for all other branches
 # no "branches" section defined
