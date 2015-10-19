@@ -5,7 +5,7 @@
     only:
       - master
 
-  version: 0.4.{build}
+  version: 2.1.{build}
 
   configuration: Release
   
@@ -37,7 +37,7 @@
       - /dev-.*/
       - /dev.*/
 
-  version: 0.5.{build}
+  version: 2.1.{build}
 
   configuration: Release
   
@@ -60,7 +60,7 @@
     only:
       - /release-.*/
     
-  version: 0.5.{build}-rc
+  version: 2.1.{build}-rc
     
   configuration: Release
   
