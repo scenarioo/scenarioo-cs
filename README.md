@@ -3,13 +3,14 @@ scenarioo-cs
 
 C# API for Scenarioo docu content generation
 
-CI-Build-Master: [![Build status](https://ci.appveyor.com/api/projects/status/wxm377bueg70428d?branch=release-screen-annotation&svg=true)](https://ci.appveyor.com/project/scenarioo-ci/scenarioo-cs)
-CI-Dev: [![Build status](https://ci.appveyor.com/api/projects/status/wxm377bueg70428d?branch=release-screen-annotation&svg=true)](https://ci.appveyor.com/project/scenarioo-ci/scenarioo-cs)
-CI-RC-Screen-Annotation: [![Build status](https://ci.appveyor.com/api/projects/status/wxm377bueg70428d?branch=release-screen-annotation&svg=true)](https://ci.appveyor.com/project/scenarioo-ci/scenarioo-cs)
+Branch | Status
+:---|:---|:---
+Master               | [![Build status](https://ci.appveyor.com/api/projects/status/wxm377bueg70428d?branch=release-screen-annotation&svg=true)](https://ci.appveyor.com/project/scenarioo-ci/scenarioo-cs)
+Dev                  | [![Build status](https://ci.appveyor.com/api/projects/status/wxm377bueg70428d?branch=release-screen-annotation&svg=true)](https://ci.appveyor.com/project/scenarioo-ci/scenarioo-cs)
+Screen Annotation RC | [![Build status](https://ci.appveyor.com/api/projects/status/wxm377bueg70428d?branch=release-screen-annotation&svg=true)](https://ci.appveyor.com/project/scenarioo-ci/scenarioo-cs)
 
-NuGet: [![NuGet Downloads](http://img.shields.io/nuget/dt/scenarioo-cs.svg)](https://www.nuget.org/packages/scenarioo-cs)
+NuGet stats: [![NuGet Downloads](http://img.shields.io/nuget/dt/scenarioo-cs.svg)](https://www.nuget.org/packages/scenarioo-cs)
 [![NuGet Version](http://img.shields.io/nuget/v/scenarioo-cs.svg)](https://www.nuget.org/packages/scenarioo-cs)
-
 
 ## Development Guide
 
