@@ -31,7 +31,7 @@ namespace Scenarioo.Api.Util.Xml
     using Exception = System.Exception;
 
     /// <summary>
-    /// Writing or reading of all ScenarioDocu entities to XML files and back
+    /// Writing or reading of all Scenario documentation entities to XML files and back
     /// </summary>
     public class ScenarioDocuXMLUtil
     {

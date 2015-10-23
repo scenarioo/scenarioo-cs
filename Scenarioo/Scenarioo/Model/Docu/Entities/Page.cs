@@ -21,31 +21,54 @@
  */
 
 using System;
+using System.Xml.Serialization;
+
+using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    using System.Xml.Serialization;
-
-    using Scenarioo.Model.Docu.Entities.Generic;
-
     [Serializable]
     [XmlRoot("page")]
     public class Page
     {
+        private Labels labels;
+
+        /// <summary>
+        /// Gets or sets multiple labels to a scenario object.
+        /// </summary>
+        /// <returns>All labels of this object. Never null.</returns>
+        [XmlElement("labels")]
+        public Labels Labels
+        {
+            get { return this.labels ?? (this.labels = new Labels()); }
+            set { this.labels = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets unique name of the page. For a webpage you usually use the relative application internal url-path to that page or
+        /// the relative-file-path of the template file rendering this page. Try to use names that are as short as possible
+        /// and do not include any url parameters. Names should be as stable as possible, do not use names that might change
+        /// on each new build.
+        /// </summary>
+        [XmlElement("name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets additional application specific details with additional metadata information's.
+        /// See <see cref="Details"/>
+        /// </summary>
+        [XmlElement("details")]
+        public Details Details { get; set; }
+
         public Page()
         {
-            this.Name = string.Empty;
+            Name = string.Empty;
+            Details = new Details();
         }
 
         public Page(string name)
         {
-            this.Name = name;
+            Name = name;
         }
-
-        [XmlElement("name")]
-        public string Name { get; set; }
-
-        [XmlElement("details")]
-        public Details Details { get; set; }
     }
 }

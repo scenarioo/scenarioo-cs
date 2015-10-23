@@ -79,6 +79,7 @@ namespace Scenarioo.Model.Docu.Entities
 
         public ScreenAnnotation()
         {
+            Details = new Details();
         }
 
         public bool ShouldSerializeScreenAnnotationClickAction()

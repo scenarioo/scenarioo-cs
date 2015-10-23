@@ -21,13 +21,12 @@
  */
 
 using System;
+using System.Xml.Serialization;
+
+using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    using System.Xml.Serialization;
-
-    using Scenarioo.Model.Docu.Entities.Generic;
-
     /// <summary>
     /// Metadata for a step. This is a container for all additional detail data about a step that is only displayed on
     /// details page for a step.
@@ -44,15 +43,8 @@ namespace Scenarioo.Model.Docu.Entities
         [XmlElement("details")]
         public Details Details
         {
-            get
-            {
-                return this.details;
-            }
-
-            set
-            {
-                this.details = value;
-            }
+            get { return this.details; }
+            set { this.details = value; }
         }
 
         /// <summary>

@@ -89,22 +89,22 @@ namespace Scenarioo.Api.Util.Xml
             Lock(
                 destFile,
                 f =>
+                {
+                    try
                     {
-                        try
-                        {
-                            var cbuffer = new byte[] { };
-                            f.Write(cbuffer, 0, cbuffer.Length);
-                        }
-                        catch (IOException e)
-                        {
-                            throw new Exception(
-                                string.Format(
-                                    "Could not marshall Object of type:{0} into file:{1}",
-                                    entity.GetType().Name,
-                                    destFile),
-                                e);
-                        }
-                    });
+                        var cbuffer = new byte[] { };
+                        f.Write(cbuffer, 0, cbuffer.Length);
+                    }
+                    catch (IOException e)
+                    {
+                        throw new Exception(
+                            string.Format(
+                                "Could not marshall Object of type:{0} into file:{1}",
+                                entity.GetType().Name,
+                                destFile),
+                            e);
+                    }
+                });
 
             do
             {
@@ -112,10 +112,15 @@ namespace Scenarioo.Api.Util.Xml
                 {
                     var task = new Task(
                         () =>
-                            {
+                        {
                                 using (
                                     var fs = new FileStream(
-                                        destFile, FileMode.Create, FileAccess.Write, FileShare.None, ScenarioDocuGeneratorConfiguration.MaxConcurrentTasks, true))
+                                        destFile,
+                                        FileMode.Create,
+                                        FileAccess.Write,
+                                        FileShare.None,
+                                        ScenarioDocuGeneratorConfiguration.MaxConcurrentTasks,
+                                        true))
                                 {
                                     ScenarioDocuXMLUtil.MarshalXml(entity, fs);
 

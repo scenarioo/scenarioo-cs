@@ -5,7 +5,7 @@
     only:
       - master
 
-  version: 0.4.{build}
+  version: 2.1.{build}
 
   configuration: Release
   
@@ -21,7 +21,7 @@
   
   build:
     publish_nuget: true
-    verbosity: detailed
+    verbosity: normal
   
   deploy:
   - provider: NuGet
@@ -37,7 +37,7 @@
       - /dev-.*/
       - /dev.*/
 
-  version: 0.5.{build}
+  version: 2.1.{build}
 
   configuration: Release
   
@@ -53,14 +53,14 @@
   
   build:
     publish_nuget: true
-    verbosity: detailed
+    verbosity: normal
 
 -
   branches:
     only:
       - /release-.*/
     
-  version: 0.5.{build}-rc
+  version: 2.1.{build}-rc
     
   configuration: Release
   
@@ -76,13 +76,13 @@
   
   build:
     publish_nuget: true
-    verbosity: detailed
+    verbosity: normal
 
   deploy:
   - provider: NuGet
     server: https://nuget.org
     api_key:
-      secure: BNq82MzBbX3y8T5N9yhqpJYTM32aEjuabo6W1GNazkSdmQU3cXrsXjpKRTpXnWGN9kwvAPmHOGZXfpIn215n2OHF/9ExXy/zjZpRo9hwDr0=
+      secure: 74aGO6tf6vNU0RRESbiWpDc10ZzZMETG02KpQedI/Ecnnx8yMoZknu/SdUP0BaMk
 
 # "fall back" configuration for all other branches
 # no "branches" section defined
