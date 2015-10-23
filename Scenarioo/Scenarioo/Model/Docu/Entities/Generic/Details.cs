@@ -35,8 +35,8 @@ namespace Scenarioo.Model.Docu.Entities.Generic
     using XmlElement = Scenarioo.Api.Util.Xml.XmlElement;
 
     /// <summary>
-    /// Collection of application specific additional information to store and display in the Scenarioo documentation.
-    /// A client of the Scenarioo API can add any key-value-data to this detail informations.
+    /// Collection of application specific additional information to store and display in documentation.
+    /// The client of the API can add any key-value-data to this detail information's.
     /// Following type of objects are possible values inside the details:
     ///  - String: for usual text information
     ///  - ObjectDescription: for describing an object (described through a type and a name and additional

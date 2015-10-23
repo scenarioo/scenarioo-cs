@@ -32,6 +32,8 @@ namespace Scenarioo.Model.Docu.Entities
     [XmlRoot("scenario")]
     public class Scenario
     {
+        private Labels labels;
+
         [XmlNamespaceDeclarations]
         public XmlSerializerNamespaces Xmlns;
 
@@ -53,18 +55,60 @@ namespace Scenarioo.Model.Docu.Entities
             this.Description = description;
         }
 
+        /// <summary>
+        /// Gets or sets a  unique name for this scenario inside the {@link UseCase} it belongs to.
+        /// Make sure to use descriptive names that stay stable as much as possible, such that you can compare scenarios
+        /// between different builds.
+        /// </summary>
         [XmlElement("name")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets more detailed description for current scenario (additionally to descriptive name).
+        /// </summary>
         [XmlElement("description")]
         public string Description { get; set; }
 
+        /// <summary>
+        /// Gets or sets status of current step for setting additional application-specific states.
+        /// Status of the scenario (did this test fail or succeed?).
+        /// Usual values are "success" or "failed".
+        /// But you can use application specific additional values, like "not implemented", "unknown" etc. where it makes
+        /// sense. Those additional values will be displayed in warning-style by the web application.
+        /// </summary>
         [XmlElement("status")]
         public string Status { get; set; }
 
+        /// <summary>
+        /// Gets or sets additional application specific details with additional metadata information's.
+        /// </summary>
         [XmlElement("details")]
         public Details Details { get; set; }
 
+        /// <summary>
+        /// Gets or sets multiple labels to a scenario object.
+        /// </summary>
+        /// <returns>All labels of this object. Never null.</returns>
+        [XmlElement("labels")]
+        public Labels Labels
+        {
+            get
+            {
+                return this.labels ?? (this.labels = new Labels());
+            }
+
+            set
+            {
+                this.labels = value;
+            }
+        }
+
+        /// <summary>
+        /// Add application specific details as key-value-data-items.
+        /// See <see cref="Details"/> for what can be used as values.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         public void AddDetail(string key, object value)
         {
             if (this.Details == null)
@@ -74,6 +118,5 @@ namespace Scenarioo.Model.Docu.Entities
 
             this.Details.AddDetail(key, value);
         }
-
     }
 }
