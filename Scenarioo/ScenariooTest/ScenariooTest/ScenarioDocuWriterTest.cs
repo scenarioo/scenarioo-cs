@@ -163,6 +163,7 @@ namespace ScenariooTest
                                    Description = "Serialize a scenario name, description and status",
                                    Status = "success",
                                };
+            scenario.Labels.AddLabel("edge case");
 
             // act
             scenario.AddDetail("userRole", "customer");
@@ -175,6 +176,7 @@ namespace ScenariooTest
             StringAssert.Contains(string.Format("<name>{0}</name>", scenario.Name), scenarioXml);
             StringAssert.Contains(string.Format("<description>{0}</description>", scenario.Description), scenarioXml);
             StringAssert.Contains("<status>success</status>", scenarioXml);
+            StringAssert.Contains("<label>edge case</label>", scenarioXml);
         }
 
         [Test]
