@@ -21,15 +21,13 @@
  */
 
 using System;
+using System.Xml.Serialization;
 
 using Scenarioo.Api;
+using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    using System.Xml.Serialization;
-
-    using Scenarioo.Model.Docu.Entities.Generic;
-
     [Serializable]
     [XmlRoot("stepDescription")]
     public class StepDescription
@@ -78,20 +76,18 @@ namespace Scenarioo.Model.Docu.Entities
         [XmlElement("labels")]
         public Labels Labels
         {
-            get
-            {
-                return this.labels ?? (this.labels = new Labels());
-            }
+            get { return this.labels ?? (this.labels = new Labels()); }
+            set { this.labels = value; }
+        }
 
-            set
-            {
-                this.labels = value;
-            }
+        public StepDescription()
+        {
+            Details = new Details();
         }
 
         public void AddDetails(string key, object value)
         {
-            this.Details.AddDetail(key, value);
+            Details.AddDetail(key, value);
         }
     }
 }

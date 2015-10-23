@@ -19,15 +19,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+using System;
+using System.Xml.Serialization;
+
+using Scenarioo.Api.Util.Xml;
+using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    using System;
-    using System.Xml.Serialization;
-
-    using Scenarioo.Api.Util.Xml;
-    using Scenarioo.Model.Docu.Entities.Generic;
-
     [Serializable]
     [XmlRoot("scenario")]
     public class Scenario
@@ -36,24 +35,6 @@ namespace Scenarioo.Model.Docu.Entities
 
         [XmlNamespaceDeclarations]
         public XmlSerializerNamespaces Xmlns;
-
-        public Scenario()
-        {
-            // Set appropriate namespace
-            this.Xmlns = new XmlSerializerNamespaces();
-            this.Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
-            this.Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
-
-            this.Name = string.Empty;
-            this.Description = string.Empty;
-            this.Status = string.Empty;
-        }
-
-        public Scenario(string name, string description, int numberOfPages, int numberOfSteps)
-        {
-            this.Name = name;
-            this.Description = description;
-        }
 
         /// <summary>
         /// Gets or sets a  unique name for this scenario inside the {@link UseCase} it belongs to.
@@ -92,16 +73,30 @@ namespace Scenarioo.Model.Docu.Entities
         [XmlElement("labels")]
         public Labels Labels
         {
-            get
-            {
-                return this.labels ?? (this.labels = new Labels());
-            }
-
-            set
-            {
-                this.labels = value;
-            }
+            get { return this.labels ?? (this.labels = new Labels()); }
+            set { this.labels = value; }
         }
+
+
+        public Scenario()
+        {
+            Xmlns = new XmlSerializerNamespaces();
+            Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
+            Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
+
+            Name = string.Empty;
+            Description = string.Empty;
+            Status = string.Empty;
+            Details = new Details();
+        }
+
+        public Scenario(string name, string description)
+            : this()
+        {
+            Name = name;
+            Description = description;
+        }
+
 
         /// <summary>
         /// Add application specific details as key-value-data-items.

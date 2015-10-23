@@ -21,33 +21,19 @@
  */
 
 using System;
+using System.Xml.Serialization;
+
+using Scenarioo.Api.Util.Xml;
+using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    using System.Xml.Serialization;
-
-    using Scenarioo.Api.Util.Xml;
-    using Scenarioo.Model.Docu.Entities.Generic;
-
     [Serializable]
     [XmlRoot("build")]
     public class Build
     {
         [XmlNamespaceDeclarations]
         public XmlSerializerNamespaces Xmlns;
-
-        public Build()
-        {
-            this.Xmlns = new XmlSerializerNamespaces();
-            this.Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
-            this.Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
-        }
-
-        public Build(string name)
-            : this()
-        {
-            this.Name = name;
-        }
 
         [XmlElement("name")]
         public string Name { get; set; }
@@ -63,6 +49,19 @@ namespace Scenarioo.Model.Docu.Entities
 
         [XmlElement("details")]
         public Details Details { get; set; }
+
+        public Build()
+        {
+            Xmlns = new XmlSerializerNamespaces();
+            Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
+            Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
+        }
+
+        public Build(string name)
+            : this()
+        {
+            this.Name = name;
+        }
 
         public void AddDetail(string key, object value)
         {

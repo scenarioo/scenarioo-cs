@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 
 using Scenarioo.Api.Util.Xml;
+using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace Scenarioo.Model.Docu.Entities
 {

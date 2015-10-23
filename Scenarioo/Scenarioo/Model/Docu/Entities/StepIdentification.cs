@@ -21,11 +21,10 @@
  */
 
 using System;
+using System.Xml.Serialization;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    using System.Xml.Serialization;
-
     /// <summary>
     /// Only for internal use, wherever ths class is used on the model, this is for internal use only, will be removed in
     /// next major version of the API.
@@ -60,12 +59,12 @@ namespace Scenarioo.Model.Docu.Entities
             int occurence,
             int relativeIndex)
         {
-            this.UseCaseName = useCaseName;
-            this.ScenarioName = scenarioName;
-            this.PageName = pageName;
-            this.Index = index;
-            this.Occurence = occurence;
-            this.RelativeIndex = relativeIndex;
+            UseCaseName = useCaseName;
+            ScenarioName = scenarioName;
+            PageName = pageName;
+            Index = index;
+            Occurence = occurence;
+            RelativeIndex = relativeIndex;
         }
     }
 }
