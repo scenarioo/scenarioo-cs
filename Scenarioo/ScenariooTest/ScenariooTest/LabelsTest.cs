@@ -23,16 +23,16 @@
 using System;
 using System.Collections.Generic;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 using Scenarioo.Model.Docu.Entities;
 
 namespace ScenariooTest
 {
-    [TestClass]
+    [TestFixture]
     public class LabelsTest
     {
-        [TestMethod]
+        [Test]
         public void AddChaining()
         {
             var labels = new Labels();
@@ -41,7 +41,7 @@ namespace ScenariooTest
             Assert.AreEqual(2, labels.Count);
         }
 
-        [TestMethod]
+        [Test]
         public void Set()
         {
             var labels = new Labels();
@@ -52,7 +52,7 @@ namespace ScenariooTest
             Assert.AreEqual(2, labels.Count);
         }
 
-        [TestMethod]
+        [Test]
         public void Validation()
         {
             Assert.IsTrue(Labels.IsValidLabel("test-1"));
@@ -64,7 +64,7 @@ namespace ScenariooTest
             Assert.IsFalse(Labels.IsValidLabel("t,est"));
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException(typeof(ArgumentException))]
         public void ImmediateValidationForAdd()
         {
@@ -72,7 +72,7 @@ namespace ScenariooTest
             labels.AddLabel("test-1").AddLabel("test.2");
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException(typeof(ArgumentException))]
         public void ImmediateValidationForSet()
         {

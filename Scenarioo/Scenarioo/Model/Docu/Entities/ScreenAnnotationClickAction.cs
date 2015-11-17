@@ -20,27 +20,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
+using System.Xml.Serialization;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    using System.Xml.Serialization;
-
-    [Serializable]
-    [XmlRoot("stepHtml")]
-    public class StepHtml
+    public enum ScreenAnnotationClickAction
     {
-        [XmlElement("htmlSource")]
-        public string HtmlSource { get; set; }
+        /// <summary>
+        /// Let the user navigate to the next step when he clicks on the annotation
+        /// </summary>
+        [XmlEnum("TO_NEXT_STEP")]
+        ToNextStep,
 
-        public StepHtml()
-        {
-            HtmlSource = string.Empty;
-        }
-
-        public StepHtml(string htmlSource)
-        {
-            HtmlSource = htmlSource;
-        }
+        /// <summary>
+        /// Let the user navigate to a URL specified in property 'ClickActionUrl' when he clicks on the annotation.
+        /// 
+        /// The URL will be opened in a seperate browser tab.
+        /// </summary>
+        [XmlEnum("TO_URL")]
+        ToUrl
     }
 }

@@ -1,0 +1,91 @@
+# configuration for "master" branch
+# build in Release mode and deploy to nuget
+-  
+  branches:
+    only:
+      - master
+
+  version: 2.1.{build}
+
+  configuration: Release
+  
+  assembly_info:
+    patch: true
+    file: '**\AssemblyInfo.*'
+    assembly_version: '{version}'
+    assembly_file_version: '{version}'
+    assembly_informational_version: '{version}'
+  
+  before_build:
+  - cmd: nuget restore
+  
+  build:
+    publish_nuget: true
+    verbosity: normal
+  
+  deploy:
+  - provider: NuGet
+    server: https://nuget.org
+    api_key:
+      secure: BNq82MzBbX3y8T5N9yhqpJYTM32aEjuabo6W1GNazkSdmQU3cXrsXjpKRTpXnWGN9kwvAPmHOGZXfpIn215n2OHF/9ExXy/zjZpRo9hwDr0=
+
+# configuration for all branches starting from "dev-"
+# build in Debug mode and deploy locally for testing
+-
+  branches:
+    only:
+      - /dev-.*/
+      - /dev.*/
+
+  version: 2.1.{build}
+
+  configuration: Release
+  
+  assembly_info:
+    patch: true
+    file: '**\AssemblyInfo.*'
+    assembly_version: '{version}'
+    assembly_file_version: '{version}'
+    assembly_informational_version: '{version}'
+  
+  before_build:
+  - cmd: nuget restore
+  
+  build:
+    publish_nuget: true
+    verbosity: normal
+
+-
+  branches:
+    only:
+      - /release-.*/
+    
+  version: 2.1.{build}-rc
+    
+  configuration: Release
+  
+  assembly_info:
+    patch: true
+    file: '**\AssemblyInfo.*'
+    assembly_version: '{version}'
+    assembly_file_version: '{version}'
+    assembly_informational_version: '{version}'
+  
+  before_build:
+  - cmd: nuget restore
+  
+  build:
+    publish_nuget: true
+    verbosity: normal
+
+  deploy:
+  - provider: NuGet
+    server: https://nuget.org
+    api_key:
+      secure: 74aGO6tf6vNU0RRESbiWpDc10ZzZMETG02KpQedI/Ecnnx8yMoZknu/SdUP0BaMk
+
+# "fall back" configuration for all other branches
+# no "branches" section defined
+# do not deploy at all
+-
+  configuration: Release

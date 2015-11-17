@@ -21,16 +21,17 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Xml.Serialization;
+
+using Scenarioo.Api.Util.Xml;
+using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    using System.Xml.Serialization;
-
-    using Scenarioo.Api.Util.Xml;
-
     /// <summary>
-    ///  Contains all the data collected from a web test for one step of one scenario/web test (except for the step image, which
-    ///  has to be stored separately
+    /// Contains all the data collected from a web test for one step of one scenario/web test (except for the step image, which
+    /// has to be stored separately
     /// </summary>
     [Serializable]
     [XmlRoot("step")]
@@ -41,9 +42,11 @@ namespace Scenarioo.Model.Docu.Entities
 
         public Step()
         {
-            this.Xmlns = new XmlSerializerNamespaces();
-            this.Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
-            this.Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
+            ScreenAnnotations = new List<ScreenAnnotation>();
+
+            Xmlns = new XmlSerializerNamespaces();
+            Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
+            Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
         }
 
         /// <summary>
@@ -72,5 +75,9 @@ namespace Scenarioo.Model.Docu.Entities
         /// </summary>
         [XmlElement("metadata")]
         public StepMetadata StepMetadata { get; set; }
+
+        [XmlArray("screenAnnotations")]
+        [XmlArrayItem("screenAnnotation")]
+        public List<ScreenAnnotation> ScreenAnnotations { get; set; }
     }
 }

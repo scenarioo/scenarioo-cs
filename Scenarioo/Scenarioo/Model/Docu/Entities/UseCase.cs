@@ -19,30 +19,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+using System;
+using System.Xml.Serialization;
+
+using Scenarioo.Api.Util.Xml;
+using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    using System;
-    using System.Xml.Serialization;
-
-    using Scenarioo.Api.Util.Xml;
-    using Scenarioo.Model.Docu.Entities.Generic;
-
     [Serializable]
     [XmlRoot("useCase")]
     public class UseCase
     {
         [XmlNamespaceDeclarations]
         public XmlSerializerNamespaces Xmlns;
-
-        private Labels labels;
-
-        public UseCase()
-        {
-            this.Xmlns = new XmlSerializerNamespaces();
-            this.Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
-            this.Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
-        }
 
         /// <summary>
         /// Gets or sets a unique name for this use case.
@@ -83,15 +73,19 @@ namespace Scenarioo.Model.Docu.Entities
         [XmlElement("labels")]
         public Labels Labels
         {
-            get
-            {
-                return this.labels ?? (this.labels = new Labels());
-            }
+            get { return this.labels ?? (this.labels = new Labels()); }
+            set { this.labels = value; }
+        }
 
-            set
-            {
-                this.labels = value;
-            }
+        private Labels labels;
+
+        public UseCase()
+        {
+            Xmlns = new XmlSerializerNamespaces();
+            Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
+            Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
+
+            Details = new Details();
         }
 
         public void AddDetail(string key, object value)

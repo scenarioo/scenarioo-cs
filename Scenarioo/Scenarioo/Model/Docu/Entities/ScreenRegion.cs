@@ -1,4 +1,4 @@
-﻿/* scenarioo-api
+/* scenarioo-api
  * Copyright (C) 2014, scenarioo.org Development Team
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -21,26 +21,35 @@
  */
 
 using System;
+using System.Xml.Serialization;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    using System.Xml.Serialization;
-
     [Serializable]
-    [XmlRoot("stepHtml")]
-    public class StepHtml
+    public class ScreenRegion
     {
-        [XmlElement("htmlSource")]
-        public string HtmlSource { get; set; }
+        [XmlElement("x")]
+        public int X { get; set; }
 
-        public StepHtml()
+        [XmlElement("y")]
+        public int Y { get; set; }
+
+        [XmlElement("height")]
+        public int Height { get; set; }
+
+        [XmlElement("width")]
+        public int Width { get; set; }
+
+        public ScreenRegion()
         {
-            HtmlSource = string.Empty;
         }
 
-        public StepHtml(string htmlSource)
+        public ScreenRegion(int x, int y, int width, int height)
         {
-            HtmlSource = htmlSource;
+            X = x;
+            Y = y;
+            Height = height;
+            Width = width;
         }
     }
 }

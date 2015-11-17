@@ -20,27 +20,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
+using System.Xml.Serialization;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    using System.Xml.Serialization;
-
-    [Serializable]
-    [XmlRoot("stepHtml")]
-    public class StepHtml
+    public enum ScreenAnnotationStyle
     {
-        [XmlElement("htmlSource")]
-        public string HtmlSource { get; set; }
+        [XmlEnum("DEFAULT")]
+        Default,
 
-        public StepHtml()
-        {
-            HtmlSource = string.Empty;
-        }
+        [XmlEnum("CLICK")]
+        Click,
 
-        public StepHtml(string htmlSource)
-        {
-            HtmlSource = htmlSource;
-        }
+        [XmlEnum("KEYBOARD")]
+        Keyboard,
+
+        [XmlEnum("EXPECTED")]
+        Expected,
+
+        [XmlEnum("NAVIGATE_TO_URL")]
+        NavigateToUrl,
+
+        [XmlEnum("ERROR")]
+        Error,
+
+        [XmlEnum("WARN")]
+        Warn,
+
+        [XmlEnum("INFO")]
+        Info,
+
+        [XmlEnum("HIGHLIGHT")]
+        Highlight,
     }
 }

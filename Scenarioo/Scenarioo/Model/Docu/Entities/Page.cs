@@ -21,28 +21,17 @@
  */
 
 using System;
+using System.Xml.Serialization;
+
+using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    using System.Xml.Serialization;
-
-    using Scenarioo.Model.Docu.Entities.Generic;
-
     [Serializable]
     [XmlRoot("page")]
     public class Page
     {
         private Labels labels;
-
-        public Page()
-        {
-            this.Name = string.Empty;
-        }
-
-        public Page(string name)
-        {
-            this.Name = name;
-        }
 
         /// <summary>
         /// Gets or sets multiple labels to a scenario object.
@@ -51,15 +40,8 @@ namespace Scenarioo.Model.Docu.Entities
         [XmlElement("labels")]
         public Labels Labels
         {
-            get
-            {
-                return this.labels ?? (this.labels = new Labels());
-            }
-
-            set
-            {
-                this.labels = value;
-            }
+            get { return this.labels ?? (this.labels = new Labels()); }
+            set { this.labels = value; }
         }
 
         /// <summary>
@@ -77,5 +59,16 @@ namespace Scenarioo.Model.Docu.Entities
         /// </summary>
         [XmlElement("details")]
         public Details Details { get; set; }
+
+        public Page()
+        {
+            Name = string.Empty;
+            Details = new Details();
+        }
+
+        public Page(string name)
+        {
+            Name = name;
+        }
     }
 }

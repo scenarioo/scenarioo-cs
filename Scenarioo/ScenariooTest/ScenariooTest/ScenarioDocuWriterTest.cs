@@ -21,11 +21,11 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 using Scenarioo.Api;
 using Scenarioo.Api.Files;
@@ -35,194 +35,255 @@ using Scenarioo.Model.Docu.Entities.Generic.Interfaces;
 
 namespace ScenariooTest
 {
-    [TestClass]
+    [TestFixture]
     public class ScenarioDocuWriterTest
     {
-        private const string BranchName = "testBranch";
-
+        private const string BranchName = "csharp-writer-unit-tests";
         private const string BuildName = "testBuild";
-
-        private const string UseCaseName = "testCase";
-
+        private const string SerializationUseCase = "Serialization";
         private const string ScenarioName = "testScenario";
-
         private const string DetailsVersionKey = "version";
-
         private const int StepIndex = 1;
         
         private string rootDirectory;
 
         private ScenarioDocuWriter writer;
-
         private ScenarioDocuReader reader;
-
         private ScenarioDocuFiles docuFiles;
 
-        [TestInitialize]
+        [TestFixtureSetUp]
         public void TestInit()
         {
             // Sets outcome directory
-            this.rootDirectory = Path.Combine(Directory.GetCurrentDirectory(), "testoutcome");
-
-            if (!Directory.Exists(this.rootDirectory))
+            rootDirectory = Path.Combine(Directory.GetCurrentDirectory(), "testoutcome");
+            TestCleanUp();
+            
+            if (!Directory.Exists(rootDirectory))
             {
-                Directory.CreateDirectory(this.rootDirectory);
+                Directory.CreateDirectory(rootDirectory);
             }
 
-            this.writer = new ScenarioDocuWriter(
-                this.rootDirectory,
+            writer = new ScenarioDocuWriter(
+                rootDirectory,
                 BranchName,
                 BuildName);
 
-            this.reader = new ScenarioDocuReader(this.rootDirectory);
+            reader = new ScenarioDocuReader(rootDirectory);
 
-            this.docuFiles = new ScenarioDocuFiles(this.rootDirectory);
+            docuFiles = new ScenarioDocuFiles(rootDirectory);
         }
 
-        [TestCleanup]
         public void TestCleanUp()
         {
-            if (Directory.Exists(this.rootDirectory))
+            if (Directory.Exists(rootDirectory))
             {
-                Directory.Delete(this.rootDirectory, true);
+                Directory.Delete(rootDirectory, true);
             }
         }
 
-        [TestMethod]
-        public void WriteBranchDescription()
+        [Test]
+        public void Serializez_Branch_Name_And_Description_Can_Be_Read()
         {
-            // GIVEN: a typical Branch
+            // arrange
             var branch = new Branch
                              {
                                  Name = BranchName,
                                  Description = "just a simple development Branch, might as well be the trunk."
                              };
 
-            // WHEN: the Branch was saved. The files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
-            this.writer.SaveBranchDescription(branch);
-            this.writer.Flush();            
+            // act
+            writer.SaveBranchDescription(branch);
+            writer.Flush();            
 
-            // THEN: the Branch can be loaded successfully and correctly
-            var branchFromFile = this.reader.LoadBranch(BranchName);
+            // assert
+            var branchFromFile = reader.LoadBranch(BranchName);
             Assert.AreEqual(BranchName, branchFromFile.Name);
             Assert.AreEqual(branch.Description, branchFromFile.Description);
         }
 
-        [TestMethod]
-        public void WriteBuildDescription()
+        [Test]
+        public void Serialized_Build_Can_Be_Read()
         {
-            // GIVEN: a typical Build
-            var build = new Build { Name = BuildName, Date = DateTime.Today, Revision = "10123", Status = "success" };
+            // arrange
+            var build = new Build { Name = BuildName, Date = DateTime.Today, Revision = "1337", Status = "success" };
 
             build.AddDetail(DetailsVersionKey, "1.0.1");
 
-            // WHEN: the Build was saved.
-            this.writer.SaveBuildDescription(build);
+            // act
+            writer.SaveBuildDescription(build);
+            writer.Flush();
 
-            // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
-            this.writer.Flush();
+            // arrange
+            Assert.IsTrue(File.Exists(docuFiles.GetBuildFile(BranchName, BuildName)));
 
-            // THEN: the Build file exists
-            Assert.IsTrue(File.Exists(this.docuFiles.GetBuildFile(BranchName, BuildName)));
+            // a build can't be read, because there is no implementation to read the details.
+            // i'd propose to change xml to json since it's more tolerant. just look
+            // at Details.cs:#WriteXml if you don't understand this comment.
+            ////var result = reader.LoadBuild(BranchName, BuildName);
+
+            ////Assert.That(BuildName, Is.EqualTo(result.Name));
+            ////Assert.That("1337", Is.EqualTo(result.Revision));
+            ////Assert.That("success", Is.EqualTo("success"));
         }
 
-        [TestMethod]
-        public void WriteUseCaseDescription()
+        [Test]
+        public void Serialized_Usecase_Can_Be_Read()
         {
-            // GIVEN: a typical use case
+            // arrange
             var usecase = new UseCase
                               {
-                                  Name = UseCaseName,
-                                  Description = "this is a typical use case with a decription",
+                                  Name = SerializationUseCase,
+                                  Description = "Serialization of scenarioo objects with .NET",
                                   Status = "success",
                               };
 
             usecase.AddDetail("webtestName", "UseCaseWebTest");
-            usecase.Labels.AddLabels(this.CreateLabels());
 
-            // WHEN: the usecase was saved.
-            this.writer.SaveUseCase(usecase);
+            // act
+            writer.SaveUseCase(usecase);
+            writer.Flush();
 
-            // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
-            this.writer.Flush();
+            // assert
+            Assert.IsTrue(File.Exists(docuFiles.GetUseCaseFile(BranchName, BuildName, SerializationUseCase)));
 
-            // THEN: the usecase file exists
-            Assert.IsTrue(File.Exists(this.docuFiles.GetUseCaseFile(BranchName, BuildName, UseCaseName)));
+            var usecaseXml = File.ReadAllText(docuFiles.GetUseCaseFile(BranchName, BuildName, SerializationUseCase));
+            StringAssert.Contains("UseCaseWebTest", usecaseXml);
+            StringAssert.Contains(usecase.Name, usecaseXml);
+            StringAssert.Contains(usecase.Description, usecaseXml);
+            StringAssert.Contains(usecase.Status, usecaseXml);
         }
 
-        [TestMethod]
-        public void WriteScenarioDescription()
+        [Test]
+        public void Serialize_Scenario_Name_Description_And_Status()
         {
-            // GIVEN: a typical scenario
+            // arrange
             var scenario = new Scenario
                                {
-                                   Name = ScenarioName,
-                                   Description = "this is a typical scenario with a decription",
+                                   Name = TestContext.CurrentContext.Test.Name,
+                                   Description = "Serialize a scenario name, description and status",
                                    Status = "success",
                                };
 
+            // act
             scenario.AddDetail("userRole", "customer");
-            scenario.Labels.AddLabels(this.CreateLabels());
+            writer.SaveScenario(SerializationUseCase, scenario);
+            writer.Flush();
 
-            // WHEN: the scenario was saved.
-            this.writer.SaveScenario(UseCaseName, scenario);
-
-            // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
-            this.writer.Flush();
-
-            // THEN: the scneario file exists
-            Assert.IsTrue(File.Exists(this.docuFiles.GetScenarioFile(BranchName, BuildName, UseCaseName, ScenarioName)));
+            // assert
+            var scenarioXml = File.ReadAllText(docuFiles.GetScenarioFile(BranchName, BuildName, SerializationUseCase, TestContext.CurrentContext.Test.Name));
+            
+            StringAssert.Contains(string.Format("<name>{0}</name>", scenario.Name), scenarioXml);
+            StringAssert.Contains(string.Format("<description>{0}</description>", scenario.Description), scenarioXml);
+            StringAssert.Contains("<status>success</status>", scenarioXml);
         }
 
-        [TestMethod]
-        public void WriteStep()
+        [Test]
+        public void Serialize_A_Step()
         {
-            // GIVEN: a typical step
+            // arrange
             var step = new Step();
-            var labels = new Labels();
-            labels.AddLabels(this.CreateLabels());
-
-            var stepDescription = new StepDescription
-                                      {
-                                          Index = StepIndex,
-                                          Title = "Test Step",
-                                          Status = "success",
-                                          Labels = labels,
-                                          ScreenshotFileName = this.docuFiles.GetScreenshotFileName(StepIndex)
-                                      };
-
+            var stepDescription = new StepDescription { Index = StepIndex, Title = "Test Step", Status = "success" };
             step.StepDescription = stepDescription;
+
             step.StepHtml = new StepHtml { HtmlSource = "<html>just some page text</html>" };
-            step.Page = new Page { Name = "customer/overview.jsp", Labels = labels };
+            step.Page = new Page { Name = "customer/overview.jsp" };
 
             step.StepMetadata = new StepMetadata
                                    {
                                        VisibleText = "just some page text",
                                    };
 
-            step.StepMetadata.AddDetail("mockedServicesConfiguration", "dummy_config_xy.properties");
+            // act
+            writer.SaveStep(SerializationUseCase, TestContext.CurrentContext.Test.Name, step);
+            writer.Flush();
 
-            // WHEN: the step was saved.
-            this.writer.SaveStep(UseCaseName, ScenarioName, step);
-
-            // THEN: the files are not created directly but asynchronously. WaitAll will wait until all Tasks are finished.
-            this.writer.Flush();
-
-            // THEN: at least one step file exists and one scenario file exists
-            Assert.IsTrue(File.Exists(this.docuFiles.GetScenarioStepFile(BranchName, BuildName, UseCaseName, ScenarioName, 1)));
+            // assert
+            Assert.IsTrue(File.Exists(docuFiles.GetScenarioStepFile(BranchName, BuildName, SerializationUseCase, TestContext.CurrentContext.Test.Name, 1)));
         }
-        
-        [TestMethod]
-        public void WriteGenericCollectionsInDetails()
+
+        [Test]
+        public void Write_Steps_With_Screen_Annotations()
         {
-            // GIVEN: any object containing collections in details
+            // arrange
+            var usecase = new UseCase
+            {
+                Name = "Screen Annotations",
+                Description = "Usecase to show the screen annotations",
+                Status = "failed",
+            };
+
+            writer.SaveUseCase(usecase);
+
+            var scenario = new Scenario
+            {
+                Name = "All screen annotations on one page",
+                Description = "this is a typical scenario with a decription",
+                Status = "failed",
+            };
+
+            writer.SaveScenario(usecase.Name, scenario);
+            writer.Flush();
+            
+            // act
+            var step = new Step();
+            var stepDescription = new StepDescription { Index = StepIndex, Title = "Test Step", Status = "success" };
+            step.StepDescription = stepDescription;
+
+            step.StepHtml = new StepHtml { HtmlSource = "<html>just some page text</html>" };
+            step.Page = new Page { Name = "Sample Screen Annotation Page" };
+            step.StepDescription.ScreenshotFileName = "000.png";
+            step.StepDescription.Index = 0;
+
+            step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(10, 50, ScreenAnnotationStyle.Highlight));
+            step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(10, 150, ScreenAnnotationStyle.Click, ScreenAnnotationClickAction.ToUrl, "next-url"));
+            step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(10, 250, ScreenAnnotationStyle.Error));
+            step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(10, 350, ScreenAnnotationStyle.Expected));
+            step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(10, 450, ScreenAnnotationStyle.Info));
+            step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(400, 50, ScreenAnnotationStyle.Keyboard));
+            step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(400, 150, ScreenAnnotationStyle.Warn));
+            step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(400, 250, ScreenAnnotationStyle.Default));
+            step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(400, 350, ScreenAnnotationStyle.NavigateToUrl, ScreenAnnotationClickAction.ToUrl, "blabla"));
+
+            var details = new Details();
+            details.AddDetail("details-key", "details-value");
+            step.ScreenAnnotations.Last().Details = details;
+            
+
+            writer.SaveStep(usecase.Name, scenario.Name, step);
+            writer.Flush();
+            
+            writer.SaveScreenshot(usecase.Name, scenario.Name, step, File.ReadAllBytes("data/screenshot.png"));
+            writer.Flush();
+
+            usecase.Status = "success";
+            scenario.Status = "success";
+
+            writer.SaveUseCase(usecase);
+            writer.SaveScenario(usecase.Name, scenario);
+
+            var stepAsString = File.ReadAllText(docuFiles.GetScenarioStepFile(BranchName, BuildName, usecase.Name, scenario.Name, 0));
+
+            // well this is a really sloppy assertion. BUT: we don't have to test the whole serialization because this is done by .NET framework.
+            // we have to do some little things that the java deserializer likes our xml. So we do just some checks on "problem zones". the whole
+            // import should still be checked with an api call on the scenarioo backend.
+            StringAssert.Contains("<style>HIGHLIGHT</style>", stepAsString);
+            StringAssert.Contains("<style>CLICK</style>", stepAsString);
+            StringAssert.Contains("<style>ERROR</style>", stepAsString);
+            StringAssert.Contains("<style>INFO</style>", stepAsString);
+            StringAssert.Contains("<style>EXPECTED</style>", stepAsString);
+        }
+
+        [Test]
+        public void Serialized_Details_Object_With_ObjectList_Exists()
+        {
+            // arrange
             var scenario = new Scenario
                                {
-                                   Name = ScenarioName,
-                                   Description = "a scenario for testing collections in details"
+                                   Name = TestContext.CurrentContext.Test.Name,
+                                   Description = "a scenario for testing collectionps in details"
                                };
 
-            // Details (further maps with key value pairs for structured objects)
+            // act
             var detailsMap = new Details();
             detailsMap.AddDetail("anyGenericObjectReference", new ObjectReference("serviceCall", "MainDB.getUsers"));
             detailsMap.AddDetail(
@@ -233,25 +294,23 @@ namespace ScenariooTest
 
             scenario.AddDetail("map", detailsMap);
 
-            // List of Strings
             var objList = new ObjectList<string> { "item1", "item2", "item3" };
             scenario.Details.AddDetail("list", objList);
+            writer.SaveScenario(SerializationUseCase, scenario);
+            writer.Flush();
 
-            // WHEN: the object was saved.
-            this.writer.SaveScenario(UseCaseName, scenario);
+            // assert (there is no way to deserialize the details atm :()
+            Assert.IsTrue(File.Exists(docuFiles.GetScenarioFile(BranchName, BuildName, SerializationUseCase, TestContext.CurrentContext.Test.Name)));
 
-            // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
-            this.writer.Flush();
-
-            // THEN: the scneario file exists
-            Assert.IsTrue(File.Exists(this.docuFiles.GetScenarioFile(BranchName, BuildName, UseCaseName, ScenarioName)));
+            scenario.Status = "success";
+            writer.SaveScenario(SerializationUseCase, scenario);
         }
 
-        [TestMethod]
-        public void WriteTreeStructureInDetails()
+        [Test]
+        public void Serilazed_Details_Object_With_ObjectTreeNode_Exists()
         {
-            // GIVEN: any object containing collections in details
-            var scenario = new Scenario { Name = ScenarioName, Description = "a scenario for testing trees in details" };
+            // arrange
+            var scenario = new Scenario { Name = ScenarioName, Description = "a scenario for testing trees in details", Status = "failed" };
 
             // A tree containing most important item types that need to be supported
             // (same types are allowed for items in tree nodes as for values in Details --> reuse code from
@@ -276,7 +335,7 @@ namespace ScenariooTest
             childWithObjectRef.Item = objRef;
             rootNode.AddChild(childWithObjectRef);
 
-           // node three with List of Strings as item
+            // node three with List of Strings as item
             var childWithList = new ObjectTreeNode<IObjectTreeNode<object>>();
             var list = new ObjectList<object> { "item1", "item2", "item3" };
             childWithList.Item = list;
@@ -296,30 +355,31 @@ namespace ScenariooTest
 
             scenario.AddDetail("exampleTree", rootNode);
 
-            // WHEN: the object was saved.
-            this.writer.SaveScenario(UseCaseName, scenario);
+            // act
+            writer.SaveScenario(SerializationUseCase, scenario);
+            writer.Flush();
 
-            // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
-            this.writer.Flush();
+            // assert
+            Assert.IsTrue(File.Exists(docuFiles.GetScenarioFile(BranchName, BuildName, SerializationUseCase, ScenarioName)));
 
-            // THEN: the scneario file exists
-            Assert.IsTrue(File.Exists(this.docuFiles.GetScenarioFile(BranchName, BuildName, UseCaseName, ScenarioName)));
+            scenario.Status = "success";
+            writer.SaveScenario(SerializationUseCase, scenario);
         }
 
-        [TestMethod]
+        [Test] // TODO: review this async stuff, i'm not sure about that! Issue #3
         public void AsyncWriteOfMultipleFilesAndFlush()
         {
             // GIVEN: a lot of large steps to write, that have not yet been written 
             var steps = new Step[10];
             for (var index = 0; index < 10; index++)
             {
-                steps[index] = this.CreateBigDataStepForLoadTestAsyncWriting(index + 1);
+                steps[index] = CreateBigDataStepForLoadTestAsyncWriting(index + 1);
             }
 
-            var expectedFileForSteps = this.docuFiles.GetScenarioStepFile(
+            var expectedFileForSteps = docuFiles.GetScenarioStepFile(
                 BranchName,
                 BuildName,
-                UseCaseName,
+                SerializationUseCase,
                 ScenarioName,
                 10);
 
@@ -333,11 +393,11 @@ namespace ScenariooTest
             // WHEN: saving those steps, 
             foreach (var step in steps)
             {
-                this.writer.SaveStep(UseCaseName, ScenarioName, step);
+                writer.SaveStep(SerializationUseCase, ScenarioName, step);
             }
 
             // THEN: the files are not created directly but asynchronously. Flush will wait until all Tasks are finished.
-            this.writer.Flush();
+            writer.Flush();
             Assert.IsTrue(File.Exists(expectedFileForSteps));
         }
 
@@ -384,10 +444,10 @@ namespace ScenariooTest
                                       {
                                           Index = index,
                                           ScreenshotFileName =
-                                              this.docuFiles.GetScreenshotFile(
+                                              docuFiles.GetScreenshotFile(
                                                   BranchName,
                                                   BuildName,
-                                                  UseCaseName,
+                                                  SerializationUseCase,
                                                   ScenarioName,
                                                   index),
                                           Title =
@@ -406,13 +466,6 @@ namespace ScenariooTest
             step.StepHtml = CreateBigHtml();
 
             return step;
-        }
-
-        private IEnumerable<string> CreateLabels()
-        {
-            var labels = new List<string> { "internetz", "test", "scenarioo-test-case" };
-
-            return labels;
         }
     }
 }
