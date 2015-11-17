@@ -27,7 +27,7 @@
   - provider: NuGet
     server: https://nuget.org
     api_key:
-      secure: BNq82MzBbX3y8T5N9yhqpJYTM32aEjuabo6W1GNazkSdmQU3cXrsXjpKRTpXnWGN9kwvAPmHOGZXfpIn215n2OHF/9ExXy/zjZpRo9hwDr0=
+      secure: 74aGO6tf6vNU0RRESbiWpDc10ZzZMETG02KpQedI/Ecnnx8yMoZknu/SdUP0BaMk
 
 # configuration for all branches starting from "dev-"
 # build in Debug mode and deploy locally for testing
