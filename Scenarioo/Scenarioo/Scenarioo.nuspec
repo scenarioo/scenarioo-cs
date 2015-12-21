@@ -3,16 +3,16 @@
   <metadata>
     <id>Scenarioo-cs</id>
     <version>$version$</version>
-    <title>Scenarioo API</title>
+    <title>Scenarioo Writer Library</title>
     <authors>Scenarioo.org</authors>
     <owners>Scenarioo.org</owners>
     <licenseUrl>https://github.com/scenarioo/scenarioo/blob/develop/LICENSE.txt</licenseUrl>
     <projectUrl>http://scenarioo.github.io/scenarioo/</projectUrl>
     <iconUrl>http://scenarioo.github.io/scenarioo/images/scenarioo-logo.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>The scenarioo C# API helps you to produce user scenario documentations out of your UI tests, such that your project’s stakeholders can browse it through the Scenarioo webapplication. More information see http://www.scenarioo.org Details about using the scenarioo C# API see https://github.com/scenarioo/scenarioo/wiki/scenarioo-cs</description>
+    <description>The scenarioo C# Writer Library helps you to produce user scenario documentations out of your UI tests, such that your project’s stakeholders can browse it through the Scenarioo webapplication. More information see http://www.scenarioo.org Details about using the scenarioo C# API see https://github.com/scenarioo/scenarioo/wiki/scenarioo-cs</description>
     <releaseNotes>Create and serialize scenarioo documentation through API.</releaseNotes>
-    <copyright>Copyright 2014</copyright>
+    <copyright>Copyright 2016</copyright>
     <tags>UI test documentation Scenarioo API automated documentation of applications through UI testing</tags>
   </metadata>
 </package>
