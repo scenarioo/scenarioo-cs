@@ -77,7 +77,6 @@ namespace Scenarioo.Model.Docu.Entities.Generic
 
         public void ReadXml(XmlReader reader)
         {
-            throw new NotImplementedException();
         }
 
         public void WriteXml(XmlWriter writer)
