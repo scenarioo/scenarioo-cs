@@ -28,8 +28,6 @@ using System.Xml.Serialization;
 
 namespace Scenarioo.Api.Util.Xml
 {
-    using Exception = System.Exception;
-
     /// <summary>
     /// Writing or reading of all Scenario documentation entities to XML files and back
     /// </summary>
@@ -51,7 +49,7 @@ namespace Scenarioo.Api.Util.Xml
             }
             catch (SerializationException ex)
             {
-                throw new Exception(string.Format("Could not unmarshall object of type {0}", typeof(T).Name), ex);
+                throw new System.Exception(string.Format("Could not unmarshall object of type {0}", typeof(T).Name), ex);
             }
         }
 
@@ -72,7 +70,7 @@ namespace Scenarioo.Api.Util.Xml
             }
             catch (SerializationException ex)
             {
-                throw new Exception(string.Format("Could not marshall object of type {0}", typeof(T).Name), ex);
+                throw new System.Exception(string.Format("Could not marshall object of type {0}", typeof(T).Name), ex);
             }
         }
     }

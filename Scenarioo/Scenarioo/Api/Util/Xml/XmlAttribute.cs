@@ -27,23 +27,21 @@ namespace Scenarioo.Api.Util.Xml
     /// </summary>
     public class XmlAttribute
     {
+        public string Name { get; set; }
+        public string Value { get; set; }
+        public object BindingObject { get; set; }
+
         public XmlAttribute(object bindingObject, string name, string value)
         {
-            this.Name = name;
-            this.Value = value;
-            this.BindingObject = bindingObject;
+            Name = name;
+            Value = value;
+            BindingObject = bindingObject;
         }
 
         public XmlAttribute(string name, string value)
         {
-            this.Name = name;
-            this.Value = value;
+            Name = name;
+            Value = value;
         }
-
-        public string Name { get; set; }
-
-        public string Value { get; set; }
-
-        public object BindingObject { get; set; }
     }
 }

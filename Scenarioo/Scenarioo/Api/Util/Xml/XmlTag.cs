@@ -31,21 +31,18 @@ namespace Scenarioo.Api.Util.Xml
     public class XmlTag
     {
         public List<XmlAttribute> Attributes { get; set; }
-
         public XmlElement Element { get; set; }
-
         public object BindingObject { get; set; }
 
         public XmlTag()
         {
-            
         }
 
         public XmlTag(XmlElement element, List<XmlAttribute> attributes, object bindingObject)
         {
-            this.Attributes = attributes;
-            this.Element = element;
-            this.BindingObject = bindingObject;
+            Attributes = attributes;
+            Element = element;
+            BindingObject = bindingObject;
         }
     }
 }

@@ -25,8 +25,6 @@ using System.IO;
 using System.Text;
 using System.Web;
 
-using Scenarioo.Api.Exception;
-
 namespace Scenarioo.Api.Util.Files
 {
     public class FilesUtil
@@ -37,12 +35,11 @@ namespace Scenarioo.Api.Util.Files
             {
                 return HttpUtility.UrlEncode(name, Encoding.UTF8);
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 throw new ArgumentOutOfRangeException(
-                    string.Format(
-                        "Unsupported UTF-8 charset. Scenarioo needs to run on a server environment that supports 'UTF-8'."),
-                    e.Message);
+                    "name",
+                    "Unsupported UTF-8 charset. Scenarioo needs to run on a server environment that supports \'UTF-8\'. " + e.Message);
             }
         }
 
@@ -58,7 +55,7 @@ namespace Scenarioo.Api.Util.Files
         {
             if (!Directory.Exists(directory))
             {
-                throw new ResourceNotFoundException(directory);
+                throw new DirectoryNotFoundException(directory);
             }
 
             return Directory.GetFiles(directory);
@@ -74,7 +71,7 @@ namespace Scenarioo.Api.Util.Files
         {
             if (!Directory.Exists(directory))
             {
-                throw new ResourceNotFoundException(directory);
+                throw new DirectoryNotFoundException(directory);
             }
 
             return Directory.GetFiles(directory, "*", SearchOption.AllDirectories);

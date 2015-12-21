@@ -46,14 +46,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Configuration\ScenarioDocuGeneratorConfiguration.cs" />
-    <Compile Include="Api\Exception\ResourceNotFoundException.cs" />
-    <Compile Include="Api\Exception\ScenarioDocuSaveException.cs" />
-    <Compile Include="Api\Exception\ScenarioDocuTimeoutException.cs" />
-    <Compile Include="Api\Files\ObjectFromDirectory.cs" />
     <Compile Include="Api\Files\ScenarioDocuFiles.cs" />
     <Compile Include="Api\ScenarioDocuReader.cs" />
     <Compile Include="Api\ScenarioDocuWriter.cs" />
-    <Compile Include="Api\Util\Files\AlphanumericFileComparator.cs" />
     <Compile Include="Api\Util\Files\FilesUtil.cs" />
     <Compile Include="Api\Util\Image\ScenarioDocuImageFileUtil.cs" />
     <Compile Include="Api\Util\Image\ScenarioDocuImageUtil.cs" />
@@ -89,9 +84,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="Scenarioo.nuspec" />
     <None Include="Schema\schema.xsd">
       <SubType>Designer</SubType>
     </None>

@@ -25,7 +25,6 @@ namespace Scenarioo.Api.Configuration
     public static class ScenarioDocuGeneratorConfiguration
     {
         public static int AsyncWritingBufferSize = 8;
-
         public static int MaxConcurrentTasks = 10;
     }
 }

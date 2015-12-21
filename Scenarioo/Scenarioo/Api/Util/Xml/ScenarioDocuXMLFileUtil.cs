@@ -30,23 +30,17 @@ using Scenarioo.Api.Configuration;
 
 namespace Scenarioo.Api.Util.Xml
 {
-    using Exception = System.Exception;
-
     /// <summary>
     /// Writing or reading all documentation entities to XML files and back.
     /// </summary>
     public class ScenarioDocuXMLFileUtil
     {
         public const string SchemaInstanceNamespace = "http://www.w3.org/2001/XMLSchema-instance";
-
         public const string ScenarioNameSpace = "http://www.scenarioo.org/scenarioo";
-
         public const string XmlSchema = "http://www.w3.org/2001/XMLSchema";
 
         public static IList<Task> RunningTasks = new List<Task>();
-
         public static string XmlKeyIdentifier = "key";
-
         public static string XmlValueIdentifier = "value";
 
         public static T UnmarshalXml<T>(string srcFile) where T : class
@@ -67,7 +61,7 @@ namespace Scenarioo.Api.Util.Xml
                         }
                         catch (IOException e)
                         {
-                            throw new Exception(string.Format("Could not unmarshall Object from file:{0}", srcFile), e);
+                            throw new System.Exception(string.Format("Could not unmarshall Object from file:{0}", srcFile), e);
                         }
                     });
 
@@ -97,7 +91,7 @@ namespace Scenarioo.Api.Util.Xml
                     }
                     catch (IOException e)
                     {
-                        throw new Exception(
+                        throw new System.Exception(
                             string.Format(
                                 "Could not marshall Object of type:{0} into file:{1}",
                                 entity.GetType().Name,

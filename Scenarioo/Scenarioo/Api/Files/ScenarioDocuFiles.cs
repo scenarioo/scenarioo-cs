@@ -23,43 +23,36 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Scenarioo.Api.Util.Files;
 
 namespace Scenarioo.Api.Files
 {
-    using Scenarioo.Api.Util.Files;
-
     /// <summary>
     /// Represents the file structure of the documentation.
     /// </summary>
     public class ScenarioDocuFiles
     {
         private const string FileNameBranch = "branch.xml";
-
         private const string FileNameBuild = "build.xml";
-
         private const string DirectoryNameScenarioScreenshot = "screenshots";
-
         private const string DirectoryNameScenarioSteps = "steps";
-
         private const string FileNameScenario = "scenario.xml";
-
         private const string FileNameUseCase = "usecase.xml";
 
-        private readonly string rootDirectory;
-
-        private readonly string digitFormat = CreateNumberFormatWithMinimumIntegerDigits(3, "0");
+        private readonly string _rootDirectory;
+        private readonly string _digitFormat = CreateNumberFormatWithMinimumIntegerDigits(3, "0");
 
         public ScenarioDocuFiles(string rootDirectory)
         {
-            this.rootDirectory = rootDirectory;
+            _rootDirectory = rootDirectory;
         }
 
         public void AssertRootDirectoryExists()
         {
-            if (!Directory.Exists(this.rootDirectory))
+            if (!Directory.Exists(_rootDirectory))
             {
                 throw new ArgumentException(
-                    string.Format("Directory for docu content generation does not exist: {0}", this.rootDirectory));
+                    string.Format("Directory for docu content generation does not exist: {0}", _rootDirectory));
             }
         }
 
@@ -67,7 +60,7 @@ namespace Scenarioo.Api.Files
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.GetBranchDirectory(branchName),
+                GetBranchDirectory(branchName),
                 Path.DirectorySeparatorChar,
                 FileNameBranch);
         }
@@ -76,7 +69,7 @@ namespace Scenarioo.Api.Files
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.GetBuildDirectory(branchName, buildName),
+                GetBuildDirectory(branchName, buildName),
                 Path.DirectorySeparatorChar,
                 FileNameBuild);
         }
@@ -85,7 +78,7 @@ namespace Scenarioo.Api.Files
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.GetUseCaseDirectory(branchName, buildName, useCaseName),
+                GetUseCaseDirectory(branchName, buildName, useCaseName),
                 Path.DirectorySeparatorChar,
                 FileNameUseCase);
         }
@@ -94,7 +87,7 @@ namespace Scenarioo.Api.Files
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.GetScenarioDirectory(branchName, buildName, useCaseName, scenarioName),
+                GetScenarioDirectory(branchName, buildName, useCaseName, scenarioName),
                 Path.DirectorySeparatorChar,
                 FileNameScenario);
         }
@@ -103,9 +96,9 @@ namespace Scenarioo.Api.Files
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.GetScenarioStepDirectory(branchName, buildName, useCaseName, scenarioName),
+                GetScenarioStepDirectory(branchName, buildName, useCaseName, scenarioName),
                 Path.DirectorySeparatorChar,
-                string.Format(@"{0}{1}", stepIndex.ToString(this.digitFormat), ".xml"));
+                string.Format(@"{0}{1}", stepIndex.ToString(_digitFormat), ".xml"));
         }
 
         /// <summary>
@@ -121,14 +114,14 @@ namespace Scenarioo.Api.Files
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.GetScreenshotDirectory(branchName, buildName, useCaseName, scenarioName),
+                GetScreenshotDirectory(branchName, buildName, useCaseName, scenarioName),
                 Path.DirectorySeparatorChar,
-                string.Format(@"{0}{1}", stepIndex.ToString(this.digitFormat), ".png"));
+                string.Format(@"{0}{1}", stepIndex.ToString(_digitFormat), ".png"));
         }
 
         public string GetScreenshotFileName(int stepIndex)
         {
-            return string.Format(@"{0}{1}", stepIndex.ToString(this.digitFormat), ".png");
+            return string.Format(@"{0}{1}", stepIndex.ToString(_digitFormat), ".png");
         }
 
         /// <summary>
@@ -141,7 +134,7 @@ namespace Scenarioo.Api.Files
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.GetBranchDirectory(branchName),
+                GetBranchDirectory(branchName),
                 Path.DirectorySeparatorChar,
                 FilesUtil.EncodeName(buildName));
         }
@@ -150,7 +143,7 @@ namespace Scenarioo.Api.Files
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.rootDirectory,
+                _rootDirectory,
                 Path.DirectorySeparatorChar,
                 FilesUtil.EncodeName(branchName));
         }
@@ -159,7 +152,7 @@ namespace Scenarioo.Api.Files
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.GetBuildDirectory(branchName, buildName),
+                GetBuildDirectory(branchName, buildName),
                 Path.DirectorySeparatorChar,
                 FilesUtil.EncodeName(useCaseName));
         }
@@ -168,7 +161,7 @@ namespace Scenarioo.Api.Files
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.GetUseCaseDirectory(branchName, buildName, useCaseName),
+                GetUseCaseDirectory(branchName, buildName, useCaseName),
                 Path.DirectorySeparatorChar,
                 FilesUtil.EncodeName(scenarioName));
         }
@@ -177,7 +170,7 @@ namespace Scenarioo.Api.Files
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.GetScenarioDirectory(branchName, buildName, useCaseName, scenarioName),
+                GetScenarioDirectory(branchName, buildName, useCaseName, scenarioName),
                 Path.DirectorySeparatorChar,
                 FilesUtil.EncodeName(DirectoryNameScenarioSteps));
         }
@@ -186,7 +179,7 @@ namespace Scenarioo.Api.Files
         {
             return string.Format(
                 @"{0}{1}{2}",
-                this.GetScenarioDirectory(branchName, buildName, useCaseName, scenarioName),
+                GetScenarioDirectory(branchName, buildName, useCaseName, scenarioName),
                 Path.DirectorySeparatorChar,
                 FilesUtil.EncodeName(DirectoryNameScenarioScreenshot));
         }
