@@ -30,7 +30,7 @@
       secure: 74aGO6tf6vNU0RRESbiWpDc10ZzZMETG02KpQedI/Ecnnx8yMoZknu/SdUP0BaMk
 
 # configuration for all branches starting from "dev-"
-# build in Debug mode and deploy locally for testing
+# build in Debug mode and deploy locally for testing. no nuget publish
 -
   branches:
     only:
