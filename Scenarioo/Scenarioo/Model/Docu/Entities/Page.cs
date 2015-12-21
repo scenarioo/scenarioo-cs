@@ -31,17 +31,17 @@ namespace Scenarioo.Model.Docu.Entities
     [XmlRoot("page")]
     public class Page
     {
-        private Labels labels;
+        private Labels _labels;
 
         /// <summary>
-        /// Gets or sets multiple labels to a scenario object.
+        /// Gets or sets multiple _labels to a scenario object.
         /// </summary>
-        /// <returns>All labels of this object. Never null.</returns>
-        [XmlElement("labels")]
+        /// <returns>All _labels of this object. Never null.</returns>
+        [XmlElement("_labels")]
         public Labels Labels
         {
-            get { return this.labels ?? (this.labels = new Labels()); }
-            set { this.labels = value; }
+            get { return _labels ?? (_labels = new Labels()); }
+            set { _labels = value; }
         }
 
         /// <summary>

@@ -76,8 +76,8 @@ namespace Scenarioo.Model.Docu.Entities
         [XmlElement("labels")]
         public Labels Labels
         {
-            get { return this.labels ?? (this.labels = new Labels()); }
-            set { this.labels = value; }
+            get { return labels ?? (labels = new Labels()); }
+            set { labels = value; }
         }
 
         public StepDescription()

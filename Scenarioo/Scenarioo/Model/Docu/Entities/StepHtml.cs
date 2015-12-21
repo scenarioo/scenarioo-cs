@@ -21,11 +21,10 @@
  */
 
 using System;
+using System.Xml.Serialization;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    using System.Xml.Serialization;
-
     [Serializable]
     [XmlRoot("stepHtml")]
     public class StepHtml

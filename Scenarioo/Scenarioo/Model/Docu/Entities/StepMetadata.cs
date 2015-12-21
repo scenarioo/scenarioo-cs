@@ -29,22 +29,22 @@ namespace Scenarioo.Model.Docu.Entities
 {
     /// <summary>
     /// Metadata for a step. This is a container for all additional detail data about a step that is only displayed on
-    /// details page for a step.
+    /// _details page for a step.
     /// </summary>
     [Serializable]
     [XmlRoot("metadata")]
     public class StepMetadata
     {
-        private Details details = new Details();
+        private Details _details = new Details();
 
         /// <summary>
-        ///  Gets or sets additional application specific details with additional metadata information's.
+        ///  Gets or sets additional application specific _details with additional metadata information's.
         /// </summary>
-        [XmlElement("details")]
+        [XmlElement("_details")]
         public Details Details
         {
-            get { return this.details; }
-            set { this.details = value; }
+            get { return _details; }
+            set { _details = value; }
         }
 
         /// <summary>
@@ -56,11 +56,11 @@ namespace Scenarioo.Model.Docu.Entities
         public string VisibleText { get; set; }
 
         /// <summary>
-        /// Add application specific details as key-value-data-items.
+        /// Add application specific _details as key-value-data-items.
         /// </summary>
         public void AddDetail(string key, object value)
         {
-            this.Details.AddDetail(key, value);
+            Details.AddDetail(key, value);
         }
     }
 }

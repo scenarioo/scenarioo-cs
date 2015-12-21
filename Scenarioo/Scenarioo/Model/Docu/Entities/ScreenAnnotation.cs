@@ -82,6 +82,10 @@ namespace Scenarioo.Model.Docu.Entities
             Details = new Details();
         }
 
+        /// <summary>
+        /// Serializer black magic: 
+        /// </summary>
+        /// <returns></returns>
         public bool ShouldSerializeScreenAnnotationClickAction()
         {
             return ClickAction.HasValue;

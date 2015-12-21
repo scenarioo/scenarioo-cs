@@ -55,22 +55,19 @@ namespace Scenarioo.Model.Docu.Entities
             Xmlns = new XmlSerializerNamespaces();
             Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
             Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
+
+            Details = new Details();
         }
 
         public Build(string name)
             : this()
         {
-            this.Name = name;
+            Name = name;
         }
 
         public void AddDetail(string key, object value)
         {
-            if (this.Details == null)
-            {
-                this.Details = new Details();    
-            }
-
-            this.Details.AddDetail(key, value);
+            Details.AddDetail(key, value);
         }
     }
 }

@@ -20,14 +20,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System;
+using System.Xml.Serialization;
+
+using Scenarioo.Api.Util.Xml;
+using Scenarioo.Model.Docu.Entities.Generic;
+
 namespace Scenarioo.Model.Docu.Entities
 {
-    using System;
-    using System.Xml.Serialization;
-
-    using Scenarioo.Api.Util.Xml;
-    using Scenarioo.Model.Docu.Entities.Generic;
-
     [Serializable]
     [XmlRoot("branch")]
     public class Branch
@@ -49,6 +49,8 @@ namespace Scenarioo.Model.Docu.Entities
             Xmlns = new XmlSerializerNamespaces();
             Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
             Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
+
+            Details = new Details();
         }
 
         public Branch(string name) : this()
@@ -65,11 +67,6 @@ namespace Scenarioo.Model.Docu.Entities
 
         public void AddDetails(string key, object value)
         {
-            if (Details == null)
-            {
-                Details = new Details();
-            }
-
             Details.AddDetail(key, value);
         }
     }

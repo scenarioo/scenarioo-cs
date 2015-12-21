@@ -32,22 +32,16 @@ namespace Scenarioo.Model.Docu.Entities
     [Serializable]
     public class Labels : IXmlSerializable
     {
-        private IList<string> labels = new List<string>();
+        private IList<string> _labels = new List<string>();
 
         public int Count
         {
-            get
-            {
-                return this.labels.Count;
-            }
+            get { return _labels.Count; }
         }
 
         public IList<string> LabelList
         {
-            get
-            {
-                return this.labels;
-            }
+            get { return _labels; }
         }
         
         /// <summary>
@@ -62,7 +56,7 @@ namespace Scenarioo.Model.Docu.Entities
         {
             if (IsValidLabel(label))
             {
-                this.labels.Add(label);
+                _labels.Add(label);
             }
             else
             {
@@ -87,7 +81,7 @@ namespace Scenarioo.Model.Docu.Entities
                 }
             }
 
-            this.labels = labelsCopy;
+            _labels = labelsCopy;
         }
         
         public XmlSchema GetSchema()
@@ -101,7 +95,7 @@ namespace Scenarioo.Model.Docu.Entities
 
         public void WriteXml(XmlWriter writer)
         {
-            foreach (var label in this.labels)
+            foreach (var label in _labels)
             {
                 writer.WriteElementString("label", label);
             }

@@ -40,15 +40,6 @@ namespace Scenarioo.Model.Docu.Entities
         [XmlNamespaceDeclarations]
         public XmlSerializerNamespaces Xmlns;
 
-        public Step()
-        {
-            ScreenAnnotations = new List<ScreenAnnotation>();
-
-            Xmlns = new XmlSerializerNamespaces();
-            Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
-            Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
-        }
-
         /// <summary>
         /// Gets or sets information about the page this step belongs to (usually there are several steps that show the same UI page).
         /// This information is optional in case you do not have a page concept in your application.
@@ -79,5 +70,14 @@ namespace Scenarioo.Model.Docu.Entities
         [XmlArray("screenAnnotations")]
         [XmlArrayItem("screenAnnotation")]
         public List<ScreenAnnotation> ScreenAnnotations { get; set; }
+
+        public Step()
+        {
+            ScreenAnnotations = new List<ScreenAnnotation>();
+
+            Xmlns = new XmlSerializerNamespaces();
+            Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
+            Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
+        }
     }
 }

@@ -67,17 +67,17 @@ namespace Scenarioo.Model.Docu.Entities
         public Details Details { get; set; }
 
         /// <summary>
-        /// Gets or sets multiple labels to a scenario object.
+        /// Gets or sets multiple _labels to a scenario object.
         /// </summary>
-        /// <returns>All labels of this object. Never null.</returns>
-        [XmlElement("labels")]
+        /// <returns>All _labels of this object. Never null.</returns>
+        [XmlElement("_labels")]
         public Labels Labels
         {
-            get { return this.labels ?? (this.labels = new Labels()); }
-            set { this.labels = value; }
+            get { return _labels ?? (_labels = new Labels()); }
+            set { _labels = value; }
         }
 
-        private Labels labels;
+        private Labels _labels;
 
         public UseCase()
         {
@@ -90,11 +90,6 @@ namespace Scenarioo.Model.Docu.Entities
 
         public void AddDetail(string key, object value)
         {
-            if (this.Details == null)
-            {
-                this.Details = new Details();
-            }
-
             Details.AddDetail(key, value);
         }
     }
