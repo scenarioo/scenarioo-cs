@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+
+using Newtonsoft.Json.Linq;
 
 using NUnit.Framework;
 
@@ -15,12 +18,9 @@ namespace ScenariooTest
     [TestFixture]
     public class Sample
     {
-        private const string BranchId = "exmaple-branch";
-        private const string BranchName = "example branch";
-
-        private const string UseCaseId = "example use case";
-
+        private const string BranchId = "example-branch";
         private const string BuildId = "example-build";
+        private const string UseCaseId = "example-use-case";
 
         private string _rootDirectory;
 
@@ -55,7 +55,7 @@ namespace ScenariooTest
         [Test]
         public void Write_Branch()
         {
-            var branch = new Branch(BranchName);
+            var branch = new Branch("example branch");
             branch.Id = BranchId; // TODO implement automatic conversion of special chars
             
             branch.Description = "an optional description text";
@@ -99,7 +99,7 @@ namespace ScenariooTest
         public void Write_Example_Scenario()
         {
             var scenario = new Scenario("example scenario", string.Empty);
-            scenario.Id = "example-scenario";
+            scenario.Id = "example-scenaro"; // TODO id geneartion
             scenario.Description = "an optional description";
             scenario.Labels.Add("example-label-1");
             scenario.Labels.Add("example-label-2");
@@ -113,30 +113,33 @@ namespace ScenariooTest
             step.Index = 0;
             step.Title = "My Step Title";
             step.Status = "success";
-            step.Page = new Page("example/page.htlm");
+            step.Page = new Page("example/page.html");
             step.Page.Id = "example-page-html"; // TODO id generation
-            step.Page.Properties = new List<DocuObject>();
             step.Page.Properties.Add(CreateSimpleProperty());
             step.Page.Properties.Add(CreateComplexProperty());
-            step.Page.Labels = new Labels("example-label-1");
+            step.Page.Labels.Add("example-label-1");
             step.Page.VisibleText = "just some dummy html code";
-            step.Page.ScreenAnnotations = new List<ScreenAnnotation>(CreateScreenAnnotations());
-            step.Labels = new Labels("example-label-1", "example-label-2");
-            step.Properties = new List<DocuObject>() { CreateSimpleProperty() };
-            step.PropertyGroups = new PropertyGroups();
-
-            var docuObject = new DocuObject();
-            docuObject.Properties = new List<DocuObject>() { CreateSimpleProperty(), CreateComplexProperty() };
-
+            step.Page.ScreenAnnotations.AddRange(CreateScreenAnnotations());
+            step.Labels.Add("example-label-1");
+            step.Labels.Add("example-label-2");
+            step.Properties.Add(CreateSimpleProperty());
+            
             step.PropertyGroups.Add("Property Group 1", CreateSimpleProperty(), CreateComplexProperty());
-
-            step.PropertyGroups["Property Group 1"].Type = "gaggi";
 
             step.StepHtml = "<html><head></head><body><p>just some dummy html code</p></body></html>";
 
             _writer.SaveStep(UseCaseId, scenario.Id, step);
-
             _writer.SaveScreenshot(UseCaseId, scenario.Id, step, File.ReadAllBytes("data/screenshot.png"));
+        }
+
+        [Test]
+        public void Write_Example_Scenario_With_ManualId()
+        {
+            var scenario = new Scenario("example scenario with a manually set ID not generated from name");
+            scenario.Status = "Success";
+            scenario.Id = "example-scenario-with-manual-id";
+
+            _writer.SaveScenario(UseCaseId, scenario);
         }
 
         [Test]

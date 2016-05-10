@@ -49,7 +49,7 @@ namespace Scenarioo.Model.Docu.Entities
         /// Gets or sets optional information for web applications about the html output of current step.
         /// </summary>
         [JsonIgnore]
-        public string StepHtml { get; set; } // TODO html in separate file
+        public string StepHtml { get; set; }
 
         public List<ScreenAnnotation> ScreenAnnotations { get; set; }
 
@@ -61,10 +61,10 @@ namespace Scenarioo.Model.Docu.Entities
 
         public Step()
         {
-            ScreenAnnotations = new List<ScreenAnnotation>();
+            Labels = new Labels();
             Properties = new List<DocuObject>();
+            PropertyGroups = new PropertyGroups();
+            ScreenAnnotations = new List<ScreenAnnotation>();
         }
     }
-
-
 }

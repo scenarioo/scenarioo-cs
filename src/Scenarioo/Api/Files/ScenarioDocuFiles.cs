@@ -73,11 +73,11 @@ namespace Scenarioo.Api.Files
                 FileNameBuild);
         }
 
-        public string GetUseCaseFile(string branchId, string buildName, string useCaseName)
+        public string GetUseCaseFile(string branchId, string buildId, string useCaseId)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                GetUseCaseDirectory(branchId, buildName, useCaseName),
+                GetUseCaseDirectory(branchId, buildId, useCaseId),
                 Path.DirectorySeparatorChar,
                 FileNameUseCase);
         }

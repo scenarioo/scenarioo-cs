@@ -65,7 +65,7 @@ namespace Scenarioo.Api
             _serializer = new JsonSerializer
                           {
                               Formatting = Formatting.Indented,
-                              ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                              ContractResolver = new SkipEmptyContractResolver(),
                               NullValueHandling = NullValueHandling.Ignore,
                           };
         }
@@ -137,7 +137,7 @@ namespace Scenarioo.Api
 
         private string GetUseCaseDirectory(UseCase useCase)
         {
-            return DocuFiles.GetUseCaseDirectory(_branchId, _buildId, useCase.Name);
+            return DocuFiles.GetUseCaseDirectory(_branchId, _buildId, useCase.Id);
         }
 
         private string GetStepsDirectory(string useCaseName, string scenarioName)

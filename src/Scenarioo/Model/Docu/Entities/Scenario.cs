@@ -68,6 +68,12 @@ namespace Scenarioo.Model.Docu.Entities
             Labels = new Labels();
         }
 
+        public Scenario(string name)
+            : this()
+        {
+            Name = name;
+        }
+
         public Scenario(string name, string description)
             : this()
         {

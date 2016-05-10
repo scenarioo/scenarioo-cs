@@ -57,9 +57,13 @@ namespace Scenarioo.Model.Docu.Entities
 
         public Page()
         {
+            Labels = new Labels();
+            Properties = new List<DocuObject>();
+            ScreenAnnotations = new List<ScreenAnnotation>();
         }
 
         public Page(string name)
+            : this()
         {
             Name = name;
         }
