@@ -21,7 +21,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Scenarioo.Api.Util.Files;
 
@@ -34,14 +33,14 @@ namespace Scenarioo.Api.Files
     {
         private const string FileNameBranch = "branch.json";
         private const string FileNameBuild = "build.json";
-        private const string DirectoryNameScenarioScreenshot = "screenshots";
-        private const string DirectoryNameScenarioSteps = "steps";
         private const string FileNameScenario = "scenario.json";
         private const string FileNameUseCase = "usecase.json";
+
+        private const string DirectoryNameScenarioScreenshot = "screenshots";
+        private const string DirectoryNameScenarioSteps = "steps";
         private const string DirectoryNameHtml = "html";
 
         private readonly string _rootDirectory;
-        private readonly string _digitFormat = CreateNumberFormatWithMinimumIntegerDigits(3, "0");
 
         public ScenarioDocuFiles(string rootDirectory)
         {
@@ -52,8 +51,7 @@ namespace Scenarioo.Api.Files
         {
             if (!Directory.Exists(_rootDirectory))
             {
-                throw new ArgumentException(
-                    string.Format("Directory for docu content generation does not exist: {0}", _rootDirectory));
+                throw new ArgumentException(string.Format("Directory for docu content generation does not exist: {0}", _rootDirectory));
             }
         }
 
@@ -84,128 +82,116 @@ namespace Scenarioo.Api.Files
                 FileNameUseCase);
         }
 
-        public string GetScenarioFile(string branchName, string buildName, string useCaseName, string scenarioName)
+        public string GetScenarioFile(string branchId, string buildId, string useCaseId, string scenarioId)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                GetScenarioDirectory(branchName, buildName, useCaseName, scenarioName),
+                GetScenarioDirectory(branchId, buildId, useCaseId, scenarioId),
                 Path.DirectorySeparatorChar,
                 FileNameScenario);
         }
 
-        public string GetScenarioStepFile(string branchName, string buildName, string useCaseName, string scenarioName, int stepIndex)
+        public string GetScenarioStepFile(string branchId, string buildId, string useCaseId, string scenarioId, int stepIndex)
         {
             return string.Format(
-                @"{0}{1}{2}",
-                GetScenarioStepDirectory(branchName, buildName, useCaseName, scenarioName),
+                @"{0}{1}{2:000}.json",
+                GetScenarioStepDirectory(branchId, buildId, useCaseId, scenarioId),
                 Path.DirectorySeparatorChar,
-                string.Format(@"{0}{1}", stepIndex.ToString(_digitFormat), ".json"));
+                stepIndex);
         }
 
-        public string GetHtmlFile(string branchName, string buildName, string useCaseName, string scenarioName, int stepIndex)
+        public string GetHtmlFile(string branchId, string buildId, string useCaseId, string scenarioId, int stepIndex)
         {
             return string.Format(
-                @"{0}{1}{2}",
-                GetHtmlDirectory(branchName, buildName, useCaseName, scenarioName),
+                @"{0}{1}{2:000}.html",
+                GetHtmlDirectory(branchId, buildId, useCaseId, scenarioId),
                 Path.DirectorySeparatorChar,
-                string.Format(@"{0}{1}", stepIndex.ToString(_digitFormat), ".html"));
+                stepIndex);
         }
 
         /// <summary>
         /// Get the file name of the file where the screenshot of a step is stored.
         /// </summary>
         /// <returns>Screenshot filename</returns>
-        public string GetScreenshotFile(string branchName, string buildName, string useCaseName, string scenarioName, int stepIndex)
+        public string GetScreenshotFile(string branchId, string buildId, string useCaseId, string scenarioId, int stepIndex)
         {
             return string.Format(
-                @"{0}{1}{2}",
-                GetScreenshotDirectory(branchName, buildName, useCaseName, scenarioName),
+                @"{0}{1}{2:000}.png",
+                GetScreenshotDirectory(branchId, buildId, useCaseId, scenarioId),
                 Path.DirectorySeparatorChar,
-                string.Format(@"{0}{1}", stepIndex.ToString(_digitFormat), ".png"));
+                stepIndex);
         }
 
         public string GetScreenshotFileName(int stepIndex)
         {
-            return string.Format(@"{0}{1}", stepIndex.ToString(_digitFormat), ".png");
+            return string.Format(@"{0:000}.png", stepIndex);
         }
 
         /// <summary>
         /// Concatenate directory of documentation files.
         /// </summary>
         /// <returns>Directory of the build</returns>
-        public string GetBuildDirectory(string branchName, string buildName)
+        public string GetBuildDirectory(string branchId, string buildId)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                GetBranchDirectory(branchName),
+                GetBranchDirectory(branchId),
                 Path.DirectorySeparatorChar,
-                FilesUtil.EncodeName(buildName));
+                FilesUtil.EncodeName(buildId));
         }
 
-        public string GetBranchDirectory(string branchName)
+        public string GetBranchDirectory(string branchId)
         {
             return string.Format(
                 @"{0}{1}{2}",
                 _rootDirectory,
                 Path.DirectorySeparatorChar,
-                FilesUtil.EncodeName(branchName));
+                FilesUtil.EncodeName(branchId));
         }
 
-        public string GetUseCaseDirectory(string branchName, string buildName, string useCaseName)
+        public string GetUseCaseDirectory(string branchId, string buildId, string useCaseId)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                GetBuildDirectory(branchName, buildName),
+                GetBuildDirectory(branchId, buildId),
                 Path.DirectorySeparatorChar,
-                FilesUtil.EncodeName(useCaseName));
+                FilesUtil.EncodeName(useCaseId));
         }
 
-        public string GetScenarioDirectory(string branchName, string buildName, string useCaseName, string scenarioName)
+        public string GetScenarioDirectory(string branchId, string buildId, string useCaseId, string scenarioId)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                GetUseCaseDirectory(branchName, buildName, useCaseName),
+                GetUseCaseDirectory(branchId, buildId, useCaseId),
                 Path.DirectorySeparatorChar,
-                FilesUtil.EncodeName(scenarioName));
+                FilesUtil.EncodeName(scenarioId));
         }
 
-        public string GetScenarioStepDirectory(string branchName, string buildName, string useCaseName, string scenarioName)
+        public string GetScenarioStepDirectory(string branchId, string buildId, string useCaseId, string scenarioId)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                GetScenarioDirectory(branchName, buildName, useCaseName, scenarioName),
+                GetScenarioDirectory(branchId, buildId, useCaseId, scenarioId),
                 Path.DirectorySeparatorChar,
                 FilesUtil.EncodeName(DirectoryNameScenarioSteps));
         }
 
-        public string GetScreenshotDirectory(string branchName, string buildName, string useCaseName, string scenarioName)
+        public string GetScreenshotDirectory(string branchId, string buildId, string useCaseId, string scenarioId)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                GetScenarioDirectory(branchName, buildName, useCaseName, scenarioName),
+                GetScenarioDirectory(branchId, buildId, useCaseId, scenarioId),
                 Path.DirectorySeparatorChar,
                 FilesUtil.EncodeName(DirectoryNameScenarioScreenshot));
         }
 
-        public string GetHtmlDirectory(string branchName, string buildName, string useCaseName, string scenarioName)
+        public string GetHtmlDirectory(string branchId, string buildId, string useCaseId, string scenarioId)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                GetScenarioDirectory(branchName, buildName, useCaseName, scenarioName),
+                GetScenarioDirectory(branchId, buildId, useCaseId, scenarioId),
                 Path.DirectorySeparatorChar,
                 FilesUtil.EncodeName(DirectoryNameHtml));
-        }
-
-        private static string CreateNumberFormatWithMinimumIntegerDigits(int minimumIntegerDigits, string digitPatern)
-        {
-            var format = new List<string>();
-
-            for (var i = 0; i < minimumIntegerDigits; i++)
-            {
-                format.Add(digitPatern);
-            }
-
-            return string.Concat(format.ToArray());
         }
     }
 }
