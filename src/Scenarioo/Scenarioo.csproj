@@ -86,7 +86,7 @@
     <Compile Include="Model\Docu\Entities\UseCase.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Json.cs" />
+    <Compile Include="SkipEmptyContractResolver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
