@@ -20,11 +20,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 
-using Scenarioo.Api.Util.Xml;
+using Newtonsoft.Json;
+
 using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace Scenarioo.Model.Docu.Entities
@@ -33,51 +32,39 @@ namespace Scenarioo.Model.Docu.Entities
     /// Contains all the data collected from a web test for one step of one scenario/web test (except for the step image, which
     /// has to be stored separately
     /// </summary>
-    [Serializable]
-    [XmlRoot("step")]
     public class Step
     {
-        [XmlNamespaceDeclarations]
-        public XmlSerializerNamespaces Xmlns;
-
+        public int Index { get; set; }
+        public string Id { get; set; }
+        public string Title { get; set; }
+        public string Status { get; set; }
+        
         /// <summary>
         /// Gets or sets information about the page this step belongs to (usually there are several steps that show the same UI page).
         /// This information is optional in case you do not have a page concept in your application.
         /// </summary>
-        [XmlElement("page")]
         public Page Page { get; set; }
-
-        /// <summary>
-        /// Gets or sets most important description information about this step. Only put the most important values and information's about
-        /// a step into this object.
-        /// </summary>
-        [XmlElement("stepDescription")]
-        public StepDescription StepDescription { get; set; }
 
         /// <summary>
         /// Gets or sets optional information for web applications about the html output of current step.
         /// </summary>
-        [XmlElement("html")]
-        public StepHtml StepHtml { get; set; }
+        [JsonIgnore]
+        public string StepHtml { get; set; } // TODO html in separate file
 
-        /// <summary>
-        /// Gets or sets additional metadata that will only be displayed on the step details page. Especially put huge
-        /// additional detail data about a step into this object.
-        /// </summary>
-        [XmlElement("metadata")]
-        public StepMetadata StepMetadata { get; set; }
-
-        [XmlArray("screenAnnotations")]
-        [XmlArrayItem("screenAnnotation")]
         public List<ScreenAnnotation> ScreenAnnotations { get; set; }
+
+        public List<DocuObject> Properties { get; set; }
+
+        public PropertyGroups PropertyGroups { get; set; }
+
+        public Labels Labels { get; set; }
 
         public Step()
         {
             ScreenAnnotations = new List<ScreenAnnotation>();
-
-            Xmlns = new XmlSerializerNamespaces();
-            Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
-            Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
+            Properties = new List<DocuObject>();
         }
     }
+
+
 }

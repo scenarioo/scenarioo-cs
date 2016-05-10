@@ -32,12 +32,13 @@ namespace Scenarioo.Api.Files
     /// </summary>
     public class ScenarioDocuFiles
     {
-        private const string FileNameBranch = "branch.xml";
-        private const string FileNameBuild = "build.xml";
+        private const string FileNameBranch = "branch.json";
+        private const string FileNameBuild = "build.json";
         private const string DirectoryNameScenarioScreenshot = "screenshots";
         private const string DirectoryNameScenarioSteps = "steps";
-        private const string FileNameScenario = "scenario.xml";
-        private const string FileNameUseCase = "usecase.xml";
+        private const string FileNameScenario = "scenario.json";
+        private const string FileNameUseCase = "usecase.json";
+        private const string DirectoryNameHtml = "html";
 
         private readonly string _rootDirectory;
         private readonly string _digitFormat = CreateNumberFormatWithMinimumIntegerDigits(3, "0");
@@ -56,29 +57,29 @@ namespace Scenarioo.Api.Files
             }
         }
 
-        public string GetBranchFile(string branchName)
+        public string GetBranchFile(string branchId)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                GetBranchDirectory(branchName),
+                GetBranchDirectory(branchId),
                 Path.DirectorySeparatorChar,
                 FileNameBranch);
         }
 
-        public string GetBuildFile(string branchName, string buildName)
+        public string GetBuildFile(string branchId, string buildId)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                GetBuildDirectory(branchName, buildName),
+                GetBuildDirectory(branchId, buildId),
                 Path.DirectorySeparatorChar,
                 FileNameBuild);
         }
 
-        public string GetUseCaseFile(string branchName, string buildName, string useCaseName)
+        public string GetUseCaseFile(string branchId, string buildName, string useCaseName)
         {
             return string.Format(
                 @"{0}{1}{2}",
-                GetUseCaseDirectory(branchName, buildName, useCaseName),
+                GetUseCaseDirectory(branchId, buildName, useCaseName),
                 Path.DirectorySeparatorChar,
                 FileNameUseCase);
         }
@@ -98,7 +99,16 @@ namespace Scenarioo.Api.Files
                 @"{0}{1}{2}",
                 GetScenarioStepDirectory(branchName, buildName, useCaseName, scenarioName),
                 Path.DirectorySeparatorChar,
-                string.Format(@"{0}{1}", stepIndex.ToString(_digitFormat), ".xml"));
+                string.Format(@"{0}{1}", stepIndex.ToString(_digitFormat), ".json"));
+        }
+
+        public string GetHtmlFile(string branchName, string buildName, string useCaseName, string scenarioName, int stepIndex)
+        {
+            return string.Format(
+                @"{0}{1}{2}",
+                GetHtmlDirectory(branchName, buildName, useCaseName, scenarioName),
+                Path.DirectorySeparatorChar,
+                string.Format(@"{0}{1}", stepIndex.ToString(_digitFormat), ".html"));
         }
 
         /// <summary>
@@ -175,6 +185,15 @@ namespace Scenarioo.Api.Files
                 GetScenarioDirectory(branchName, buildName, useCaseName, scenarioName),
                 Path.DirectorySeparatorChar,
                 FilesUtil.EncodeName(DirectoryNameScenarioScreenshot));
+        }
+
+        public string GetHtmlDirectory(string branchName, string buildName, string useCaseName, string scenarioName)
+        {
+            return string.Format(
+                @"{0}{1}{2}",
+                GetScenarioDirectory(branchName, buildName, useCaseName, scenarioName),
+                Path.DirectorySeparatorChar,
+                FilesUtil.EncodeName(DirectoryNameHtml));
         }
 
         private static string CreateNumberFormatWithMinimumIntegerDigits(int minimumIntegerDigits, string digitPatern)

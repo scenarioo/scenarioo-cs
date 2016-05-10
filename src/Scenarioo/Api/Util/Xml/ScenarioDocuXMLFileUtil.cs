@@ -61,7 +61,7 @@ namespace Scenarioo.Api.Util.Xml
                         }
                         catch (IOException e)
                         {
-                            throw new System.Exception(string.Format("Could not unmarshall Object from file:{0}", srcFile), e);
+                            throw new Exception(string.Format("Could not unmarshall Object from file:{0}", srcFile), e);
                         }
                     });
 

@@ -107,7 +107,7 @@ namespace ScenariooTest
             // arrange
             var build = new Build { Name = BuildName, Date = DateTime.Today, Revision = "1337", Status = "success" };
 
-            build.AddDetail(DetailsVersionKey, "1.0.1");
+            //build.AddDetail(DetailsVersionKey, "1.0.1");
 
             // act
             writer.SaveBuildDescription(build);
@@ -137,7 +137,7 @@ namespace ScenariooTest
                                   Status = "success",
                               };
 
-            usecase.AddDetail("webtestName", "UseCaseWebTest");
+            //usecase.AddDetail("webtestName", "UseCaseWebTest");
 
             // act
             writer.SaveUseCase(usecase);
@@ -163,10 +163,9 @@ namespace ScenariooTest
                                    Description = "Serialize a scenario name, description and status",
                                    Status = "success",
                                };
-            scenario.Labels.AddLabel("edge case");
+            scenario.Labels.Add("edge case");
 
             // act
-            scenario.AddDetail("userRole", "customer");
             writer.SaveScenario(SerializationUseCase, scenario);
             writer.Flush();
 
@@ -185,15 +184,15 @@ namespace ScenariooTest
             // arrange
             var step = new Step();
             var stepDescription = new StepDescription { Index = StepIndex, Title = "Test Step", Status = "success" };
-            step.StepDescription = stepDescription;
+            //step.StepDescription = stepDescription;
 
-            step.StepHtml = new StepHtml { HtmlSource = "<html>just some page text</html>" };
+            //step.StepHtml = new StepHtml { HtmlSource = "<html>just some page text</html>" };
             step.Page = new Page { Name = "customer/overview.jsp" };
 
-            step.StepMetadata = new StepMetadata
-                                   {
-                                       VisibleText = "just some page text",
-                                   };
+            ////step.StepMetadata = new StepMetadata
+            ////                       {
+            ////                           VisibleText = "just some page text",
+            ////                       };
 
             // act
             writer.SaveStep(SerializationUseCase, TestContext.CurrentContext.Test.Name, step);
@@ -229,12 +228,12 @@ namespace ScenariooTest
             // act
             var step = new Step();
             var stepDescription = new StepDescription { Index = StepIndex, Title = "Test Step", Status = "success" };
-            step.StepDescription = stepDescription;
+            //step.StepDescription = stepDescription;
 
-            step.StepHtml = new StepHtml { HtmlSource = "<html>just some page text</html>" };
-            step.Page = new Page { Name = "Sample Screen Annotation Page" };
-            step.StepDescription.ScreenshotFileName = "000.png";
-            step.StepDescription.Index = 0;
+            //step.StepHtml = new StepHtml { HtmlSource = "<html>just some page text</html>" };
+            //step.Page = new Page { Name = "Sample Screen Annotation Page" };
+            //step.StepDescription.ScreenshotFileName = "000.png";
+            //step.StepDescription.Index = 0;
 
             step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(10, 50, ScreenAnnotationStyle.Highlight));
             step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(10, 150, ScreenAnnotationStyle.Click, ScreenAnnotationClickAction.ToUrl, "next-url"));
@@ -248,7 +247,7 @@ namespace ScenariooTest
 
             var details = new Details();
             details.AddDetail("details-key", "details-value");
-            step.ScreenAnnotations.Last().Details = details;
+            //step.ScreenAnnotations.Last().Details = details;
             
             writer.SaveStep(usecase.Name, scenario.Name, step);
             writer.Flush();
@@ -293,10 +292,10 @@ namespace ScenariooTest
             detailsMap.AddDetail("key1", "value1");
             detailsMap.AddDetail("key2", "value2");
 
-            scenario.AddDetail("map", detailsMap);
+            //scenario.AddDetail("map", detailsMap); // TODO new-format
 
             var objList = new ObjectList<string> { "item1", "item2", "item3" };
-            scenario.Details.AddDetail("list", objList);
+            //scenario.Details.AddDetail("list", objList); // TODO new-format
             writer.SaveScenario(SerializationUseCase, scenario);
             writer.Flush();
 
@@ -354,7 +353,7 @@ namespace ScenariooTest
             childWithDetails.Item = detailsMap;
             rootNode.AddChild(childWithDetails);
 
-            scenario.AddDetail("exampleTree", rootNode);
+            //scenario.AddDetail("exampleTree", rootNode); // TODO new-format
 
             // act
             writer.SaveScenario(SerializationUseCase, scenario);
@@ -425,16 +424,16 @@ namespace ScenariooTest
         /// Simply generate StepMetadata object with a lot of details to get a big step for load testing of writing.
         /// </summary>
         /// <returns>Generated StepMetadata</returns>
-        private static StepMetadata CreateBigMetadata()
-        {
-            var stepMetadata = new StepMetadata();
-            for (var i = 0; i < 1000; i++)
-            {
-                stepMetadata.Details.AddDetail("detail" + i, "just a detail to produce a lot of data that needs marshalling and writing.");
-            }
+        //private static StepMetadata CreateBigMetadata()
+        //{
+        //    var stepMetadata = new StepMetadata();
+        //    for (var i = 0; i < 1000; i++)
+        //    {
+        //        stepMetadata.Details.AddDetail("detail" + i, "just a detail to produce a lot of data that needs marshalling and writing.");
+        //    }
 
-            return stepMetadata;
-        }
+        //    return stepMetadata;
+        //}
 
         private Step CreateBigDataStepForLoadTestAsyncWriting(int index)
         {
@@ -455,16 +454,16 @@ namespace ScenariooTest
                                               "this is a step with a lot of data in it such that writing should take realy long for testing async writing\n"
                                       };
 
-            step.StepDescription = stepDescription;
+            //step.StepDescription = stepDescription;
 
             // Metdata with a lot of details 
-            step.StepMetadata = CreateBigMetadata();
+            //step.StepMetadata = CreateBigMetadata();
 
             // Page 
             step.Page = new Page("test.jsp");
 
             // Creates HTML (lot of dummy data, just to generate big data for writing) 
-            step.StepHtml = CreateBigHtml();
+            //step.StepHtml = CreateBigHtml();
 
             return step;
         }

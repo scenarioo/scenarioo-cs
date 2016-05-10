@@ -19,34 +19,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-using System;
-using System.Xml.Serialization;
 
-using Scenarioo.Api.Util.Xml;
+using System.Collections.Generic;
+
 using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    [Serializable]
-    [XmlRoot("useCase")]
     public class UseCase
     {
-        [XmlNamespaceDeclarations]
-        public XmlSerializerNamespaces Xmlns;
+        public string Id { get; set; }
 
         /// <summary>
         /// Gets or sets a unique name for this use case.
         /// Make sure to use descriptive names that stay stable as much as possible between multiple builds, such that you
         /// can compare use cases and its scenarios between different builds.
         /// </summary>
-        [XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets more detailed description for current scenario (additionally to descriptive name).
         /// </summary>
-        [XmlElement("description")]
         public string Description { get; set; }
+
+        public Labels Labels { get; set; }
 
         /// <summary>
         /// Gets or sets status of current step for setting additional application-specific states.
@@ -55,42 +51,20 @@ namespace Scenarioo.Model.Docu.Entities
         /// But you can use application specific additional values, like "not implemented", "unknown" etc. where it makes
         /// sense. Those additional values will be displayed in warning-style by the web application.
         /// </summary>
-        [XmlElement("status")]
         public string Status { get; set; }
 
-        /// <summary>
-        /// Gets or sets additional application specific details with additional metadata information's.
-        /// Add application specific details as key-value-data-items.
-        /// See <see cref="Details"/>
-        /// </summary>
-        [XmlElement("details")]
-        public Details Details { get; set; }
-
-        /// <summary>
-        /// Gets or sets multiple _labels to a scenario object.
-        /// </summary>
-        /// <returns>All _labels of this object. Never null.</returns>
-        [XmlElement("_labels")]
-        public Labels Labels
-        {
-            get { return _labels ?? (_labels = new Labels()); }
-            set { _labels = value; }
-        }
-
-        private Labels _labels;
+        public List<DocuObject> Properties { get; set; }
 
         public UseCase()
         {
-            Xmlns = new XmlSerializerNamespaces();
-            Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
-            Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
-
-            Details = new Details();
+            Labels = new Labels();
+            Properties = new List<DocuObject>();
         }
 
-        public void AddDetail(string key, object value)
+        public UseCase(string name)
+            : this()
         {
-            Details.AddDetail(key, value);
+            Name = name;
         }
     }
 }

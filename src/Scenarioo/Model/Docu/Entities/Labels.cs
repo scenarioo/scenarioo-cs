@@ -21,84 +21,126 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    [Serializable]
-    public class Labels : IXmlSerializable
+    /// <summary>
+    /// Custom implementation for IList to allow validation on labels.
+    /// </summary>
+    public class Labels : IList<string>
     {
-        private IList<string> _labels = new List<string>();
+        private readonly IList<string> _list = new List<string>();
 
-        public int Count
+        public Labels()
         {
-            get { return _labels.Count; }
         }
 
-        public IList<string> LabelList
+        public Labels(params string[] labels)
         {
-            get { return _labels; }
+            foreach (var label in labels)
+            {
+                Add(label);
+            }
         }
-        
+
         /// <summary>
         /// Validates a label for validity. A label must only contain letters, numbers and/or '_', '-'
         /// </summary>
-        public static bool IsValidLabel(string label)
+        public static void AssertLabel(string label)
         {
-            return Regex.IsMatch(label, "^[ a-zA-Z0-9_-]+$");
-        }
-
-        public Labels AddLabel(string label)
-        {
-            if (IsValidLabel(label))
-            {
-                _labels.Add(label);
-            }
-            else
+            if (!Regex.IsMatch(label, "^[ a-zA-Z0-9_-]+$"))
             {
                 throw new ArgumentException("Invalid label name: '" + label + "'");
             }
-
-            return this;
         }
 
-        public void AddLabels(IEnumerable<string> labelsToSet)
+        #region IList
+
+        public IEnumerator<string> GetEnumerator()
         {
-            var labelsCopy = new List<string>();
-            foreach (var label in labelsToSet)
+            return _list.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public void Add(string item)
+        {
+            AssertLabel(item);
+            _list.Add(item);
+        }
+
+        public void Clear()
+        {
+            _list.Clear();
+        }
+
+        public bool Contains(string item)
+        {
+            return _list.Contains(item);
+        }
+
+        public void CopyTo(string[] array, int arrayIndex)
+        {
+            _list.CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(string item)
+        {
+            return _list.Remove(item);
+        }
+
+        public int Count
+        {
+            get
             {
-                if (IsValidLabel(label))
-                {
-                    labelsCopy.Add(label);
-                }
-                else
-                {
-                    throw new ArgumentException("Invalid label name: '" + label + "'");
-                }
+                return _list.Count;
             }
-
-            _labels = labelsCopy;
-        }
-        
-        public XmlSchema GetSchema()
-        {
-            throw new NotImplementedException();
         }
 
-        public void ReadXml(XmlReader reader)
+        public bool IsReadOnly
         {
-        }
-
-        public void WriteXml(XmlWriter writer)
-        {
-            foreach (var label in _labels)
+            get
             {
-                writer.WriteElementString("label", label);
+                return _list.IsReadOnly;
             }
         }
+
+        public int IndexOf(string item)
+        {
+            return _list.IndexOf(item);
+        }
+
+        public void Insert(int index, string item)
+        {
+            AssertLabel(item);
+            _list.Insert(index, item);
+        }
+
+        public void RemoveAt(int index)
+        {
+            _list.RemoveAt(index);
+        }
+
+        public string this[int index]
+        {
+            get
+            {
+                return _list[index];
+            }
+            set
+            {
+                AssertLabel(value);
+                _list[index] = value;
+            }
+        }
+
+        #endregion
     }
+
 }
