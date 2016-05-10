@@ -30,8 +30,6 @@ using NUnit.Framework;
 using Scenarioo.Api;
 using Scenarioo.Api.Files;
 using Scenarioo.Model.Docu.Entities;
-using Scenarioo.Model.Docu.Entities.Generic;
-using Scenarioo.Model.Docu.Entities.Generic.Interfaces;
 
 namespace ScenariooTest
 {
@@ -183,7 +181,7 @@ namespace ScenariooTest
         {
             // arrange
             var step = new Step();
-            var stepDescription = new StepDescription { Index = StepIndex, Title = "Test Step", Status = "success" };
+            //var stepDescription = new StepDescription { Index = StepIndex, Title = "Test Step", Status = "success" };
             //step.StepDescription = stepDescription;
 
             //step.StepHtml = new StepHtml { HtmlSource = "<html>just some page text</html>" };
@@ -227,7 +225,7 @@ namespace ScenariooTest
             
             // act
             var step = new Step();
-            var stepDescription = new StepDescription { Index = StepIndex, Title = "Test Step", Status = "success" };
+            //var /*stepDescription*/ = new StepDescription { Index = StepIndex, Title = "Test Step", Status = "success" };
             //step.StepDescription = stepDescription;
 
             //step.StepHtml = new StepHtml { HtmlSource = "<html>just some page text</html>" };
@@ -245,8 +243,8 @@ namespace ScenariooTest
             step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(400, 250, ScreenAnnotationStyle.Default));
             step.ScreenAnnotations.Add(DataGenerator.CreateScreenAnnotation(400, 350, ScreenAnnotationStyle.NavigateToUrl, ScreenAnnotationClickAction.ToUrl, "blabla"));
 
-            var details = new Details();
-            details.AddDetail("details-key", "details-value");
+            //var details = new Details();
+            //details.AddDetail("details-key", "details-value");
             //step.ScreenAnnotations.Last().Details = details;
             
             writer.SaveStep(usecase.Name, scenario.Name, step);
@@ -284,17 +282,17 @@ namespace ScenariooTest
                                };
 
             // act
-            var detailsMap = new Details();
-            detailsMap.AddDetail("anyGenericObjectReference", new ObjectReference("serviceCall", "MainDB.getUsers"));
-            detailsMap.AddDetail(
-                "anyGenericObject",
-                new ObjectDescription("configuration", "my_dummy_mocks_configuration.properties"));
-            detailsMap.AddDetail("key1", "value1");
-            detailsMap.AddDetail("key2", "value2");
+            //var detailsMap = new Details();
+            //detailsMap.AddDetail("anyGenericObjectReference", new ObjectReference("serviceCall", "MainDB.getUsers"));
+            //detailsMap.AddDetail(
+            //    "anyGenericObject",
+            //    new ObjectDescription("configuration", "my_dummy_mocks_configuration.properties"));
+            //detailsMap.AddDetail("key1", "value1");
+            //detailsMap.AddDetail("key2", "value2");
 
             //scenario.AddDetail("map", detailsMap); // TODO new-format
 
-            var objList = new ObjectList<string> { "item1", "item2", "item3" };
+            //var objList = new ObjectList<string> { "item1", "item2", "item3" };
             //scenario.Details.AddDetail("list", objList); // TODO new-format
             writer.SaveScenario(SerializationUseCase, scenario);
             writer.Flush();
@@ -317,41 +315,41 @@ namespace ScenariooTest
             // SerializableDictionary!).
 
             // Root node with string as item
-            var rootNode = new ObjectTreeNode<object> { Item = "Root" };
-            rootNode.AddDetail(
-                "detailKey",
-                "Tree nodes can have again details, use same serialization as already tested!");
+            //var rootNode = new ObjectTreeNode<object> { Item = "Root" };
+            //rootNode.AddDetail(
+            //    "detailKey",
+            //    "Tree nodes can have again details, use same serialization as already tested!");
 
-            // node one with object description as item
-            var childWithObject = new ObjectTreeNode<object>();
-            var objDescription = new ObjectDescription("serviceCall", "AddressWebService.getAdress");
-            objDescription.AddDetail("justADetail", "just an example");
-            childWithObject.Item = objDescription;
-            rootNode.AddChild(childWithObject);
+            //// node one with object description as item
+            //var childWithObject = new ObjectTreeNode<object>();
+            //var objDescription = new ObjectDescription("serviceCall", "AddressWebService.getAdress");
+            //objDescription.AddDetail("justADetail", "just an example");
+            //childWithObject.Item = objDescription;
+            //rootNode.AddChild(childWithObject);
 
-            // node two with object reference as item
-            var childWithObjectRef = new ObjectTreeNode<object>();
-            var objRef = new ObjectReference("serviceCall", "AddressWebService.getAdress");
-            childWithObjectRef.Item = objRef;
-            rootNode.AddChild(childWithObjectRef);
+            //// node two with object reference as item
+            //var childWithObjectRef = new ObjectTreeNode<object>();
+            //var objRef = new ObjectReference("serviceCall", "AddressWebService.getAdress");
+            //childWithObjectRef.Item = objRef;
+            //rootNode.AddChild(childWithObjectRef);
 
-            // node three with List of Strings as item
-            var childWithList = new ObjectTreeNode<IObjectTreeNode<object>>();
-            var list = new ObjectList<object> { "item1", "item2", "item3" };
-            childWithList.Item = list;
-            rootNode.AddChild(childWithList);
+            //// node three with List of Strings as item
+            //var childWithList = new ObjectTreeNode<IObjectTreeNode<object>>();
+            //var list = new ObjectList<object> { "item1", "item2", "item3" };
+            //childWithList.Item = list;
+            //rootNode.AddChild(childWithList);
 
-            // node four with details as item
-            var childWithDetails = new ObjectTreeNode<object>();
-            var detailsMap = new Details();
-            detailsMap.AddDetail("key1", "value1");
-            detailsMap.AddDetail("key2", "value2");
-            detailsMap.AddDetail("anyGenericObjectReference", new ObjectReference("serviceCall", "MainDB.getUsers"));
-            detailsMap.AddDetail(
-                "anyGenericObject",
-                new ObjectDescription("configuration", "my_dummy_mocks_configuration.properties"));
-            childWithDetails.Item = detailsMap;
-            rootNode.AddChild(childWithDetails);
+            //// node four with details as item
+            //var childWithDetails = new ObjectTreeNode<object>();
+            //var detailsMap = new Details();
+            //detailsMap.AddDetail("key1", "value1");
+            //detailsMap.AddDetail("key2", "value2");
+            //detailsMap.AddDetail("anyGenericObjectReference", new ObjectReference("serviceCall", "MainDB.getUsers"));
+            //detailsMap.AddDetail(
+            //    "anyGenericObject",
+            //    new ObjectDescription("configuration", "my_dummy_mocks_configuration.properties"));
+            //childWithDetails.Item = detailsMap;
+            //rootNode.AddChild(childWithDetails);
 
             //scenario.AddDetail("exampleTree", rootNode); // TODO new-format
 
@@ -400,26 +398,7 @@ namespace ScenariooTest
             writer.Flush();
             Assert.IsTrue(File.Exists(expectedFileForSteps));
         }
-
-        private static StepHtml CreateBigHtml()
-        {
-            var builder = new StringBuilder();
-            builder.Append("<html><head></head><body>");
-            builder.Append(
-                "<p>This is just a dummy html code with lot of content to generate a lot of big data to write for load testing.<p>");
-            for (int i = 0; i < 1000; i++)
-            {
-                builder.Append(
-                    "<div class=\"dummyParagraph" + i
-                    + "\">This is just a dummy html code with lot of content to generate a lot of big data to write for load testing.</div>");
-            }
-
-            builder.Append("</body></html>");
-
-            var html = new StepHtml { HtmlSource = builder.ToString() };
-            return html;
-        }
-
+        
         /// <summary>
         /// Simply generate StepMetadata object with a lot of details to get a big step for load testing of writing.
         /// </summary>
@@ -440,19 +419,19 @@ namespace ScenariooTest
             var step = new Step();
 
             // Description
-            var stepDescription = new StepDescription
-                                      {
-                                          Index = index,
-                                          ScreenshotFileName =
-                                              docuFiles.GetScreenshotFile(
-                                                  BranchName,
-                                                  BuildName,
-                                                  SerializationUseCase,
-                                                  ScenarioName,
-                                                  index),
-                                          Title =
-                                              "this is a step with a lot of data in it such that writing should take realy long for testing async writing\n"
-                                      };
+            //var stepDescription = new StepDescription
+            //                          {
+            //                              Index = index,
+            //                              ScreenshotFileName =
+            //                                  docuFiles.GetScreenshotFile(
+            //                                      BranchName,
+            //                                      BuildName,
+            //                                      SerializationUseCase,
+            //                                      ScenarioName,
+            //                                      index),
+            //                              Title =
+            //                                  "this is a step with a lot of data in it such that writing should take realy long for testing async writing\n"
+            //                          };
 
             //step.StepDescription = stepDescription;
 

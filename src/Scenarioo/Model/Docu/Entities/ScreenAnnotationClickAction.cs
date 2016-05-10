@@ -20,7 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System.Xml.Serialization;
+using System.Runtime.Serialization;
 
 namespace Scenarioo.Model.Docu.Entities
 {
@@ -29,14 +29,14 @@ namespace Scenarioo.Model.Docu.Entities
         /// <summary>
         /// Let the user navigate to the next step when he clicks on the annotation
         /// </summary>
-        [XmlEnum("TO_NEXT_STEP")]
+        [EnumMember(Value = "TO_NEXT_STEP")]
         ToNextStep,
 
         /// <summary>
         /// Let the user navigate to a URL specified in property 'ClickActionUrl' when he clicks on the annotation.
         /// The URL will be opened in a seperate browser tab.
         /// </summary>
-        [XmlEnum("TO_URL")]
+        [EnumMember(Value = "TO_URL")]
         ToUrl
     }
 }

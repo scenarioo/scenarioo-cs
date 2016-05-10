@@ -55,22 +55,11 @@
     <Compile Include="Api\Util\Files\FilesUtil.cs" />
     <Compile Include="Api\Util\Image\ScenarioDocuImageFileUtil.cs" />
     <Compile Include="Api\Util\Image\ScenarioDocuImageUtil.cs" />
-    <Compile Include="Api\Util\Xml\ScenarioDocuXMLFileUtil.cs" />
     <Compile Include="Api\Util\Xml\ScenarioDocuXMLUtil.cs" />
-    <Compile Include="Api\Serializer\GenericSerializer.cs" />
-    <Compile Include="Api\Util\Xml\XmlAttribute.cs" />
-    <Compile Include="Api\Util\Xml\XmlElement.cs" />
-    <Compile Include="Api\Util\Xml\XmlTag.cs" />
     <Compile Include="Model\Docu\Derived\BuildLink.cs" />
     <Compile Include="Model\Docu\Entities\Branch.cs" />
     <Compile Include="Model\Docu\Entities\Build.cs" />
-    <Compile Include="Model\Docu\Entities\Generic\Details.cs" />
     <Compile Include="Model\Docu\Entities\Generic\DocuObject.cs" />
-    <Compile Include="Model\Docu\Entities\Generic\Interfaces\IObjectTreeNode.cs" />
-    <Compile Include="Model\Docu\Entities\Generic\ObjectDescription.cs" />
-    <Compile Include="Model\Docu\Entities\Generic\ObjectList.cs" />
-    <Compile Include="Model\Docu\Entities\Generic\ObjectReference.cs" />
-    <Compile Include="Model\Docu\Entities\Generic\ObjectTreeNode.cs" />
     <Compile Include="Model\Docu\Entities\Generic\PropertyGroups.cs" />
     <Compile Include="Model\Docu\Entities\Labels.cs" />
     <Compile Include="Model\Docu\Entities\Page.cs" />
@@ -80,9 +69,6 @@
     <Compile Include="Model\Docu\Entities\ScreenAnnotationStyle.cs" />
     <Compile Include="Model\Docu\Entities\ScreenRegion.cs" />
     <Compile Include="Model\Docu\Entities\Step.cs" />
-    <Compile Include="Model\Docu\Entities\StepDescription.cs" />
-    <Compile Include="Model\Docu\Entities\StepHtml.cs" />
-    <Compile Include="Model\Docu\Entities\StepIdentification.cs" />
     <Compile Include="Model\Docu\Entities\UseCase.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -91,9 +77,6 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Scenarioo.nuspec" />
-    <None Include="Schema\schema.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Settings.StyleCop" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

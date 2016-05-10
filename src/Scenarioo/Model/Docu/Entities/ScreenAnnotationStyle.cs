@@ -20,37 +20,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System.Xml.Serialization;
+using System.Runtime.Serialization;
 
 namespace Scenarioo.Model.Docu.Entities
 {
     public enum ScreenAnnotationStyle
     {
-        [XmlEnum("DEFAULT")]
+        [EnumMember(Value = "DEFAULT")]
         Default,
 
-        [XmlEnum("CLICK")]
+        [EnumMember(Value = "CLICK")]
         Click,
 
-        [XmlEnum("KEYBOARD")]
+        [EnumMember(Value = "KEYBOARD")]
         Keyboard,
 
-        [XmlEnum("EXPECTED")]
+        [EnumMember(Value = "EXPECTED")]
         Expected,
 
-        [XmlEnum("NAVIGATE_TO_URL")]
+        [EnumMember(Value = "NAVIGATE_TO_URL")]
         NavigateToUrl,
 
-        [XmlEnum("ERROR")]
+        [EnumMember(Value = "ERROR")]
         Error,
 
-        [XmlEnum("WARN")]
+        [EnumMember(Value = "WARN")]
         Warn,
 
-        [XmlEnum("INFO")]
+        [EnumMember(Value = "INFO")]
         Info,
 
-        [XmlEnum("HIGHLIGHT")]
+        [EnumMember(Value = "HIGHLIGHT")]
         Highlight,
     }
 }

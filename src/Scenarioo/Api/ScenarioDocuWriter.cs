@@ -21,15 +21,13 @@
  */
 
 using System.IO;
-using System.Threading;
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json.Converters;
 
 using Scenarioo.Annotations;
 using Scenarioo.Api.Files;
 using Scenarioo.Api.Util.Image;
-using Scenarioo.Api.Util.Xml;
 using Scenarioo.Model.Docu.Entities;
 
 namespace Scenarioo.Api
@@ -68,13 +66,9 @@ namespace Scenarioo.Api
                               ContractResolver = new SkipEmptyContractResolver(),
                               NullValueHandling = NullValueHandling.Ignore,
                           };
+            _serializer.Converters.Add(new StringEnumConverter());
         }
-        
-        private static void ExecuteAsyncXmlWriter<T>(T entity, string destFile) where T : class
-        {
-            ScenarioDocuXMLFileUtil.MarshalXml(entity, destFile);
-        }
-
+  
         private static void ExecuteAsyncImageWriter(string fileName, byte[] file)
         {
             ScenarioDocuImageFileUtil.MarshalImage(fileName, file);
@@ -304,12 +298,7 @@ namespace Scenarioo.Api
         /// </summary>
         public void Flush()
         {
-            while (ScenarioDocuXMLFileUtil.RunningTasks.Count > 0)
-            {
-                ScenarioDocuXMLFileUtil.RemoveFinishedTasks();
-
-                Thread.Sleep(100);
-            }
+            // not used anymore -> TODO async
         }
     }
 }
