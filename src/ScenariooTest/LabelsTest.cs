@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using NUnit.Framework;
 
@@ -40,35 +41,33 @@ namespace ScenariooTest
         [TestCase("tEst_1")]
         public void Valid_Labels(string label)
         {
-            Should.NotThrow(() => Labels.AssertLabel(label));
+            var target = new Labels(label);
+            target.First().ShouldBe(label);
         }
 
         [Test]
-        [TestCase("test.1")]
-        [TestCase("test_1 Ã¨")]
-        [TestCase("t,est")]
-        public void Invalid_Labels(string label)
+        [TestCase("test.1", "test-1")]
+        [TestCase("test_1 Ã¨", "test_1 A-")]
+        [TestCase("t,est", "t-est")]
+        public void Invalid_Labels_Get_Normalized_With_Add(string label, string expected)
         {
-            Should.Throw<ArgumentException>(() => Labels.AssertLabel(label));
+            var target = new Labels();
+            target.Add(label);
+
+            target.First().ShouldBe(expected);
         }
 
         [Test]
-        [TestCase("test+1")]
-        [TestCase("test.2")]
-        public void Add_Throws_If_Label_Is_Not_Valid(string invalidLabel)
-        {
-            var labels = new Labels();
-
-            Should.Throw<ArgumentException>(() => labels.Add(invalidLabel));
-        }
-
-        [Test]
-        [TestCase(".invalid")]
-        public void Indexer_Throws_If_Label_Is_Not_Valid(string invalidLabel)
+        [TestCase("test+1", "test-1")]
+        [TestCase("test.2", "test-2")]
+        [TestCase("+\"/&%°`^?=)(.,{}![]", "-------------------")]
+        public void Invalid_Labels_Get_Normalized_With_Indexer(string invalidLabel, string expected)
         {
             var labels = new Labels();
-
-            Should.Throw<ArgumentException>(() => labels[0] = invalidLabel);
+            labels.Add("bla");
+            labels[0] = invalidLabel;
+            
+            labels[0].ShouldBe(expected);
         }
     }
 }

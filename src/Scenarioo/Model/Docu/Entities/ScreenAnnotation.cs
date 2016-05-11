@@ -64,7 +64,7 @@ namespace Scenarioo.Model.Docu.Entities
         /// </summary>
         public string ClickActionUrl { get; set; }
 
-        public List<DocuObject> Properties { get; set; }
+        public DocuObjectMap Properties { get; set; }
 
         public ScreenAnnotation()
         {

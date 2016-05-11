@@ -31,13 +31,11 @@ namespace Scenarioo.Model.Docu.Entities
         public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<DocuObject> Properties { get; set; }
-        public List<DocuObject> Items { get; set; }
+        public DocuObjectMap Properties { get; set; }
 
         public Branch()
         {
-            Properties = new List<DocuObject>();
-            Items = new List<DocuObject>();
+            Properties = new DocuObjectMap();
         }
 
         public Branch(string name) 

@@ -38,7 +38,7 @@ namespace Scenarioo.Model.Docu.Entities
 
         public string Id { get; set; }
 
-        public List<DocuObject> Properties { get; set; }
+        public DocuObjectMap Properties { get; set; }
 
         /// <summary>
         /// Gets or sets multiple _labels to a scenario object.
@@ -58,7 +58,7 @@ namespace Scenarioo.Model.Docu.Entities
         public Page()
         {
             Labels = new Labels();
-            Properties = new List<DocuObject>();
+            Properties = new DocuObjectMap();
             ScreenAnnotations = new List<ScreenAnnotation>();
         }
 

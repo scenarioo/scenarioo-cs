@@ -53,17 +53,17 @@ namespace Scenarioo.Model.Docu.Entities
 
         public List<ScreenAnnotation> ScreenAnnotations { get; set; }
 
-        public List<DocuObject> Properties { get; set; }
+        public DocuObjectMap Properties { get; set; }
 
-        public PropertyGroups PropertyGroups { get; set; }
+        public DocuObjectMap PropertyGroups { get; set; }
 
         public Labels Labels { get; set; }
 
         public Step()
         {
             Labels = new Labels();
-            Properties = new List<DocuObject>();
-            PropertyGroups = new PropertyGroups();
+            Properties = new DocuObjectMap();
+            PropertyGroups = new DocuObjectMap();
             ScreenAnnotations = new List<ScreenAnnotation>();
         }
     }

@@ -1,12 +1,17 @@
-﻿
-
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Scenarioo.Model.Docu.Entities.Generic
 {
-    public class PropertyGroups : IList<DocuObject>
+    /// <summary>
+    /// Container for docu objects.
+    /// </summary>
+    /// <remarks>
+    /// This "Map" is a list because of serialization reasons. There won't be many items
+    /// in the list so the map-access will be enough fast with LINQ.
+    /// </remarks>
+    public class DocuObjectMap : IList<DocuObject>
     {
         private readonly IList<DocuObject> _docuObjects = new List<DocuObject>();
 

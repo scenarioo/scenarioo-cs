@@ -56,7 +56,9 @@ namespace Scenarioo.Model.Docu.Entities
         /// <summary>
         /// Gets or sets additional application specific details with additional metadata information's.
         /// </summary>
-        public List<DocuObject> Properties { get; set; }
+        public DocuObjectMap Properties { get; set; }
+
+        public DocuObjectMap Sections { get; set; }
 
         public Scenario()
         {
@@ -64,8 +66,8 @@ namespace Scenarioo.Model.Docu.Entities
             Description = string.Empty;
             Status = string.Empty;
 
-            Properties = new List<DocuObject>();
             Labels = new Labels();
+            Properties = new DocuObjectMap();
         }
 
         public Scenario(string name)

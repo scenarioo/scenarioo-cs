@@ -21,7 +21,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 
 using Scenarioo.Model.Docu.Entities.Generic;
 
@@ -35,11 +34,11 @@ namespace Scenarioo.Model.Docu.Entities
         public string Revision { get; set; }
         public DateTime Date { get; set; }
         public string Status { get; set; }
-        public List<DocuObject> Properties { get; set; }
+        public DocuObjectMap Properties { get; set; }
 
         public Build()
         {
-            Properties = new List<DocuObject>();
+            Properties = new DocuObjectMap();
         }
 
         public Build(string name)

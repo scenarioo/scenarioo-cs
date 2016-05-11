@@ -28,7 +28,9 @@ using System.Text.RegularExpressions;
 namespace Scenarioo.Model.Docu.Entities
 {
     /// <summary>
-    /// Custom implementation for IList to allow validation on labels.
+    /// Custom implementation for IList to allow a sanitize mechanism which
+    /// is implemented in an optimistic way: diacritics will be replaced, for
+    /// example ä -> a. All other special characters like / will be replaced by a -.
     /// </summary>
     public class Labels : IList<string>
     {
@@ -46,15 +48,9 @@ namespace Scenarioo.Model.Docu.Entities
             }
         }
 
-        /// <summary>
-        /// Validates a label for validity. A label must only contain letters, numbers and/or '_', '-'
-        /// </summary>
-        public static void AssertLabel(string label)
+        public static string Sanitize(string text)
         {
-            if (!Regex.IsMatch(label, "^[ a-zA-Z0-9_-]+$"))
-            {
-                throw new ArgumentException("Invalid label name: '" + label + "'");
-            }
+            return Regex.Replace(text.RemoveDiacritics(), "[^ a-zA-Z0-9_-]", "-");
         }
 
         #region IList
@@ -71,8 +67,7 @@ namespace Scenarioo.Model.Docu.Entities
 
         public void Add(string item)
         {
-            AssertLabel(item);
-            _list.Add(item);
+            _list.Add(Sanitize(item));
         }
 
         public void Clear()
@@ -118,8 +113,7 @@ namespace Scenarioo.Model.Docu.Entities
 
         public void Insert(int index, string item)
         {
-            AssertLabel(item);
-            _list.Insert(index, item);
+            _list.Insert(index, Sanitize(item));
         }
 
         public void RemoveAt(int index)
@@ -135,12 +129,10 @@ namespace Scenarioo.Model.Docu.Entities
             }
             set
             {
-                AssertLabel(value);
-                _list[index] = value;
+                _list[index] = Sanitize(value);
             }
         }
 
         #endregion
     }
-
 }

@@ -142,25 +142,6 @@ namespace ScenariooTest
             _writer.SaveScenario(UseCaseId, scenario);
         }
 
-        [Test]
-        public void Ridiculous_Performance_Test()
-        {
-            var group = new PropertyGroups();
-
-            for (int i = 0; i < 1000; ++i)
-            {
-                group.Add("shit + " + i, new DocuObject());
-            }
-
-            var watch = Stopwatch.StartNew();
-            var bla = group["shit + 900"];
-            watch.Stop();
-            bla.Type = "1337";
-            
-            Console.WriteLine("Took {0} ms", watch.ElapsedMilliseconds);
-            Console.WriteLine("Took {0} ticks ({1})", watch.ElapsedTicks, TimeSpan.TicksPerMillisecond);
-        }
-
         private static DocuObject CreateSimpleProperty()
         {
             return new DocuObject("some value", labelKey: "simpleProperty");
@@ -184,7 +165,7 @@ namespace ScenariooTest
                        {
                            ClickAction = ScreenAnnotationClickAction.ToNextStep,
                            Style = ScreenAnnotationStyle.Click,
-                           Properties = new List<DocuObject>()
+                           Properties = new DocuObjectMap()
                                         {
                                             CreateSimpleProperty(),
                                             CreateComplexProperty()

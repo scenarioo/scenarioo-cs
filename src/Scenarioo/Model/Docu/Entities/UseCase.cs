@@ -20,8 +20,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System.Collections.Generic;
-
 using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace Scenarioo.Model.Docu.Entities
@@ -53,12 +51,14 @@ namespace Scenarioo.Model.Docu.Entities
         /// </summary>
         public string Status { get; set; }
 
-        public List<DocuObject> Properties { get; set; }
+        public DocuObjectMap Properties { get; set; }
+        public DocuObjectMap Sections { get; set; }
 
         public UseCase()
         {
             Labels = new Labels();
-            Properties = new List<DocuObject>();
+            Sections = new DocuObjectMap();
+            Properties = new DocuObjectMap();
         }
 
         public UseCase(string name)

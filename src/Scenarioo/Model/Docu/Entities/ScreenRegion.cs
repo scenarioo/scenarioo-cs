@@ -21,7 +21,6 @@
  */
 
 using System;
-using System.Xml.Serialization;
 
 namespace Scenarioo.Model.Docu.Entities
 {

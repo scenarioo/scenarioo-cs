@@ -56,11 +56,10 @@
     <Compile Include="Api\Util\Image\ScenarioDocuImageFileUtil.cs" />
     <Compile Include="Api\Util\Image\ScenarioDocuImageUtil.cs" />
     <Compile Include="Api\Util\Xml\ScenarioDocuXMLUtil.cs" />
-    <Compile Include="Model\Docu\Derived\BuildLink.cs" />
     <Compile Include="Model\Docu\Entities\Branch.cs" />
     <Compile Include="Model\Docu\Entities\Build.cs" />
     <Compile Include="Model\Docu\Entities\Generic\DocuObject.cs" />
-    <Compile Include="Model\Docu\Entities\Generic\PropertyGroups.cs" />
+    <Compile Include="Model\Docu\Entities\Generic\DocuObjectMap.cs" />
     <Compile Include="Model\Docu\Entities\Labels.cs" />
     <Compile Include="Model\Docu\Entities\Page.cs" />
     <Compile Include="Model\Docu\Entities\Scenario.cs" />
@@ -73,6 +72,7 @@
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SkipEmptyContractResolver.cs" />
+    <Compile Include="StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
