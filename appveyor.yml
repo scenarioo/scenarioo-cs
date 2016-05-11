@@ -37,7 +37,7 @@
       - /dev-.*/
       - /dev.*/
 
-  version: 2.1.{build}
+  version: 3.0.{build}
 
   configuration: Release
   
