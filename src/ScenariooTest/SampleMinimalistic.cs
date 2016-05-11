@@ -115,13 +115,13 @@ namespace ScenariooTest
         }
 
         [Test]
-        public void Write_Example_Scenario()
+        public void Write_Example_Scenario_And_Step()
         {
             // arrange
             var scenario = new Scenario("example scenario minimal");
             scenario.Status = "success";
 
-            var step = new Step { Index = 0, Status = "success" };
+            var step = new Step { Index = 0 };
 
             // act
             _writer.SaveScenario(UseCaseId, scenario);
@@ -132,28 +132,36 @@ namespace ScenariooTest
             var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/example/example-branch-minimal/example-build-minimal/example-use-case-minimal/example-scenario-minimal/scenario.json".GetStringFromUrl());
             var actual = JToken.Parse(File.ReadAllText(_docuFiles.GetScenarioFile(BranchId, BuildId, UseCaseId, scenario.Id)));
 
+            var expectedStep = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/example/example-branch-minimal/example-build-minimal/example-use-case-minimal/example-scenario-minimal/steps/000.json".GetStringFromUrl());
+            var actualStep = JToken.Parse(File.ReadAllText(_docuFiles.GetScenarioStepFile(BranchId, BuildId, UseCaseId, scenario.Id, step.Index)));
+
+            Console.WriteLine("Actual: \n{0}\n\n", actual);
+            Console.WriteLine("Expected: \n{0}", expected);
+
+            Console.WriteLine("Actual: \n{0}\n\n", actualStep);
+            Console.WriteLine("Expected: \n{0}", expectedStep);
+
+            Assert.IsTrue(JToken.DeepEquals(expected, actual), "Scenario");
+            Assert.IsTrue(JToken.DeepEquals(expectedStep, actualStep), "Step");
+        }
+
+        [Test]
+        public void Write_Example_Scenario_Failed()
+        {
+            // arrange
+            var scenario = new Scenario("example scenario failed");
+            scenario.Status = "failed";
+
+            // act
+            _writer.SaveScenario(UseCaseId, scenario);
+
+            var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/example/example-branch-minimal/example-build-minimal/example-use-case-minimal/example-scenario-failed/scenario.json".GetStringFromUrl());
+            var actual = JToken.Parse(File.ReadAllText(_docuFiles.GetScenarioFile(BranchId, BuildId, UseCaseId, scenario.Id)));
+
             Console.WriteLine("Actual: \n{0}\n\n", actual);
             Console.WriteLine("Expected: \n{0}", expected);
 
             Assert.IsTrue(JToken.DeepEquals(expected, actual));
         }
-
-        ////[Test]
-        ////public void Write_Example_Scenario_With_ManualId()
-        ////{
-        ////    var scenario = new Scenario("example scenario with a manually set ID not generated from name");
-        ////    scenario.Status = "success";
-        ////    scenario.Id = "example-scenario-with-manual-id";
-
-        ////    _writer.SaveScenario(UseCaseId, scenario);
-
-        ////    var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/example/example-branch/example-build/example-use-case/example-scenario-with-manual-id/scenario.json".GetStringFromUrl());
-        ////    var actual = JToken.Parse(File.ReadAllText(_docuFiles.GetScenarioFile(BranchId, BuildId, UseCaseId, scenario.Id)));
-
-        ////    Console.WriteLine("Actual: \n{0}\n\n", actual);
-        ////    Console.WriteLine("Expected: \n{0}", expected);
-
-        ////    Assert.IsTrue(JToken.DeepEquals(expected, actual));
-        ////}
     }
 }

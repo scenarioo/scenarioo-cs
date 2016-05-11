@@ -128,7 +128,7 @@ namespace ScenariooTest
         }
 
         [Test]
-        public void Write_Example_Scenario()
+        public void Write_Example_Scenario_And_Step()
         {
             // arrange
             var scenario = new Scenario("example scenario", string.Empty);
