@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Linq;
 using System.Reflection;
 
 using Newtonsoft.Json;
@@ -37,6 +36,7 @@ namespace Scenarioo
                     property.ShouldSerialize = newShouldSerialize;
                 }
             }
+
             return property;
         }
     }

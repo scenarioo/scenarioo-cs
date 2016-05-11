@@ -96,7 +96,6 @@ namespace ScenariooTest
             Assert.IsTrue(JToken.DeepEquals(expected, actual));
         }
 
-
         [Test]
         public void Write_UseCase()
         {
