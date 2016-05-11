@@ -254,6 +254,9 @@ namespace Scenarioo.Api
 
         private void SanitizeObjectId(ISanitized target)
         {
+            if (target == null)
+                return;
+
             if (string.IsNullOrEmpty(target.Id))
             {
                 target.Id = target.Name.SanitizeForId();

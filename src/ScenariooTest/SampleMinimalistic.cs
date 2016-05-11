@@ -114,49 +114,29 @@ namespace ScenariooTest
             Assert.IsTrue(JToken.DeepEquals(expected, actual));
         }
 
-        ////[Test]
-        ////public void Write_Example_Scenario()
-        ////{
-        ////    var scenario = new Scenario("example scenario", string.Empty);
+        [Test]
+        public void Write_Example_Scenario()
+        {
+            // arrange
+            var scenario = new Scenario("example scenario minimal");
+            scenario.Status = "success";
 
-        ////    scenario.Description = "an optional description";
-        ////    scenario.Labels.Add("example-label-1");
-        ////    scenario.Labels.Add("example-label-2");
-        ////    scenario.Status = "success";
-        ////    scenario.Properties.Add(CreateSimpleProperty());
-        ////    scenario.Properties.Add(CreateComplexProperty());
+            var step = new Step { Index = 0, Status = "success" };
 
-        ////    _writer.SaveScenario(UseCaseId, scenario);
+            // act
+            _writer.SaveScenario(UseCaseId, scenario);
+            _writer.SaveStep(UseCaseId, scenario.Id, step);
+            _writer.SaveScreenshot(UseCaseId, scenario.Id, step, File.ReadAllBytes("data/screenshot.png"));
 
-        ////    var step = new Step();
-        ////    step.Index = 0;
-        ////    step.Title = "My Step Title";
-        ////    step.Status = "success";
-        ////    step.Page = new Page("example/page.html");
-        ////    step.Page.Properties.Add(CreateSimpleProperty());
-        ////    step.Page.Properties.Add(CreateComplexProperty());
-        ////    step.Page.Labels.Add("example-label-1");
-        ////    step.Page.VisibleText = "just some dummy html code";
-        ////    step.Page.ScreenAnnotations.AddRange(CreateScreenAnnotations());
-        ////    step.Labels.Add("example-label-1");
-        ////    step.Labels.Add("example-label-2");
-        ////    step.Properties.Add(CreateSimpleProperty());
+            // assert
+            var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/example/example-branch-minimal/example-build-minimal/example-use-case-minimal/example-scenario-minimal/scenario.json".GetStringFromUrl());
+            var actual = JToken.Parse(File.ReadAllText(_docuFiles.GetScenarioFile(BranchId, BuildId, UseCaseId, scenario.Id)));
 
-        ////    step.Sections.Add("Property Group 1", CreateSimpleProperty(), CreateComplexProperty());
+            Console.WriteLine("Actual: \n{0}\n\n", actual);
+            Console.WriteLine("Expected: \n{0}", expected);
 
-        ////    step.StepHtml = "<html><head></head><body><p>just some dummy html code</p></body></html>";
-
-        ////    _writer.SaveStep(UseCaseId, scenario.Id, step);
-        ////    _writer.SaveScreenshot(UseCaseId, scenario.Id, step, File.ReadAllBytes("data/screenshot.png"));
-
-        ////    var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/example/example-branch/example-build/example-use-case/example-scenario/scenario.json".GetStringFromUrl());
-        ////    var actual = JToken.Parse(File.ReadAllText(_docuFiles.GetScenarioFile(BranchId, BuildId, UseCaseId, scenario.Id)));
-
-        ////    Console.WriteLine("Actual: \n{0}\n\n", actual);
-        ////    Console.WriteLine("Expected: \n{0}", expected);
-
-        ////    Assert.IsTrue(JToken.DeepEquals(expected, actual));
-        ////}
+            Assert.IsTrue(JToken.DeepEquals(expected, actual));
+        }
 
         ////[Test]
         ////public void Write_Example_Scenario_With_ManualId()
