@@ -32,7 +32,7 @@ namespace Scenarioo.Model.Docu.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public string Revision { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
         public string Status { get; set; }
         public DocuObjectMap Properties { get; set; }
 
@@ -45,6 +45,11 @@ namespace Scenarioo.Model.Docu.Entities
             : this()
         {
             Name = name;
+        }
+
+        public bool ShouldSerializeProperties()
+        {
+            return Properties == null || Properties.Count != 0;
         }
     }
 }

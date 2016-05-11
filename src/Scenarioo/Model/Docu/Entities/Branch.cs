@@ -40,7 +40,6 @@ namespace Scenarioo.Model.Docu.Entities
             : this()
         {
             Name = name;
-            Description = string.Empty;
         }
 
         public Branch(string name, string description) 
@@ -48,6 +47,11 @@ namespace Scenarioo.Model.Docu.Entities
         {
             Name = name;
             Description = description;
+        }
+
+        public bool ShouldSerializeProperties()
+        {
+            return Properties == null || Properties.Count != 0;
         }
     }
 }

@@ -77,5 +77,25 @@ namespace Scenarioo.Model.Docu.Entities
         {
             return Sections == null || Sections.Count != 0;
         }
+
+        /// <summary>
+        /// Tells the serializer to not serialize the object if the list is empty. For convenience everything is initialized 
+        /// in the constructor.
+        /// </summary>
+        /// <returns></returns>
+        public bool ShouldSerializeProperties()
+        {
+            return Properties == null || Properties.Count != 0;
+        }
+
+        /// <summary>
+        /// Tells the serializer to not serialize the object if the list is empty. For convenience everything is initialized 
+        /// in the constructor.
+        /// </summary>
+        /// <returns></returns>
+        public bool ShouldSerializeLabels()
+        {
+            return Labels == null || Labels.Count != 0;
+        }
     }
 }

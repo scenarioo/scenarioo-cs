@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="DataGenerator.cs" />
     <Compile Include="Sample.cs" />
+    <Compile Include="SampleMinimalistic.cs" />
     <Compile Include="SanitizeTests.cs" />
     <Compile Include="ScenarioDocuWriterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
