@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
@@ -11,8 +10,6 @@ using Scenarioo.Api;
 using Scenarioo.Api.Files;
 using Scenarioo.Model.Docu.Entities;
 using Scenarioo.Model.Docu.Entities.Generic;
-
-using Shouldly;
 
 namespace ScenariooTest
 {
@@ -28,7 +25,7 @@ namespace ScenariooTest
         private ScenarioDocuWriter _writer;
         private ScenarioDocuFiles _docuFiles;
 
-         [TestFixtureSetUp]
+        [TestFixtureSetUp]
         public void TestInit()
         {
             // Sets outcome directory
@@ -59,6 +56,7 @@ namespace ScenariooTest
         [Test]
         public void Write_Branch()
         {
+            // arrange
             var branch = new Branch("example branch");
             
             branch.Description = "an optional description text";
@@ -66,10 +64,15 @@ namespace ScenariooTest
             branch.Properties.Add(CreateSimpleProperty());
             branch.Properties.Add(CreateComplexProperty());
 
+            // act
             _writer.SaveBranchDescription(branch);
 
+            // assert
             var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/example/example-branch/branch.json".GetStringFromUrl());
             var actual = JToken.Parse(File.ReadAllText(_docuFiles.GetBranchFile(branch.Id)));
+
+            Console.WriteLine("Actual: \n{0}\n\n", actual);
+            Console.WriteLine("Expected: \n{0}", expected);
 
             Assert.IsTrue(JToken.DeepEquals(expected, actual));
         }
@@ -77,6 +80,7 @@ namespace ScenariooTest
         [Test]
         public void Write_Build()
         {
+            // arrange
             var build = new Build("example build");
             build.Description = "an optional description text";
             build.Revision = "1.0.1#5ba891b";
@@ -85,8 +89,10 @@ namespace ScenariooTest
             build.Properties.Add(CreateSimpleProperty());
             build.Properties.Add(CreateComplexProperty());
 
+            // act
             _writer.SaveBuildDescription(build);
 
+            // assert
             var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/example/example-branch/example-build/build.json".GetStringFromUrl());
             var actual = JToken.Parse(File.ReadAllText(_docuFiles.GetBuildFile(BranchId, build.Id)));
 
@@ -99,6 +105,7 @@ namespace ScenariooTest
         [Test]
         public void Write_UseCase()
         {
+            // arrange
             var usecase = new UseCase("example use case");
             usecase.Description = "an optional description text";
             usecase.Labels.Add("example-label-1");
@@ -107,8 +114,10 @@ namespace ScenariooTest
             usecase.Properties.Add(CreateSimpleProperty());
             usecase.Properties.Add(CreateComplexProperty());
 
+            // act
             _writer.SaveUseCase(usecase);
 
+            // assert
             var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/example/example-branch/example-build/example-use-case/usecase.json".GetStringFromUrl());
             var actual = JToken.Parse(File.ReadAllText(_docuFiles.GetUseCaseFile(BranchId, BuildId, usecase.Id)));
 
@@ -121,6 +130,7 @@ namespace ScenariooTest
         [Test]
         public void Write_Example_Scenario()
         {
+            // arrange
             var scenario = new Scenario("example scenario", string.Empty);
             
             scenario.Description = "an optional description";
@@ -129,8 +139,6 @@ namespace ScenariooTest
             scenario.Status = "success";
             scenario.Properties.Add(CreateSimpleProperty());
             scenario.Properties.Add(CreateComplexProperty());
-
-            _writer.SaveScenario(UseCaseId, scenario);
 
             var step = new Step();
             step.Index = 0;
@@ -145,14 +153,15 @@ namespace ScenariooTest
             step.Labels.Add("example-label-1");
             step.Labels.Add("example-label-2");
             step.Properties.Add(CreateSimpleProperty());
-            
             step.Sections.Add("Property Group 1", CreateSimpleProperty(), CreateComplexProperty());
-
             step.StepHtml = "<html><head></head><body><p>just some dummy html code</p></body></html>";
 
+            // act
+            _writer.SaveScenario(UseCaseId, scenario);
             _writer.SaveStep(UseCaseId, scenario.Id, step);
             _writer.SaveScreenshot(UseCaseId, scenario.Id, step, File.ReadAllBytes("data/screenshot.png"));
 
+            // assert
             var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/example/example-branch/example-build/example-use-case/example-scenario/scenario.json".GetStringFromUrl());
             var actual = JToken.Parse(File.ReadAllText(_docuFiles.GetScenarioFile(BranchId, BuildId, UseCaseId, scenario.Id)));
 
@@ -165,12 +174,15 @@ namespace ScenariooTest
         [Test]
         public void Write_Example_Scenario_With_ManualId()
         {
+            // arrange
             var scenario = new Scenario("example scenario with a manually set ID not generated from name");
             scenario.Status = "success";
             scenario.Id = "example-scenario-with-manual-id";
 
+            // act
             _writer.SaveScenario(UseCaseId, scenario);
 
+            // assert
             var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/example/example-branch/example-build/example-use-case/example-scenario-with-manual-id/scenario.json".GetStringFromUrl());
             var actual = JToken.Parse(File.ReadAllText(_docuFiles.GetScenarioFile(BranchId, BuildId, UseCaseId, scenario.Id)));
 
