@@ -50,10 +50,10 @@ namespace ScenariooTest
 
         public void TestCleanUp()
         {
-            //if (Directory.Exists(_rootDirectory))
-            //{
-            //    Directory.Delete(_rootDirectory, true);
-            //}
+            if (Directory.Exists(_rootDirectory))
+            {
+                Directory.Delete(_rootDirectory, true);
+            }
         }
 
         [Test]
