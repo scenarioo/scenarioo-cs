@@ -32,7 +32,7 @@ namespace Scenarioo.Model.Docu.Entities
     /// Contains all the data collected from a web test for one step of one scenario/web test (except for the step image, which
     /// has to be stored separately
     /// </summary>
-    public class Step
+    public class Step 
     {
         public int Index { get; set; }
         public string Id { get; set; }
@@ -55,7 +55,7 @@ namespace Scenarioo.Model.Docu.Entities
 
         public DocuObjectMap Properties { get; set; }
 
-        public DocuObjectMap PropertyGroups { get; set; }
+        public DocuObjectMap Sections { get; set; }
 
         public Labels Labels { get; set; }
 
@@ -63,8 +63,18 @@ namespace Scenarioo.Model.Docu.Entities
         {
             Labels = new Labels();
             Properties = new DocuObjectMap();
-            PropertyGroups = new DocuObjectMap();
+            Sections = new DocuObjectMap();
             ScreenAnnotations = new List<ScreenAnnotation>();
+        }
+
+        /// <summary>
+        /// Tells the serializer to not serialize the object if the list is empty. For convenience everything is initialized 
+        /// in the constructor.
+        /// </summary>
+        /// <returns></returns>
+        public bool ShouldSerializeSections()
+        {
+            return Sections == null || Sections.Count != 0;
         }
     }
 }

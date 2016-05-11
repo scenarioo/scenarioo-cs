@@ -30,7 +30,7 @@ namespace Scenarioo
         /// Replacec all non allowed chars with a -. Used for id's which will be used
         /// in links.
         /// </summary>
-        public static string SanitizeId(this string text)
+        public static string SanitizeForId(this string text)
         {
             return Regex.Replace(text, "[^a-zA-Z0-9_-]", "-");
         }

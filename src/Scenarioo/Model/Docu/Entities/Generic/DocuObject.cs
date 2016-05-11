@@ -5,9 +5,9 @@ namespace Scenarioo.Model.Docu.Entities.Generic
     public class DocuObject
     {
         public string Id { get; set; }
-
         public string LabelKey { get; set; }
         public string Value { get; set; }
+
         public string Type { get; set; }
         public List<DocuObject> Properties { get; set; }
         public List<DocuObject> Items { get; set; }

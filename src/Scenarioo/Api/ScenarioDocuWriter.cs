@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System;
 using System.IO;
 
 using Newtonsoft.Json;
@@ -180,6 +181,8 @@ namespace Scenarioo.Api
         /// <param name="build">The build description to write</param>
         public void SaveBuildDescription(Build build)
         {
+            SanitizeObjectId(build);
+
             var destBuildFile = DocuFiles.GetBuildFile(_branchId, _buildId);
             CreateBuildDirectoryIfNotYetExists();
 
@@ -197,6 +200,8 @@ namespace Scenarioo.Api
         /// <param name="branch">The branch description to write.</param>
         public void SaveBranchDescription(Branch branch)
         {
+            SanitizeObjectId(branch);
+
             var destBranchFile = DocuFiles.GetBranchFile(_branchId);
             CreateBranchDirectoryIfNotYetExists();
 
@@ -214,6 +219,8 @@ namespace Scenarioo.Api
         /// <param name="useCase">The use case description to write</param>
         public void SaveUseCase(UseCase useCase)
         {
+            SanitizeObjectId(useCase);
+
             var desUseCaseFile = DocuFiles.GetUseCaseFile(_branchId, _buildId, useCase.Id);
             CreateUseCaseDirectoryIfNotYetExists(useCase);
 
@@ -227,7 +234,7 @@ namespace Scenarioo.Api
 
         public void SaveScenario(string useCaseId, Scenario scenario)
         {
-
+            SanitizeObjectId(scenario);
 
             var desScenarioFile = DocuFiles.GetScenarioFile(
                 _branchId,
@@ -245,8 +252,22 @@ namespace Scenarioo.Api
             //ExecuteAsyncXmlWriter(scenario, desScenarioFile);
         }
 
+        private void SanitizeObjectId(ISanitized target)
+        {
+            if (string.IsNullOrEmpty(target.Id))
+            {
+                target.Id = target.Name.SanitizeForId();
+            }
+            else
+            {
+                target.Id = target.Id.SanitizeForId();
+            }
+        }
+
         public void SaveStep(string useCaseId, string scenarioId, Step step)
         {
+            SanitizeObjectId(step.Page);
+
             var desScenarioStepFile = DocuFiles.GetScenarioStepFile(
                 _branchId,
                 _buildId,
@@ -298,6 +319,7 @@ namespace Scenarioo.Api
         /// this generator is written to the file system.
         /// Will block until writing has finished.
         /// </summary>
+        [Obsolete]
         public void Flush()
         {
             // not used anymore -> TODO async

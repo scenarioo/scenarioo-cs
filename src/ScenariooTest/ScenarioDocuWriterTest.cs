@@ -30,6 +30,7 @@ using NUnit.Framework;
 using Scenarioo.Api;
 using Scenarioo.Api.Files;
 using Scenarioo.Model.Docu.Entities;
+using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace ScenariooTest
 {

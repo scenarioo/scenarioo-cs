@@ -50,9 +50,9 @@ namespace Scenarioo.Api
             _docuFiles = new ScenarioDocuFiles(rootDirectory);
         }
 
-        public Branch LoadBranch(string branchName)
+        public Branch LoadBranch(string branchId)
         {
-            return JsonConvert.DeserializeObject<Branch>(_docuFiles.GetBranchFile(branchName));
+            return JsonConvert.DeserializeObject<Branch>(_docuFiles.GetBranchFile(branchId));
         }
 
         public Build LoadBuild(string branchName, string buildName)

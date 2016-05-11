@@ -20,8 +20,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
 
 using NUnit.Framework;
@@ -64,7 +62,7 @@ namespace ScenariooTest
         public void Invalid_Labels_Get_Normalized_With_Indexer(string invalidLabel, string expected)
         {
             var labels = new Labels();
-            labels.Add("bla");
+            labels.Add("bla"); // indexer is not available otherwise to set something
             labels[0] = invalidLabel;
             
             labels[0].ShouldBe(expected);

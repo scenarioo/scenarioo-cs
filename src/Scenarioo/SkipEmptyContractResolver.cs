@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using System.Reflection;
 
 using Newtonsoft.Json;
@@ -20,14 +21,21 @@ namespace Scenarioo
             {
                 Predicate<object> newShouldSerialize = obj =>
                 {
-                    var collection = property.ValueProvider.GetValue(obj) as IList;
-                    return collection == null || collection.Count != 0;
+                    var list = property.ValueProvider.GetValue(obj) as IList;
+                    
+                    return list == null || list.Count != 0;
                 };
 
                 var oldShouldSerialize = property.ShouldSerialize;
-                property.ShouldSerialize = oldShouldSerialize != null
-                    ? o => oldShouldSerialize(o) && newShouldSerialize(o)
-                    : newShouldSerialize;
+
+                if (oldShouldSerialize != null)
+                {
+                    property.ShouldSerialize = o => oldShouldSerialize(o) && newShouldSerialize(o);
+                }
+                else
+                {
+                    property.ShouldSerialize = newShouldSerialize;
+                }
             }
             return property;
         }

@@ -26,7 +26,7 @@ using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    public class Page
+    public class Page : ISanitized
     {
         /// <summary>
         /// Gets or sets unique name of the page. For a webpage you usually use the relative application internal url-path to that page or

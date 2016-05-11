@@ -20,13 +20,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System.Collections.Generic;
-
 using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    public class Branch
+    public class Branch : ISanitized
     {
         public string Id { get; set; }
         public string Name { get; set; }

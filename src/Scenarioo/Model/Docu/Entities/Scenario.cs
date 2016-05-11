@@ -20,13 +20,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System.Collections.Generic;
-
 using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    public class Scenario
+    public class Scenario : ISanitized
     {
         public string Id { get; set; }
 
@@ -62,10 +60,6 @@ namespace Scenarioo.Model.Docu.Entities
 
         public Scenario()
         {
-            Name = string.Empty;
-            Description = string.Empty;
-            Status = string.Empty;
-
             Labels = new Labels();
             Properties = new DocuObjectMap();
         }
@@ -81,6 +75,34 @@ namespace Scenarioo.Model.Docu.Entities
         {
             Name = name;
             Description = description;
+        }
+
+
+        /// <summary>
+        /// Tells the serializer to not serialize the object if the list is empty. For convenience everything is initialized 
+        /// in the constructor.
+        /// </summary>
+        public bool ShouldSerializeProperties()
+        {
+            return Properties == null || Properties.Count != 0;
+        }
+
+        /// <summary>
+        /// Tells the serializer to not serialize the object if the list is empty. For convenience everything is initialized 
+        /// in the constructor.
+        /// </summary>
+        public bool ShouldSerializeSections()
+        {
+            return Sections == null || Sections.Count != 0;
+        }
+
+        /// <summary>
+        /// Tells the serializer to not serialize the object if the list is empty. For convenience everything is initialized 
+        /// in the constructor.
+        /// </summary>
+        public bool ShouldSerializeLabels()
+        {
+            return Labels == null || Labels.Count != 0;
         }
     }
 }

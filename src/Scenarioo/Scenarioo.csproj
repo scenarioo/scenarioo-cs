@@ -60,6 +60,7 @@
     <Compile Include="Model\Docu\Entities\Build.cs" />
     <Compile Include="Model\Docu\Entities\Generic\DocuObject.cs" />
     <Compile Include="Model\Docu\Entities\Generic\DocuObjectMap.cs" />
+    <Compile Include="Model\Docu\Entities\ISanitized.cs" />
     <Compile Include="Model\Docu\Entities\Labels.cs" />
     <Compile Include="Model\Docu\Entities\Page.cs" />
     <Compile Include="Model\Docu\Entities\Scenario.cs" />

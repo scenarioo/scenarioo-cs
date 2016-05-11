@@ -24,36 +24,8 @@ using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    public class UseCase
+    public class UseCase : ISanitized
     {
-        public string Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets a unique name for this use case.
-        /// Make sure to use descriptive names that stay stable as much as possible between multiple builds, such that you
-        /// can compare use cases and its scenarios between different builds.
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets more detailed description for current scenario (additionally to descriptive name).
-        /// </summary>
-        public string Description { get; set; }
-
-        public Labels Labels { get; set; }
-
-        /// <summary>
-        /// Gets or sets status of current step for setting additional application-specific states.
-        /// Status of the scenario (did this test fail or succeed?).
-        /// Usual values are "success" or "failed".
-        /// But you can use application specific additional values, like "not implemented", "unknown" etc. where it makes
-        /// sense. Those additional values will be displayed in warning-style by the web application.
-        /// </summary>
-        public string Status { get; set; }
-
-        public DocuObjectMap Properties { get; set; }
-        public DocuObjectMap Sections { get; set; }
-
         public UseCase()
         {
             Labels = new Labels();
@@ -65,6 +37,45 @@ namespace Scenarioo.Model.Docu.Entities
             : this()
         {
             Name = name;
+        }
+
+        /// <summary>
+        ///     Gets or sets more detailed description for current scenario (additionally to descriptive name).
+        /// </summary>
+        public string Description { get; set; }
+
+        public Labels Labels { get; set; }
+
+        /// <summary>
+        ///     Gets or sets status of current step for setting additional application-specific states.
+        ///     Status of the scenario (did this test fail or succeed?).
+        ///     Usual values are "success" or "failed".
+        ///     But you can use application specific additional values, like "not implemented", "unknown" etc. where it makes
+        ///     sense. Those additional values will be displayed in warning-style by the web application.
+        /// </summary>
+        public string Status { get; set; }
+
+        public DocuObjectMap Properties { get; set; }
+
+        public DocuObjectMap Sections { get; set; }
+
+        public string Id { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a unique name for this use case.
+        ///     Make sure to use descriptive names that stay stable as much as possible between multiple builds, such that you
+        ///     can compare use cases and its scenarios between different builds.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Tells the serializer to not serialize the object if the list is empty. For convenience everything is initialized 
+        /// in the constructor.
+        /// </summary>
+        /// <returns></returns>
+        public bool ShouldSerializeSections()
+        {
+            return Sections == null || Sections.Count != 0;
         }
     }
 }

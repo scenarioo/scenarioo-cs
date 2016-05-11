@@ -26,7 +26,7 @@ using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    public class Build
+    public class Build : ISanitized
     {
         public string Id { get; set; }
         public string Name { get; set; }

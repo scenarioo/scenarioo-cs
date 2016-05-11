@@ -75,6 +75,7 @@
     <Compile Include="ScenarioDocuWriterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LabelsTest.cs" />
+    <Compile Include="WebClientExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Scenarioo\Scenarioo.csproj">

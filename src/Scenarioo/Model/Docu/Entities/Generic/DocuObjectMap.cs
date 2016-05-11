@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,7 +35,7 @@ namespace Scenarioo.Model.Docu.Entities.Generic
             }
         }
 
-        #region IList
+        #region IList<T>
 
         public IEnumerator<DocuObject> GetEnumerator()
         {
@@ -109,5 +110,6 @@ namespace Scenarioo.Model.Docu.Entities.Generic
         }
 
         #endregion
+
     }
 }
