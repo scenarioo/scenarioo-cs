@@ -159,7 +159,7 @@ namespace ScenariooTest
             // act
             _writer.SaveScenario(UseCaseId, scenario);
             _writer.SaveStep(UseCaseId, scenario.Id, step);
-            _writer.SaveScreenshot(UseCaseId, scenario.Id, step, File.ReadAllBytes("data/screenshot.png"));
+            _writer.SaveScreenshot(UseCaseId, scenario.Id, step, File.ReadAllBytes(Path.Combine(TestContext.CurrentContext.TestDirectory, "data/screenshot.png")));
 
             // assert
             var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/example/example-branch/example-build/example-use-case/example-scenario/scenario.json".GetStringFromUrl());
