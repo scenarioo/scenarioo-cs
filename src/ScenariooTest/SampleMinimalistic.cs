@@ -67,7 +67,7 @@ namespace ScenariooTest
             _writer.SaveBranchDescription(branch);
 
             // assert
-            var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/example/example-branch-minimal/branch.json".GetStringFromUrl());
+            var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/reference-example/example-branch-minimal/branch.json".GetStringFromUrl());
             var actual = JToken.Parse(File.ReadAllText(_docuFiles.GetBranchFile(branch.Id)));
 
             Console.WriteLine("Actual: \n{0}\n\n", actual);
@@ -86,7 +86,7 @@ namespace ScenariooTest
             _writer.SaveBuildDescription(build);
 
             // assert
-            var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/example/example-branch-minimal/example-build-minimal/build.json".GetStringFromUrl());
+            var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/reference-example/example-branch-minimal/example-build-minimal/build.json".GetStringFromUrl());
             var actual = JToken.Parse(File.ReadAllText(_docuFiles.GetBuildFile(BranchId, build.Id)));
 
             Console.WriteLine("Actual: \n{0}\n\n", actual);
@@ -105,7 +105,7 @@ namespace ScenariooTest
             _writer.SaveUseCase(usecase);
 
             // assert
-            var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/example/example-branch-minimal/example-build-minimal/example-use-case-minimal/usecase.json".GetStringFromUrl());
+            var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/reference-example/example-branch-minimal/example-build-minimal/example-use-case-minimal/usecase.json".GetStringFromUrl());
             var actual = JToken.Parse(File.ReadAllText(_docuFiles.GetUseCaseFile(BranchId, BuildId, usecase.Id)));
 
             Console.WriteLine("Actual: \n{0}\n\n", actual);
@@ -129,10 +129,10 @@ namespace ScenariooTest
             _writer.SaveScreenshot(UseCaseId, scenario.Id, step, File.ReadAllBytes(Path.Combine(TestContext.CurrentContext.TestDirectory, "data/screenshot.png")));
 
             // assert
-            var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/example/example-branch-minimal/example-build-minimal/example-use-case-minimal/example-scenario-minimal/scenario.json".GetStringFromUrl());
+            var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/reference-example/example-branch-minimal/example-build-minimal/example-use-case-minimal/example-scenario-minimal/scenario.json".GetStringFromUrl());
             var actual = JToken.Parse(File.ReadAllText(_docuFiles.GetScenarioFile(BranchId, BuildId, UseCaseId, scenario.Id)));
 
-            var expectedStep = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/example/example-branch-minimal/example-build-minimal/example-use-case-minimal/example-scenario-minimal/steps/000.json".GetStringFromUrl());
+            var expectedStep = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/reference-example/example-branch-minimal/example-build-minimal/example-use-case-minimal/example-scenario-minimal/steps/000.json".GetStringFromUrl());
             var actualStep = JToken.Parse(File.ReadAllText(_docuFiles.GetScenarioStepFile(BranchId, BuildId, UseCaseId, scenario.Id, step.Index)));
 
             Console.WriteLine("Actual: \n{0}\n\n", actual);
@@ -155,7 +155,7 @@ namespace ScenariooTest
             // act
             _writer.SaveScenario(UseCaseId, scenario);
 
-            var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/example/example-branch-minimal/example-build-minimal/example-use-case-minimal/example-scenario-failed/scenario.json".GetStringFromUrl());
+            var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/reference-example/example-branch-minimal/example-build-minimal/example-use-case-minimal/example-scenario-failed/scenario.json".GetStringFromUrl());
             var actual = JToken.Parse(File.ReadAllText(_docuFiles.GetScenarioFile(BranchId, BuildId, UseCaseId, scenario.Id)));
 
             Console.WriteLine("Actual: \n{0}\n\n", actual);

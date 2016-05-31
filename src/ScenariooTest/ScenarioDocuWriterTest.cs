@@ -22,15 +22,12 @@
 
 using System;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 using NUnit.Framework;
 
 using Scenarioo.Api;
 using Scenarioo.Api.Files;
 using Scenarioo.Model.Docu.Entities;
-using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace ScenariooTest
 {
@@ -82,26 +79,6 @@ namespace ScenariooTest
         }
 
         [Test]
-        public void Serializez_Branch_Name_And_Description_Can_Be_Read()
-        {
-            // arrange
-            var branch = new Branch
-                             {
-                                 Name = BranchName,
-                                 Description = "just a simple development Branch, might as well be the trunk."
-                             };
-
-            // act
-            writer.SaveBranchDescription(branch);
-            writer.Flush();            
-
-            // assert
-            var branchFromFile = reader.LoadBranch(BranchName);
-            Assert.AreEqual(BranchName, branchFromFile.Name);
-            Assert.AreEqual(branch.Description, branchFromFile.Description);
-        }
-
-        [Test]
         public void Serialized_Build_Can_Be_Read()
         {
             // arrange
@@ -124,82 +101,6 @@ namespace ScenariooTest
             ////Assert.That(BuildName, Is.EqualTo(result.Name));
             ////Assert.That("1337", Is.EqualTo(result.Revision));
             ////Assert.That("success", Is.EqualTo("success"));
-        }
-
-        [Test]
-        public void Serialized_Usecase_Can_Be_Read()
-        {
-            // arrange
-            var usecase = new UseCase
-                              {
-                                  Name = SerializationUseCase,
-                                  Description = "Serialization of scenarioo objects with .NET",
-                                  Status = "success",
-                              };
-
-            //usecase.AddDetail("webtestName", "UseCaseWebTest");
-
-            // act
-            writer.SaveUseCase(usecase);
-            writer.Flush();
-
-            // assert
-            Assert.IsTrue(File.Exists(docuFiles.GetUseCaseFile(BranchName, BuildName, SerializationUseCase)));
-
-            var usecaseXml = File.ReadAllText(docuFiles.GetUseCaseFile(BranchName, BuildName, SerializationUseCase));
-            StringAssert.Contains("UseCaseWebTest", usecaseXml);
-            StringAssert.Contains(usecase.Name, usecaseXml);
-            StringAssert.Contains(usecase.Description, usecaseXml);
-            StringAssert.Contains(usecase.Status, usecaseXml);
-        }
-
-        [Test]
-        public void Serialize_Scenario_Name_Description_And_Status()
-        {
-            // arrange
-            var scenario = new Scenario
-                               {
-                                   Name = TestContext.CurrentContext.Test.Name,
-                                   Description = "Serialize a scenario name, description and status",
-                                   Status = "success",
-                               };
-            scenario.Labels.Add("edge case");
-
-            // act
-            writer.SaveScenario(SerializationUseCase, scenario);
-            writer.Flush();
-
-            // assert
-            var scenarioXml = File.ReadAllText(docuFiles.GetScenarioFile(BranchName, BuildName, SerializationUseCase, TestContext.CurrentContext.Test.Name));
-            
-            StringAssert.Contains(string.Format("<name>{0}</name>", scenario.Name), scenarioXml);
-            StringAssert.Contains(string.Format("<description>{0}</description>", scenario.Description), scenarioXml);
-            StringAssert.Contains("<status>success</status>", scenarioXml);
-            StringAssert.Contains("<label>edge case</label>", scenarioXml);
-        }
-
-        [Test]
-        public void Serialize_A_Step()
-        {
-            // arrange
-            var step = new Step();
-            //var stepDescription = new StepDescription { Index = StepIndex, Title = "Test Step", Status = "success" };
-            //step.StepDescription = stepDescription;
-
-            //step.StepHtml = new StepHtml { HtmlSource = "<html>just some page text</html>" };
-            step.Page = new Page { Name = "customer/overview.jsp" };
-
-            ////step.StepMetadata = new StepMetadata
-            ////                       {
-            ////                           VisibleText = "just some page text",
-            ////                       };
-
-            // act
-            writer.SaveStep(SerializationUseCase, TestContext.CurrentContext.Test.Name, step);
-            writer.Flush();
-
-            // assert
-            Assert.IsTrue(File.Exists(docuFiles.GetScenarioStepFile(BranchName, BuildName, SerializationUseCase, TestContext.CurrentContext.Test.Name, 1)));
         }
 
         [Test]
