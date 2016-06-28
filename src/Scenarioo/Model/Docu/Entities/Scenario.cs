@@ -62,6 +62,7 @@ namespace Scenarioo.Model.Docu.Entities
         {
             Labels = new Labels();
             Properties = new DocuObjectMap();
+            Sections = new DocuObjectMap();
         }
 
         public Scenario(string name)

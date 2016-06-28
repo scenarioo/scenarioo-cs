@@ -114,6 +114,14 @@ namespace ScenariooTest
             usecase.Properties.Add(CreateSimpleProperty());
             usecase.Properties.Add(CreateComplexProperty());
 
+            usecase.Sections.Add(new DocuObject(labelKey: "More Information", value: "#Simple Text Section\nAllowed to have multiline content of course.\nBut we need to take care to visualize this nicely."));
+
+            var property2 = new DocuObject(labelKey: "property2-with-list-value");
+            property2.Items.Add(new DocuObject(value: "item1"));
+            property2.Items.Add(new DocuObject(value: "item2"));
+
+            usecase.Sections.Add("Another Section with more Properties", new DocuObject(labelKey: "property1", value: " a simple value"), property2);
+
             // act
             _writer.SaveUseCase(usecase);
 
@@ -139,6 +147,14 @@ namespace ScenariooTest
             scenario.Status = "success";
             scenario.Properties.Add(CreateSimpleProperty());
             scenario.Properties.Add(CreateComplexProperty());
+
+            scenario.Sections.Add(new DocuObject(labelKey: "More Information", value: "#Simple Text Section with Markdown\n\nAllowed to have multiline content of course.\n\nBut we need to take care to visualize this nicely."));
+
+            var property2 = new DocuObject(labelKey: "property2-with-list-value");
+            property2.Items.Add(new DocuObject(value: "item1"));
+            property2.Items.Add(new DocuObject(value: "item2"));
+
+            scenario.Sections.Add("Another Section with more Properties", new DocuObject(labelKey: "property1", value: " a simple value"), property2);
 
             var step = new Step();
             step.Index = 0;
