@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 using OpenQA.Selenium;
@@ -10,6 +11,8 @@ namespace Samples.PizzaDelivery.PageObjects.Infrastructure
 {
     public class DocumentationContext
     {
+        private const string OutputDirectory = "ScenariooOutput";
+
         private readonly string _scenarioId;
 
         private readonly IList<ScreenAnnotation> _screenAnnotations = new List<ScreenAnnotation>();
@@ -18,12 +21,19 @@ namespace Samples.PizzaDelivery.PageObjects.Infrastructure
 
         private readonly string _useCaseId;
 
-        private readonly ScenarioDocuWriter _writer = new ScenarioDocuWriter(@"C:\Scenarioo", "Branch", "Build");
+        private readonly ScenarioDocuWriter _writer;
 
         private int _currentStep;
-
+        
         public DocumentationContext(ITakesScreenshot screenshotDriver, string useCaseId, string scenarioId)
         {
+            if (!Directory.Exists(OutputDirectory))
+            {
+                Directory.CreateDirectory(OutputDirectory);
+            }
+
+            _writer = new ScenarioDocuWriter(OutputDirectory, "Branch", "Build");
+
             _screenshotDriver = screenshotDriver;
             _useCaseId = useCaseId;
             _scenarioId = scenarioId;
