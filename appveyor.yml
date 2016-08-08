@@ -3,6 +3,10 @@
     only:
       - master
       - dev
+  environment:
+    private_nuget_api_key:
+      secure: Mh+LngNbJyjY1/z+s9Vzdey6WbwSmvrIvyAj4zpURtc=k
+  
   configuration: Release
   platform: Any CPU
   cache:
@@ -20,17 +24,20 @@
     publish_nuget: true
     verbosity: normal
   
-  deploy:
-  - provider: NuGet
-    server: https://ci.appveyor.com/nuget/scenarioo
-    api_key:
-      secure: Mh+LngNbJyjY1/z+s9Vzdey6WbwSmvrIvyAj4zpURtc=k
+  after_build:
+    - ps: nuget pack src/Scenarioo/Scenarioo.csproj -Version (get-item env:GitVersion_NuGetVersion).Value -properties "Configuration=$env:configuration;Platform=AnyCPU" -Verbosity Detailed
+    - ps: nuget push *.nupkg -ApiKey (get-item env:private_nuget_api_key).Value -Source https://ci.appveyor.com/nuget/scenarioo/api/v2/package
 
 # feature branches are pushed to appveyor nuget feed, may be used for testing.
 - 
   branches:
     only:
       - /feature/.*/
+  
+  environment:
+    private_nuget_api_key:
+      secure: Mh+LngNbJyjY1/z+s9Vzdey6WbwSmvrIvyAj4zpURtc=k
+
   configuration: Release
   platform: Any CPU
   cache:
@@ -48,11 +55,9 @@
     publish_nuget: true
     verbosity: normal
   
-  deploy:
-  - provider: NuGet
-    server: https://ci.appveyor.com/nuget/scenarioo
-    api_key:
-      secure: Mh+LngNbJyjY1/z+s9Vzdey6WbwSmvrIvyAj4zpURtc=k
+  after_build:
+    - ps: nuget pack src/Scenarioo/Scenarioo.csproj -Version (get-item env:GitVersion_NuGetVersion).Value -properties "Configuration=$env:configuration;Platform=AnyCPU" -Verbosity Detailed
+    - ps: nuget push *.nupkg -ApiKey (get-item env:private_nuget_api_key).Value -Source https://ci.appveyor.com/nuget/scenarioo/api/v2/package
 
 - 
   branches:
