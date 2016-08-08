@@ -1,143 +1,85 @@
-# configuration for "master" branch
-# build in Release mode and deploy to nuget
--  
+-
   branches:
     only:
       - master
-
-  version: 2.1.{build}
-
+      - dev
+  environment:
+    nuget_api_key:
+      secure: 74aGO6tf6vNU0RRESbiWpDc10ZzZMETG02KpQedI/Ecnnx8yMoZknu/SdUP0BaMk
+  
   configuration: Release
-  
-  assembly_info:
-    patch: true
-    file: '**\AssemblyInfo.*'
-    assembly_version: '{version}'
-    assembly_file_version: '{version}'
-    assembly_informational_version: '{version}'
-  
+  platform: Any CPU
+  cache:
+    - packages -> **\packages.config
+    - C:\ProgramData\chocolatey\bin -> appveyor.yml
+    - C:\ProgramData\chocolatey\lib -> appveyor.yml  
+  install:
+    - choco install gitversion.portable -y
+
   before_build:
-  - cmd: nuget restore Scenarioo-cs.sln
+    - ps: nuget restore Scenarioo-cs.sln
+    - ps: gitversion /l console /output buildserver /updateassemblyinfo /b (get-item env:APPVEYOR_REPO_BRANCH).Value
   
   build:
-    publish_nuget: true
     verbosity: normal
   
-  deploy:
-  - provider: NuGet
-    server: https://nuget.org
-    api_key:
-      secure: 74aGO6tf6vNU0RRESbiWpDc10ZzZMETG02KpQedI/Ecnnx8yMoZknu/SdUP0BaMk
+  after_build:
+    - ps: nuget pack src\Scenarioo\Scenarioo.csproj -Version (get-item env:GitVersion_NuGetVersionV2).Value -properties "Configuration=$env:configuration;Platform=AnyCPU" -Verbosity Detailed
+    - ps: if(-not $env:APPVEYOR_PULL_REQUEST_NUMBER){ nuget push *.nupkg -ApiKey (get-item env:nuget_api_key).Value -source https://www.nuget.org/api/v2/package }
+-  
+  branches:
+    only:
+      - /feature/.*/
+  environment:
+    private_nuget_api_key:
+      secure: Mh+LngNbJyjY1/z+s9Vzdey6WbwSmvrIvyAj4zpURtc=
+  
+  configuration: Release
+  platform: Any CPU
+  pull_requests:
+    do_not_increment_build_number: true
+  cache:
+    - packages -> **\packages.config
+    - C:\ProgramData\chocolatey\bin -> appveyor.yml
+    - C:\ProgramData\chocolatey\lib -> appveyor.yml
+  install:
+    - choco install gitversion.portable -y
+
+  before_build:
+  - ps: nuget restore Scenarioo-cs.sln
+  - ps: gitversion /l console /output buildserver /updateassemblyinfo /b (get-item env:APPVEYOR_REPO_BRANCH).Value
+  
+  build:
+    verbosity: normal
+  
+  after_build:
+    - ps: nuget pack src\Scenarioo\Scenarioo.csproj -Version (get-item env:GitVersion_NuGetVersionV2).Value -properties "Configuration=$env:configuration;Platform=AnyCPU" -Verbosity Detailed
+    - ps: nuget push *.nupkg -ApiKey (get-item env:private_nuget_api_key).Value -Source https://ci.appveyor.com/nuget/scenarioo/api/v2/package
 
 -  
   branches:
     only:
       - /.*/merge/
-
-  version: 2.1.{build}
   
+  configuration: Release
+  platform: Any CPU
+
   pull_requests:
     do_not_increment_build_number: true
 
-  configuration: Release
-  
-  assembly_info:
-    patch: true
-    file: '**\AssemblyInfo.*'
-    assembly_version: '{version}'
-    assembly_file_version: '{version}'
-    assembly_informational_version: '{version}'
-  
+  cache:
+    - packages -> **\packages.config
+    - C:\ProgramData\chocolatey\bin -> appveyor.yml
+    - C:\ProgramData\chocolatey\lib -> appveyor.yml
+  install:
+    - choco install gitversion.portable -y
+
+  nuget:
+    account_feed: true
+
   before_build:
-  - cmd: nuget restore Scenarioo-cs.sln
+  - ps: nuget restore Scenarioo-cs.sln
+  - ps: gitversion /l console /output buildserver /updateassemblyinfo /b (get-item env:APPVEYOR_REPO_BRANCH).Value
   
   build:
-    publish_nuget: false
     verbosity: normal
-
-# configuration for all branches starting from "dev-"
-# build in Debug mode and deploy locally for testing. no nuget publish
--
-  branches:
-    only:
-      - /dev-.*/
-      - /dev.*/
-
-  version: 3.0.{build}
-
-  configuration: Release
-  
-  assembly_info:
-    patch: true
-    file: '**\AssemblyInfo.*'
-    assembly_version: '{version}'
-    assembly_file_version: '{version}'
-    assembly_informational_version: '{version}'
-  
-  before_build:
-  - cmd: nuget restore Scenarioo-cs.sln
-  
-  build:
-    publish_nuget: true
-    verbosity: normal
-
--
-  branches:
-    only:
-      - /feature/.*/
-
-  version: 3.0.{build}
-
-  configuration: Release
-
-  pull_requests:
-    do_not_increment_build_number: true
-  
-  assembly_info:
-    patch: true
-    file: '**\AssemblyInfo.*'
-    assembly_version: '{version}'
-    assembly_file_version: '{version}'
-    assembly_informational_version: '{version}'
-  
-  before_build:
-  - cmd: nuget restore Scenarioo-cs.sln
-  
-  build:
-    publish_nuget: false
-    verbosity: normal
-
--
-  branches:
-    only:
-	  - /release/.*/
-    
-  version: 2.1.{build}-rc
-    
-  configuration: Release
-  
-  assembly_info:
-    patch: true
-    file: '**\AssemblyInfo.*'
-    assembly_version: '{version}'
-    assembly_file_version: '{version}'
-    assembly_informational_version: '{version}'
-  
-  before_build:
-  - cmd: nuget restore
-  
-  build:
-    publish_nuget: true
-    verbosity: normal
-
-  deploy:
-  - provider: NuGet
-    server: https://nuget.org
-    api_key:
-      secure: 74aGO6tf6vNU0RRESbiWpDc10ZzZMETG02KpQedI/Ecnnx8yMoZknu/SdUP0BaMk
-
-# "fall back" configuration for all other branches
-# no "branches" section defined
-# do not deploy at all
--
-  configuration: Release
