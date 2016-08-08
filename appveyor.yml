@@ -32,7 +32,7 @@
 -  
   branches:
     only:
-      - pull/.*
+      - /pull/.*/
 
   version: 2.1.{build}
   
