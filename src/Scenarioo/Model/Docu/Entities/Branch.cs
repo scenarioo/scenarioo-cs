@@ -30,6 +30,7 @@ namespace Scenarioo.Model.Docu.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public DocuObjectMap Properties { get; set; }
+        public DocuObjectMap Sections { get; set; }
 
         public Branch()
         {
