@@ -4,8 +4,8 @@
       - master
       - dev
   environment:
-    private_nuget_api_key:
-      secure: Mh+LngNbJyjY1/z+s9Vzdey6WbwSmvrIvyAj4zpURtc=
+    nuget_api_key:
+      secure: 74aGO6tf6vNU0RRESbiWpDc10ZzZMETG02KpQedI/Ecnnx8yMoZknu/SdUP0BaMk
   
   configuration: Release
   platform: Any CPU
@@ -26,7 +26,7 @@
   
   after_build:
     - ps: nuget pack src\Scenarioo\Scenarioo.csproj -Version (get-item env:GitVersion_NuGetVersionV2).Value -properties "Configuration=$env:configuration;Platform=AnyCPU" -Verbosity Detailed
-    - ps: nuget push *.nupkg -ApiKey (get-item env:private_nuget_api_key).Value -Source https://ci.appveyor.com/nuget/scenarioo/api/v2/package
+    - ps: if(-not $env:APPVEYOR_PULL_REQUEST_NUMBER){ nuget push *.nupkg -ApiKey (get-item env:nuget_api_key).Value -source https://www.nuget.org/api/v2/package }
 -  
   branches:
     only:
