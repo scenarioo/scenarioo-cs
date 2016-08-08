@@ -35,9 +35,9 @@ namespace Samples.PizzaDelivery.PageObjects
 
         public void ClickNext()
         {
-            var nextButton = _driver.FindElement(By.Id("phoneNumber"));
+            var nextButton = _driver.FindElement(By.Id("step-enterPhoneNumber")).FindElement(By.ClassName("next"));
 
-            nextButton.FindElement(By.ClassName("next"));
+            nextButton.Click();
             _documentationContext.RecordElementClickAnnotation(nextButton);
 
             _documentationContext.SaveStep("Click 'Next'");
