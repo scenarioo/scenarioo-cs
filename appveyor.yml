@@ -110,7 +110,7 @@
 -
   branches:
     only:
-	  - /release/.*/
+      - /release/.*/
     
   version: 2.1.{build}-rc
     
