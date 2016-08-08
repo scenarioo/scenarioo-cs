@@ -39,6 +39,15 @@ namespace Scenarioo.Model.Docu.Entities
             Name = name;
         }
 
+        public string Id { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a unique name for this use case.
+        ///     Make sure to use descriptive names that stay stable as much as possible between multiple builds, such that you
+        ///     can compare use cases and its scenarios between different builds.
+        /// </summary>
+        public string Name { get; set; }
+
         /// <summary>
         ///     Gets or sets more detailed description for current scenario (additionally to descriptive name).
         /// </summary>
@@ -58,15 +67,6 @@ namespace Scenarioo.Model.Docu.Entities
         public DocuObjectMap Properties { get; set; }
 
         public DocuObjectMap Sections { get; set; }
-
-        public string Id { get; set; }
-
-        /// <summary>
-        ///     Gets or sets a unique name for this use case.
-        ///     Make sure to use descriptive names that stay stable as much as possible between multiple builds, such that you
-        ///     can compare use cases and its scenarios between different builds.
-        /// </summary>
-        public string Name { get; set; }
 
         /// <summary>
         /// Tells the serializer to not serialize the object if the list is empty. For convenience everything is initialized 
