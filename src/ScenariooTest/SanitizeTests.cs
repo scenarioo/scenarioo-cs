@@ -28,12 +28,6 @@ namespace ScenariooTest
         }
 
         [Test]
-        public void Remove_Diacritics_s()
-        {
-            "ß".RemoveDiacritics().ShouldBe("s");
-        }
-
-        [Test]
         public void Remove_Diacritics_C()
         {
             "ç".RemoveDiacritics().ShouldBe("c");
