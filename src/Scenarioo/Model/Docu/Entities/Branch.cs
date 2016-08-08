@@ -20,54 +20,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
-using System.Xml.Serialization;
-
-using Scenarioo.Api.Util.Xml;
 using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    [Serializable]
-    [XmlRoot("branch")]
-    public class Branch
+    public class Branch : ISanitized
     {
-        [XmlNamespaceDeclarations]
-        public XmlSerializerNamespaces Xmlns;
-
-        [XmlElement("name")]
+        public string Id { get; set; }
         public string Name { get; set; }
-
-        [XmlElement("description")]
         public string Description { get; set; }
-
-        [XmlElement("details")]
-        public Details Details { get; set; }
+        public DocuObjectMap Properties { get; set; }
+        public DocuObjectMap Sections { get; set; }
 
         public Branch()
         {
-            Xmlns = new XmlSerializerNamespaces();
-            Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
-            Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
-
-            Details = new Details();
+            Properties = new DocuObjectMap();
         }
 
-        public Branch(string name) : this()
+        public Branch(string name) 
+            : this()
         {
             Name = name;
-            Description = string.Empty;
         }
 
-        public Branch(string name, string description) : this()
+        public Branch(string name, string description) 
+            : this()
         {
             Name = name;
             Description = description;
         }
 
-        public void AddDetails(string key, object value)
+        public bool ShouldSerializeProperties()
         {
-            Details.AddDetail(key, value);
+            return Properties == null || Properties.Count != 0;
         }
     }
 }

@@ -20,66 +20,54 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
-using System.Xml.Serialization;
+using System.Collections.Generic;
 
 using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    [Serializable]
-    [XmlRoot("screenAnnotation")]
     public class ScreenAnnotation
     {
-        [XmlElement("region")]
         public ScreenRegion Region { get; set; }
 
         /// <summary>
         /// (optional) Set the visual style of the annotation (if not set, the same style as 'default' will be used).
         /// </summary>
-        [XmlElement("style")]
         public ScreenAnnotationStyle Style { get; set; }
 
         /// <summary>
         /// (optional) Set a separate title text, that is only displayed inside the popup window (and not on the screen).
         /// This text is displayed instead of 'screenText' inside the popup.
         /// </summary>
-        [XmlElement("title")]
         public string Title { get; set; }
 
         /// <summary>
         /// (optional) Set the text to display inside the screen on the annotation (should be short, use description 
         /// for longer texts). Too long texts might be truncated inside the screenshot view in the documentation.
         /// </summary>
-        [XmlElement("screenText")]
         public string ScreenText { get; set; }
 
         /// <summary>
         /// (optional) Set a longer textual description for this annotation, this annotation is displayed below 
         /// the shorter 'text' inside an info popup that can be opened on the annotation.
         /// </summary>
-        [XmlElement("description")]
         public string Description { get; set; }
 
         /// <summary>
         /// (optional) Set a click action to define what happens, when the annotation is clicked on.
         /// </summary>
-        [XmlElement("clickAction")]
         public ScreenAnnotationClickAction? ClickAction { get; set; }
 
         /// <summary>
         /// (optional, but mandatory in case that clickAction is {@link ScreenAnnotationClickAction#toUrl})
         /// The URL to browse to when the annotation is clicked on. The URL will be opened in a separate browser tab.
         /// </summary>
-        [XmlElement("clickActionUrl")]
         public string ClickActionUrl { get; set; }
 
-        [XmlElement("details")]
-        public Details Details { get; set; }
+        public DocuObjectMap Properties { get; set; }
 
         public ScreenAnnotation()
         {
-            Details = new Details();
         }
 
         /// <summary>

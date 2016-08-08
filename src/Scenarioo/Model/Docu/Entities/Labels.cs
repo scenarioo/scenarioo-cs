@@ -21,84 +21,118 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    [Serializable]
-    public class Labels : IXmlSerializable
+    /// <summary>
+    /// Custom implementation for IList to allow a sanitize mechanism which
+    /// is implemented in an optimistic way: diacritics will be replaced, for
+    /// example ä -> a. All other special characters like / will be replaced by a -.
+    /// </summary>
+    public class Labels : IList<string>
     {
-        private IList<string> _labels = new List<string>();
+        private readonly IList<string> _list = new List<string>();
+
+        public Labels()
+        {
+        }
+
+        public Labels(params string[] labels)
+        {
+            foreach (var label in labels)
+            {
+                Add(label);
+            }
+        }
+
+        public static string Sanitize(string text)
+        {
+            return Regex.Replace(text.RemoveDiacritics(), "[^ a-zA-Z0-9_-]", "-");
+        }
+
+        #region IList
+
+        public IEnumerator<string> GetEnumerator()
+        {
+            return _list.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public void Add(string item)
+        {
+            _list.Add(Sanitize(item));
+        }
+
+        public void Clear()
+        {
+            _list.Clear();
+        }
+
+        public bool Contains(string item)
+        {
+            return _list.Contains(item);
+        }
+
+        public void CopyTo(string[] array, int arrayIndex)
+        {
+            _list.CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(string item)
+        {
+            return _list.Remove(item);
+        }
 
         public int Count
         {
-            get { return _labels.Count; }
-        }
-
-        public IList<string> LabelList
-        {
-            get { return _labels; }
-        }
-        
-        /// <summary>
-        /// Validates a label for validity. A label must only contain letters, numbers and/or '_', '-'
-        /// </summary>
-        public static bool IsValidLabel(string label)
-        {
-            return Regex.IsMatch(label, "^[ a-zA-Z0-9_-]+$");
-        }
-
-        public Labels AddLabel(string label)
-        {
-            if (IsValidLabel(label))
+            get
             {
-                _labels.Add(label);
-            }
-            else
-            {
-                throw new ArgumentException("Invalid label name: '" + label + "'");
-            }
-
-            return this;
-        }
-
-        public void AddLabels(IEnumerable<string> labelsToSet)
-        {
-            var labelsCopy = new List<string>();
-            foreach (var label in labelsToSet)
-            {
-                if (IsValidLabel(label))
-                {
-                    labelsCopy.Add(label);
-                }
-                else
-                {
-                    throw new ArgumentException("Invalid label name: '" + label + "'");
-                }
-            }
-
-            _labels = labelsCopy;
-        }
-        
-        public XmlSchema GetSchema()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ReadXml(XmlReader reader)
-        {
-        }
-
-        public void WriteXml(XmlWriter writer)
-        {
-            foreach (var label in _labels)
-            {
-                writer.WriteElementString("label", label);
+                return _list.Count;
             }
         }
+
+        public bool IsReadOnly
+        {
+            get
+            {
+                return _list.IsReadOnly;
+            }
+        }
+
+        public int IndexOf(string item)
+        {
+            return _list.IndexOf(item);
+        }
+
+        public void Insert(int index, string item)
+        {
+            _list.Insert(index, Sanitize(item));
+        }
+
+        public void RemoveAt(int index)
+        {
+            _list.RemoveAt(index);
+        }
+
+        public string this[int index]
+        {
+            get
+            {
+                return _list[index];
+            }
+            set
+            {
+                _list[index] = Sanitize(value);
+            }
+        }
+
+        #endregion
     }
 }

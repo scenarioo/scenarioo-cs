@@ -19,78 +19,83 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-using System;
-using System.Xml.Serialization;
 
-using Scenarioo.Api.Util.Xml;
 using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    [Serializable]
-    [XmlRoot("useCase")]
-    public class UseCase
+    public class UseCase : ISanitized
     {
-        [XmlNamespaceDeclarations]
-        public XmlSerializerNamespaces Xmlns;
+        public UseCase()
+        {
+            Labels = new Labels();
+            Sections = new DocuObjectMap();
+            Properties = new DocuObjectMap();
+        }
+
+        public UseCase(string name)
+            : this()
+        {
+            Name = name;
+        }
+
+        public string Id { get; set; }
 
         /// <summary>
-        /// Gets or sets a unique name for this use case.
-        /// Make sure to use descriptive names that stay stable as much as possible between multiple builds, such that you
-        /// can compare use cases and its scenarios between different builds.
+        ///     Gets or sets a unique name for this use case.
+        ///     Make sure to use descriptive names that stay stable as much as possible between multiple builds, such that you
+        ///     can compare use cases and its scenarios between different builds.
         /// </summary>
-        [XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets more detailed description for current scenario (additionally to descriptive name).
+        ///     Gets or sets more detailed description for current scenario (additionally to descriptive name).
         /// </summary>
-        [XmlElement("description")]
         public string Description { get; set; }
 
+        public Labels Labels { get; set; }
+
         /// <summary>
-        /// Gets or sets status of current step for setting additional application-specific states.
-        /// Status of the scenario (did this test fail or succeed?).
-        /// Usual values are "success" or "failed".
-        /// But you can use application specific additional values, like "not implemented", "unknown" etc. where it makes
-        /// sense. Those additional values will be displayed in warning-style by the web application.
+        ///     Gets or sets status of current step for setting additional application-specific states.
+        ///     Status of the scenario (did this test fail or succeed?).
+        ///     Usual values are "success" or "failed".
+        ///     But you can use application specific additional values, like "not implemented", "unknown" etc. where it makes
+        ///     sense. Those additional values will be displayed in warning-style by the web application.
         /// </summary>
-        [XmlElement("status")]
         public string Status { get; set; }
 
-        /// <summary>
-        /// Gets or sets additional application specific details with additional metadata information's.
-        /// Add application specific details as key-value-data-items.
-        /// See <see cref="Details"/>
-        /// </summary>
-        [XmlElement("details")]
-        public Details Details { get; set; }
+        public DocuObjectMap Properties { get; set; }
+
+        public DocuObjectMap Sections { get; set; }
 
         /// <summary>
-        /// Gets or sets multiple _labels to a scenario object.
+        /// Tells the serializer to not serialize the object if the list is empty. For convenience everything is initialized 
+        /// in the constructor.
         /// </summary>
-        /// <returns>All _labels of this object. Never null.</returns>
-        [XmlElement("_labels")]
-        public Labels Labels
+        /// <returns></returns>
+        public bool ShouldSerializeSections()
         {
-            get { return _labels ?? (_labels = new Labels()); }
-            set { _labels = value; }
+            return Sections == null || Sections.Count != 0;
         }
 
-        private Labels _labels;
-
-        public UseCase()
+        /// <summary>
+        /// Tells the serializer to not serialize the object if the list is empty. For convenience everything is initialized 
+        /// in the constructor.
+        /// </summary>
+        /// <returns></returns>
+        public bool ShouldSerializeProperties()
         {
-            Xmlns = new XmlSerializerNamespaces();
-            Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
-            Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
-
-            Details = new Details();
+            return Properties == null || Properties.Count != 0;
         }
 
-        public void AddDetail(string key, object value)
+        /// <summary>
+        /// Tells the serializer to not serialize the object if the list is empty. For convenience everything is initialized 
+        /// in the constructor.
+        /// </summary>
+        /// <returns></returns>
+        public bool ShouldSerializeLabels()
         {
-            Details.AddDetail(key, value);
+            return Labels == null || Labels.Count != 0;
         }
     }
 }

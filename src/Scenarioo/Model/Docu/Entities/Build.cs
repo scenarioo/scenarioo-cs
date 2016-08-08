@@ -21,42 +21,24 @@
  */
 
 using System;
-using System.Xml.Serialization;
 
-using Scenarioo.Api.Util.Xml;
 using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    [Serializable]
-    [XmlRoot("build")]
-    public class Build
+    public class Build : ISanitized
     {
-        [XmlNamespaceDeclarations]
-        public XmlSerializerNamespaces Xmlns;
-
-        [XmlElement("name")]
+        public string Id { get; set; }
         public string Name { get; set; }
-
-        [XmlElement("revision")]
+        public string Description { get; set; }
         public string Revision { get; set; }
-
-        [XmlElement("date")]
-        public DateTime Date { get; set; }
-
-        [XmlElement("status")]
+        public DateTime? Date { get; set; }
         public string Status { get; set; }
-
-        [XmlElement("details")]
-        public Details Details { get; set; }
+        public DocuObjectMap Properties { get; set; }
 
         public Build()
         {
-            Xmlns = new XmlSerializerNamespaces();
-            Xmlns.Add("ns3", ScenarioDocuXMLFileUtil.ScenarioNameSpace);
-            Xmlns.Add("xs", ScenarioDocuXMLFileUtil.XmlSchema);
-
-            Details = new Details();
+            Properties = new DocuObjectMap();
         }
 
         public Build(string name)
@@ -65,9 +47,9 @@ namespace Scenarioo.Model.Docu.Entities
             Name = name;
         }
 
-        public void AddDetail(string key, object value)
+        public bool ShouldSerializeProperties()
         {
-            Details.AddDetail(key, value);
+            return Properties == null || Properties.Count != 0;
         }
     }
 }

@@ -20,13 +20,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+using System;
 using System.IO;
-using System.Threading;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 using Scenarioo.Annotations;
 using Scenarioo.Api.Files;
 using Scenarioo.Api.Util.Image;
-using Scenarioo.Api.Util.Xml;
 using Scenarioo.Model.Docu.Entities;
 
 namespace Scenarioo.Api
@@ -38,31 +40,36 @@ namespace Scenarioo.Api
     /// </summary>
     public class ScenarioDocuWriter
     {
-        private readonly string _branchName;
-        private readonly string _buildName;
+        private readonly string _branchId;
+        private readonly string _buildId;
         public ScenarioDocuFiles DocuFiles { get; set; }
+
+        private readonly JsonSerializer _serializer;
 
         private string DestinationRootDirectory { [UsedImplicitly] get; set; }
 
         public ScenarioDocuWriter(
             string destinationRootDirectory,
-            string branchName,
-            string buildName)
+            string branchId,
+            string buildId)
         {
             DocuFiles = new ScenarioDocuFiles(destinationRootDirectory);
             DestinationRootDirectory = destinationRootDirectory;
 
-            _branchName = branchName;
-            _buildName = buildName;
+            _branchId = branchId;
+            _buildId = buildId;
 
             CreateBuildDirectoryIfNotYetExists();
-        }
-        
-        private static void ExecuteAsyncXmlWriter<T>(T entity, string destFile) where T : class
-        {
-            ScenarioDocuXMLFileUtil.MarshalXml(entity, destFile);
-        }
 
+            _serializer = new JsonSerializer
+                          {
+                              Formatting = Formatting.Indented,
+                              ContractResolver = new SkipEmptyContractResolver(),
+                              NullValueHandling = NullValueHandling.Ignore,
+                          };
+            _serializer.Converters.Add(new StringEnumConverter());
+        }
+  
         private static void ExecuteAsyncImageWriter(string fileName, byte[] file)
         {
             ScenarioDocuImageFileUtil.MarshalImage(fileName, file);
@@ -93,6 +100,11 @@ namespace Scenarioo.Api
             CreateDirectoryIfNotYetExists(GetStepsDirectory(useCaseName, scenarioName));
         }
 
+        private void CreateHtmlDirectoryIfNotYetExists(string useCaseId, string scenarioId)
+        {
+            CreateDirectoryIfNotYetExists(DocuFiles.GetHtmlDirectory(_branchId, _buildId, useCaseId, scenarioId));
+        }
+
         private void CreateScreenshotDirectoryIfNotYetExists(string useCaseName, string scenarioName)
         {
             CreateDirectoryIfNotYetExists(GetScreenshotDirectory(useCaseName, scenarioName));
@@ -110,35 +122,35 @@ namespace Scenarioo.Api
 
         private string GetBuildDirectory()
         {
-            return DocuFiles.GetBuildDirectory(_branchName, _buildName);
+            return DocuFiles.GetBuildDirectory(_branchId, _buildId);
         }
 
         private string GetBranchDirectory()
         {
-            return DocuFiles.GetBranchDirectory(_branchName);
+            return DocuFiles.GetBranchDirectory(_branchId);
         }
 
         private string GetUseCaseDirectory(UseCase useCase)
         {
-            return DocuFiles.GetUseCaseDirectory(_branchName, _buildName, useCase.Name);
+            return DocuFiles.GetUseCaseDirectory(_branchId, _buildId, useCase.Id);
         }
 
         private string GetStepsDirectory(string useCaseName, string scenarioName)
         {
             return DocuFiles.GetScenarioStepDirectory(
-                _branchName,
-                _buildName,
+                _branchId,
+                _buildId,
                 useCaseName,
                 scenarioName);
         }
-
+        
         private string GetScenarioDirectory(string useCaseName, Scenario scenario)
         {
             return DocuFiles.GetScenarioDirectory(
-                _branchName,
-                _buildName,
+                _branchId,
+                _buildId,
                 useCaseName,
-                scenario.Name);
+                scenario.Id);
         }
 
         /// <summary>
@@ -157,8 +169,8 @@ namespace Scenarioo.Api
         private string GetScreenshotDirectory(string useCaseName, string scenarioName)
         {
             return DocuFiles.GetScreenshotDirectory(
-                _branchName, 
-                _buildName, 
+                _branchId, 
+                _buildId, 
                 useCaseName, 
                 scenarioName);
         }
@@ -169,9 +181,17 @@ namespace Scenarioo.Api
         /// <param name="build">The build description to write</param>
         public void SaveBuildDescription(Build build)
         {
-            var destBuildFile = DocuFiles.GetBuildFile(_branchName, _buildName);
+            SanitizeObjectId(build);
+
+            var destBuildFile = DocuFiles.GetBuildFile(_branchId, _buildId);
             CreateBuildDirectoryIfNotYetExists();
-            ExecuteAsyncXmlWriter(build, destBuildFile);
+
+            using (StreamWriter file = File.CreateText(destBuildFile))
+            {
+                _serializer.Serialize(file, build);
+            }
+
+            //ExecuteAsyncXmlWriter(build, destBuildFile); // TODO async
         }
 
         /// <summary>
@@ -180,9 +200,17 @@ namespace Scenarioo.Api
         /// <param name="branch">The branch description to write.</param>
         public void SaveBranchDescription(Branch branch)
         {
-            var destBranchFile = DocuFiles.GetBranchFile(_branchName);
+            SanitizeObjectId(branch);
+
+            var destBranchFile = DocuFiles.GetBranchFile(_branchId);
             CreateBranchDirectoryIfNotYetExists();
-            ExecuteAsyncXmlWriter(branch, destBranchFile);
+
+            using (StreamWriter file = File.CreateText(destBranchFile))
+            {   
+                _serializer.Serialize(file, branch);
+            }
+
+            //ExecuteAsyncXmlWriter(branch, destBranchFile); // TODO async
         }
 
         /// <summary>
@@ -191,51 +219,101 @@ namespace Scenarioo.Api
         /// <param name="useCase">The use case description to write</param>
         public void SaveUseCase(UseCase useCase)
         {
-            var desUseCaseFile = DocuFiles.GetUseCaseFile(_branchName, _buildName, useCase.Name);
+            SanitizeObjectId(useCase);
+
+            var desUseCaseFile = DocuFiles.GetUseCaseFile(_branchId, _buildId, useCase.Id);
             CreateUseCaseDirectoryIfNotYetExists(useCase);
-            ExecuteAsyncXmlWriter(useCase, desUseCaseFile);
+
+            using (StreamWriter file = File.CreateText(desUseCaseFile))
+            {
+                _serializer.Serialize(file, useCase);
+            }
+
+            //ExecuteAsyncXmlWriter(useCase, desUseCaseFile); // TODO async
         }
 
-        public void SaveScenario(string useCaseName, Scenario scenario)
+        public void SaveScenario(string useCaseId, Scenario scenario)
         {
+            SanitizeObjectId(scenario);
+
             var desScenarioFile = DocuFiles.GetScenarioFile(
-                _branchName,
-                _buildName,
-                useCaseName,
-                scenario.Name);
-            CreateScenarioDirectoryIfNotYetExists(useCaseName, scenario);
-            ExecuteAsyncXmlWriter(scenario, desScenarioFile);
+                _branchId,
+                _buildId,
+                useCaseId,
+                scenario.Id);
+
+            CreateScenarioDirectoryIfNotYetExists(useCaseId, scenario);
+
+            using (StreamWriter file = File.CreateText(desScenarioFile))
+            {
+                _serializer.Serialize(file, scenario);
+            }
+
+            //ExecuteAsyncXmlWriter(scenario, desScenarioFile);
         }
 
-        public void SaveStep(string useCaseName, string scenarioName, Step step)
+        private void SanitizeObjectId(ISanitized target)
         {
+            if (target == null)
+                return;
+
+            if (string.IsNullOrEmpty(target.Id))
+            {
+                target.Id = target.Name.SanitizeForId();
+            }
+            else
+            {
+                target.Id = target.Id.SanitizeForId();
+            }
+        }
+
+        public void SaveStep(string useCaseId, string scenarioId, Step step)
+        {
+            SanitizeObjectId(step.Page);
+
             var desScenarioStepFile = DocuFiles.GetScenarioStepFile(
-                _branchName,
-                _buildName,
-                useCaseName,
-                scenarioName,
-                step.StepDescription.Index);
-            CreateStepDirectoryIfNotYetExists(useCaseName, scenarioName);
-            ExecuteAsyncXmlWriter(step, desScenarioStepFile);
+                _branchId,
+                _buildId,
+                useCaseId,
+                scenarioId,
+                step.Index);
+
+            CreateStepDirectoryIfNotYetExists(useCaseId, scenarioId);
+
+            using (StreamWriter file = File.CreateText(desScenarioStepFile))
+            {
+                _serializer.Serialize(file, step);    
+            }
+
+            if (!string.IsNullOrEmpty(step.StepHtml))
+            {
+                CreateHtmlDirectoryIfNotYetExists(useCaseId, scenarioId);
+
+                var htmlFile = DocuFiles.GetHtmlFile(_branchId, _buildId, useCaseId, scenarioId, step.Index);
+
+                File.WriteAllText(htmlFile, step.StepHtml);
+            }
+
+            //ExecuteAsyncXmlWriter(step, desScenarioStepFile);
         }
 
         /// <summary>
         /// Save Screenshot as a PNG file in usual file for step.
         /// </summary>
-        /// <param name="usecaseName">The use case name</param>
+        /// <param name="usecaseId">The use case name</param>
         /// <param name="scenarioName">The scenario name</param>
         /// <param name="step">The step</param>
         /// <param name="file">Bytes of screenshot</param>
-        public void SaveScreenshot(string usecaseName, string scenarioName, Step step, byte[] file)
+        public void SaveScreenshot(string usecaseId, string scenarioName, Step step, byte[] file)
         {
             var desScreenshotFile = DocuFiles.GetScreenshotFile(
-                _branchName, 
-                _buildName, 
-                usecaseName, 
+                _branchId, 
+                _buildId, 
+                usecaseId, 
                 scenarioName, 
-                step.StepDescription.Index); // TODO: align to java writer library and use filename!
+                step.Index); // TODO: align to java writer library and use filename!
             
-            CreateScreenshotDirectoryIfNotYetExists(usecaseName, scenarioName);
+            CreateScreenshotDirectoryIfNotYetExists(usecaseId, scenarioName);
             ExecuteAsyncImageWriter(desScreenshotFile, file);
         }
 
@@ -244,14 +322,10 @@ namespace Scenarioo.Api
         /// this generator is written to the file system.
         /// Will block until writing has finished.
         /// </summary>
+        [Obsolete]
         public void Flush()
         {
-            while (ScenarioDocuXMLFileUtil.RunningTasks.Count > 0)
-            {
-                ScenarioDocuXMLFileUtil.RemoveFinishedTasks();
-
-                Thread.Sleep(100);
-            }
+            // not used anymore -> TODO async
         }
     }
 }

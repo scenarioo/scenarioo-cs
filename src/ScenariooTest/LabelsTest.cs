@@ -20,12 +20,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
-using System.Collections.Generic;
+using System.Linq;
 
 using NUnit.Framework;
 
 using Scenarioo.Model.Docu.Entities;
+
+using Shouldly;
 
 namespace ScenariooTest
 {
@@ -33,52 +34,38 @@ namespace ScenariooTest
     public class LabelsTest
     {
         [Test]
-        public void AddChaining()
+        [TestCase("test-1")]
+        [TestCase("test 1")]
+        [TestCase("tEst_1")]
+        public void Valid_Labels(string label)
         {
-            var labels = new Labels();
-            labels.AddLabel("test-1").AddLabel("test-2");
-
-            Assert.AreEqual(2, labels.Count);
+            var target = new Labels(label);
+            target.First().ShouldBe(label);
         }
 
         [Test]
-        public void Set()
+        [TestCase("test.1", "test-1")]
+        [TestCase("test_1 Ã¨", "test_1 A-")]
+        [TestCase("t,est", "t-est")]
+        public void Invalid_Labels_Get_Normalized_With_Add(string label, string expected)
         {
-            var labels = new Labels();
-            var labelsToSet = new List<string> { "valid", "valid 2" };
+            var target = new Labels();
+            target.Add(label);
 
-            labels.AddLabels(labelsToSet);
-
-            Assert.AreEqual(2, labels.Count);
+            target.First().ShouldBe(expected);
         }
 
         [Test]
-        public void Validation()
-        {
-            Assert.IsTrue(Labels.IsValidLabel("test-1"));
-            Assert.IsTrue(Labels.IsValidLabel("test 1"));
-            Assert.IsTrue(Labels.IsValidLabel("tEst_1"));
-
-            Assert.IsFalse(Labels.IsValidLabel("test.1"));
-            Assert.IsFalse(Labels.IsValidLabel("test_1 Ã¨"));
-            Assert.IsFalse(Labels.IsValidLabel("t,est"));
-        }
-
-        [Test]
-        [ExpectedException(typeof(ArgumentException))]
-        public void ImmediateValidationForAdd()
+        [TestCase("test+1", "test-1")]
+        [TestCase("test.2", "test-2")]
+        [TestCase("+\"/&%°`^?=)(.,{}![]", "-------------------")]
+        public void Invalid_Labels_Get_Normalized_With_Indexer(string invalidLabel, string expected)
         {
             var labels = new Labels();
-            labels.AddLabel("test-1").AddLabel("test.2");
-        }
-
-        [Test]
-        [ExpectedException(typeof(ArgumentException))]
-        public void ImmediateValidationForSet()
-        {
-            var labels = new Labels();
-            var labelsToSet = new List<string> { "valid", ".invalid" };
-            labels.AddLabels(labelsToSet);
+            labels.Add("bla"); // indexer is not available otherwise to set something
+            labels[0] = invalidLabel;
+            
+            labels[0].ShouldBe(expected);
         }
     }
 }

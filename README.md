@@ -57,6 +57,7 @@ be watching the issue list!
 ### Core Team
  - [tobiaszuercher](https://github.com/tobiaszuercher) (Tobias Zürcher)
  - [mautechr](https://github.com/mautechr) (Christoph Maute)
+ - [felixmokross](https://github.com/felixmokross) (Felix Mokross)
 
 ### Contributors
  - feel free to send a pull request :)

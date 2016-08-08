@@ -21,6 +21,9 @@
  */
 
 using System;
+
+using Newtonsoft.Json;
+
 using Scenarioo.Api.Files;
 using Scenarioo.Api.Util.Xml;
 using Scenarioo.Model.Docu.Entities;
@@ -33,32 +36,38 @@ namespace Scenarioo.Api
     public class ScenarioDocuReader
     {
         private readonly ScenarioDocuFiles _docuFiles;
+        private readonly JsonSerializer _serializer;
 
         public ScenarioDocuReader(string rootDirectory)
         {
+            _serializer = new JsonSerializer
+            {
+                Formatting = Formatting.Indented,
+                ContractResolver = new SkipEmptyContractResolver(),
+                NullValueHandling = NullValueHandling.Ignore,
+            };
+
             _docuFiles = new ScenarioDocuFiles(rootDirectory);
         }
 
-        public Branch LoadBranch(string branchName)
+        public Branch LoadBranch(string branchId)
         {
-            return ScenarioDocuXMLFileUtil.UnmarshalXml<Branch>(_docuFiles.GetBranchFile(branchName));
+            return JsonConvert.DeserializeObject<Branch>(_docuFiles.GetBranchFile(branchId));
         }
 
         public Build LoadBuild(string branchName, string buildName)
         {
-            return ScenarioDocuXMLFileUtil.UnmarshalXml<Build>(_docuFiles.GetBuildFile(branchName, buildName));
+            return JsonConvert.DeserializeObject<Build>(_docuFiles.GetBuildFile(branchName, buildName));
         }
 
         public UseCase LoadUseCase(string branchName, string buildName, string useCaseName)
         {
-            return
-                ScenarioDocuXMLFileUtil.UnmarshalXml<UseCase>(_docuFiles.GetUseCaseFile(branchName, buildName, useCaseName));
+            return JsonConvert.DeserializeObject<UseCase>(_docuFiles.GetUseCaseFile(branchName, buildName, useCaseName));
         }
 
         public Scenario LoadScenario(string branchName, string buildName, string useCaseName, string scenarioName)
         {
-            return
-                ScenarioDocuXMLFileUtil.UnmarshalXml<Scenario>(
+            return JsonConvert.DeserializeObject<Scenario>(
                     _docuFiles.GetScenarioFile(branchName, buildName, useCaseName, scenarioName));
         }
 
@@ -70,8 +79,7 @@ namespace Scenarioo.Api
             string scenarioStepName,
             int stepIndex)
         {
-            return
-                ScenarioDocuXMLFileUtil.UnmarshalXml<Step>(
+            return JsonConvert.DeserializeObject<Step>(
                     _docuFiles.GetScenarioStepFile(
                         branchName,
                         buildName,

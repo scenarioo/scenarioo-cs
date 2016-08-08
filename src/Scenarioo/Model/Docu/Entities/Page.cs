@@ -20,53 +20,50 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using System;
-using System.Xml.Serialization;
+using System.Collections.Generic;
 
 using Scenarioo.Model.Docu.Entities.Generic;
 
 namespace Scenarioo.Model.Docu.Entities
 {
-    [Serializable]
-    [XmlRoot("page")]
-    public class Page
+    public class Page : ISanitized
     {
-        private Labels _labels;
-
-        /// <summary>
-        /// Gets or sets multiple _labels to a scenario object.
-        /// </summary>
-        /// <returns>All _labels of this object. Never null.</returns>
-        [XmlElement("_labels")]
-        public Labels Labels
-        {
-            get { return _labels ?? (_labels = new Labels()); }
-            set { _labels = value; }
-        }
-
         /// <summary>
         /// Gets or sets unique name of the page. For a webpage you usually use the relative application internal url-path to that page or
         /// the relative-file-path of the template file rendering this page. Try to use names that are as short as possible
         /// and do not include any url parameters. Names should be as stable as possible, do not use names that might change
         /// on each new build.
         /// </summary>
-        [XmlElement("name")]
         public string Name { get; set; }
 
+        public string Id { get; set; }
+
+        public DocuObjectMap Properties { get; set; }
+
         /// <summary>
-        /// Gets or sets additional application specific details with additional metadata information's.
-        /// See <see cref="Details"/>
+        /// Gets or sets multiple _labels to a scenario object.
         /// </summary>
-        [XmlElement("details")]
-        public Details Details { get; set; }
+        /// <returns>All _labels of this object. Never null.</returns>
+        public Labels Labels { get; set; }
+
+        /// <summary>
+        /// Gets or sets all visible text of a step here to provide possibility to search inside visible step text.
+        /// But currently the client web application does not yet support full text search anyway and also not to display
+        /// this visible text anywhere in the web application.
+        /// </summary>
+        public string VisibleText { get; set; }
+
+        public List<ScreenAnnotation> ScreenAnnotations { get; set; }
 
         public Page()
         {
-            Name = string.Empty;
-            Details = new Details();
+            Labels = new Labels();
+            Properties = new DocuObjectMap();
+            ScreenAnnotations = new List<ScreenAnnotation>();
         }
 
         public Page(string name)
+            : this()
         {
             Name = name;
         }
