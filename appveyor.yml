@@ -39,9 +39,9 @@
 
   artifacts:
     - path: '*.nupkg' # find all NuGet packages recursively
-	- path: src/Samples.PizzaDelivery/bin/$(configuration)/ScenariooOutput
-	  name: PizzaDelivery
-	  type: zip
+    - path: src/Samples.PizzaDelivery/bin/$(configuration)/ScenariooOutput
+      name: PizzaDelivery
+      type: zip
   
   configuration: Release
   platform: Any CPU
