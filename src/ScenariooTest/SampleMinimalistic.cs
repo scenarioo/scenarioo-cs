@@ -146,16 +146,16 @@ namespace ScenariooTest
         }
 
         [Test]
-        public void Write_Example_Scenario_Failed()
+        public void Write_Example_Scenario_Success()
         {
             // arrange
-            var scenario = new Scenario("example scenario failed");
-            scenario.Status = "failed";
+            var scenario = new Scenario("example scenario minimal");
+            scenario.Status = "success";
 
             // act
             _writer.SaveScenario(UseCaseId, scenario);
 
-            var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/reference-example/example-branch-minimal/example-build-minimal/example-use-case-minimal/example-scenario-failed/scenario.json".GetStringFromUrl());
+            var expected = JToken.Parse("https://raw.githubusercontent.com/scenarioo/scenarioo-format/master/reference-example/example-branch-minimal/example-build-minimal/example-use-case-minimal/example-scenario-minimal/scenario.json".GetStringFromUrl());
             var actual = JToken.Parse(File.ReadAllText(_docuFiles.GetScenarioFile(BranchId, BuildId, UseCaseId, scenario.Id)));
 
             Console.WriteLine("Actual: \n{0}\n\n", actual);
