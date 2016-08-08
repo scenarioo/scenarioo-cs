@@ -8,7 +8,7 @@
       secure: 74aGO6tf6vNU0RRESbiWpDc10ZzZMETG02KpQedI/Ecnnx8yMoZknu/SdUP0BaMk
 
   artifacts:
-    - path: '**\*.nupkg' # find all NuGet packages recursively
+    - path: '*.nupkg' # find all NuGet packages recursively
 
   configuration: Release
   platform: Any CPU
@@ -38,7 +38,7 @@
       secure: Mh+LngNbJyjY1/z+s9Vzdey6WbwSmvrIvyAj4zpURtc=
 
   artifacts:
-    - path: '**\*.nupkg' # find all NuGet packages recursively
+    - path: '*.nupkg' # find all NuGet packages recursively
   
   configuration: Release
   platform: Any CPU
@@ -71,7 +71,7 @@
   platform: Any CPU
 
   artifacts:
-    - path: '**\*.nupkg' # find all NuGet packages recursively
+    - path: '*.nupkg' # find all NuGet packages recursively
 
   pull_requests:
     do_not_increment_build_number: true
