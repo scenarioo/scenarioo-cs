@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Scenarioo-cs</id>
-    <version>$version$</version>
+    <version>0.0.0.0</version>
     <title>Scenarioo Writer Library</title>
     <authors>Scenarioo.org</authors>
     <owners>Scenarioo.org</owners>
