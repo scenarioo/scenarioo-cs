@@ -32,7 +32,7 @@
 -  
   branches:
     only:
-      - /.*/merge/
+      - /pull/.*/
 
   version: 2.1.{build}
   
