@@ -9,7 +9,10 @@
   
   configuration: Release
   platform: Any CPU
-  
+  cache:
+    - packages -> **\packages.config
+    - C:\ProgramData\chocolatey\bin -> appveyor.yml
+    - C:\ProgramData\chocolatey\lib -> appveyor.yml  
   install:
     - choco install gitversion.portable -y
 
@@ -24,3 +27,60 @@
   after_build:
     - ps: nuget pack src\Scenarioo\Scenarioo.csproj -Version (get-item env:GitVersion_NuGetVersionV2).Value -properties "Configuration=$env:configuration;Platform=AnyCPU" -Verbosity Detailed
     - ps: nuget push *.nupkg -ApiKey (get-item env:private_nuget_api_key).Value -Source https://ci.appveyor.com/nuget/scenarioo/api/v2/package
+-  
+  branches:
+    only:
+      - /feature/.*/
+  environment:
+    private_nuget_api_key:
+      secure: Mh+LngNbJyjY1/z+s9Vzdey6WbwSmvrIvyAj4zpURtc=
+  
+  configuration: Release
+  platform: Any CPU
+  pull_requests:
+    do_not_increment_build_number: true
+  cache:
+    - packages -> **\packages.config
+    - C:\ProgramData\chocolatey\bin -> appveyor.yml
+    - C:\ProgramData\chocolatey\lib -> appveyor.yml
+  install:
+    - choco install gitversion.portable -y
+
+  before_build:
+  - ps: nuget restore Scenarioo-cs.sln
+  - ps: gitversion /l console /output buildserver /updateassemblyinfo /b (get-item env:APPVEYOR_REPO_BRANCH).Value
+  
+  build:
+    publish_nuget: true
+    verbosity: normal
+  
+  after_build:
+    - ps: nuget pack src\Scenarioo\Scenarioo.csproj -Version (get-item env:GitVersion_NuGetVersionV2).Value -properties "Configuration=$env:configuration;Platform=AnyCPU" -Verbosity Detailed
+    - ps: nuget push *.nupkg -ApiKey (get-item env:private_nuget_api_key).Value -Source https://ci.appveyor.com/nuget/scenarioo/api/v2/package
+
+-  
+  branches:
+    only:
+      - /.*/merge/
+  
+  configuration: Release
+  platform: Any CPU
+  pull_requests:
+    do_not_increment_build_number: true
+  cache:
+    - packages -> **\packages.config
+    - C:\ProgramData\chocolatey\bin -> appveyor.yml
+    - C:\ProgramData\chocolatey\lib -> appveyor.yml
+  install:
+    - choco install gitversion.portable -y
+
+  nuget:
+    account_feed: true
+
+  before_build:
+  - ps: nuget restore Scenarioo-cs.sln
+  - ps: gitversion /l console /output buildserver /updateassemblyinfo /b (get-item env:APPVEYOR_REPO_BRANCH).Value
+  
+  build:
+    publish_nuget: true
+    verbosity: normal
