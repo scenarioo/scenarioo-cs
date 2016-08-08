@@ -29,6 +29,32 @@
     api_key:
       secure: 74aGO6tf6vNU0RRESbiWpDc10ZzZMETG02KpQedI/Ecnnx8yMoZknu/SdUP0BaMk
 
+-  
+  branches:
+    only:
+      - /.*/merge/
+
+  version: 2.1.{build}
+  
+  pull_requests:
+    do_not_increment_build_number: true
+
+  configuration: Release
+  
+  assembly_info:
+    patch: true
+    file: '**\AssemblyInfo.*'
+    assembly_version: '{version}'
+    assembly_file_version: '{version}'
+    assembly_informational_version: '{version}'
+  
+  before_build:
+  - cmd: nuget restore Scenarioo-cs.sln
+  
+  build:
+    publish_nuget: false
+    verbosity: normal
+
 # configuration for all branches starting from "dev-"
 # build in Debug mode and deploy locally for testing. no nuget publish
 -
@@ -58,7 +84,33 @@
 -
   branches:
     only:
-      - /release-.*/
+      - /feature/.*/
+
+  version: 3.0.{build}
+
+  configuration: Release
+
+  pull_requests:
+    do_not_increment_build_number: true
+  
+  assembly_info:
+    patch: true
+    file: '**\AssemblyInfo.*'
+    assembly_version: '{version}'
+    assembly_file_version: '{version}'
+    assembly_informational_version: '{version}'
+  
+  before_build:
+  - cmd: nuget restore Scenarioo-cs.sln
+  
+  build:
+    publish_nuget: false
+    verbosity: normal
+
+-
+  branches:
+    only:
+	  - /release/.*/
     
   version: 2.1.{build}-rc
     
