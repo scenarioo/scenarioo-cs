@@ -39,7 +39,7 @@ Since the appveyor.yml is public, we have to encrypt all sensitive strings with 
 
 ### Testing
 The tests will create an output, which can directly be read by scenarioo. Please check the 
-[installation guide](https://github.com/scenarioo/scenarioo/wiki/How%20to%20use%20Scenarioo) to install scenarioo. 
+[installation guide](http://scenarioo.org/docs/master/tutorial/Scenarioo-Viewer-Web-Application-Setup.html) to install scenarioo. 
 This is how i finally test wheter the scenarioo-cs library works.
 
 ### Versioning
